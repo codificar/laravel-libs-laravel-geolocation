@@ -1,0 +1,19 @@
+{
+    "name": "codificar/geolocation",
+    "description": "A generic library for laravel.",
+    "authors": [{
+        "name": "Codificar",
+        "email": "libs@codificar.com.br"
+    }],
+    "require": {
+        "enotas/php-client": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Codificar\\Geolocation\\": "src/"
+        },
+        "classmap": [
+          
+        ]
+    }
+}
