@@ -1,10 +1,12 @@
 <?php
 //Admin
-Route::group(['middleware' => 'auth.admin'], function(){	
+// Route::group(['middleware' => 'auth.admin'], function(){	
 Route::group(['prefix' => '/admin', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function(){	
-
+    Route::get('/geolocate', function(){
+        return "OK";
+    });
 });
-});
+// });
 
 /**
  * Rota para permitir utilizar arquivos de traducao do laravel (dessa lib) no vue js
