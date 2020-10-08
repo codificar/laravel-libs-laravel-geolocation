@@ -3,17 +3,20 @@
 namespace Codificar\Geolocation\Lib\Places;
 
 //Internal Uses
+//Interface
+use Codificar\Geolocation\Lib\Places\IMapsPlaces;
+//Models
 use Codificar\Geolocation\Models\GeolocationSettings;
 
     /**
      * Geolocation requests on Google Maps API
      */
-    class MapsPlacesGoogleLib implements IMapsPlaces
+    class MapsPlacesFlightMap implements IMapsPlaces
     {
         /**
          * @var String  $url_api URL to access API
          */
-        private $url_api = "https://maps.googleapis.com/maps/api/";
+        private $url_api = "https://maps.flightmap.io/api/";
 
         /**
          * @var String  $places_key_api Key of API authentication
@@ -72,7 +75,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
          *                     ]
          */
         public function getAddressByTextWithLatLng($text, $requester_lat, $requester_lng)
-        {
+        {             
             $processed      =   [];
             $success        =   false;
             $error          =   [];
@@ -84,32 +87,37 @@ use Codificar\Geolocation\Models\GeolocationSettings;
             else
             {
                 $params         =   array(
-                    "key"       =>  $this->places_key_api,
-                    "location"  =>  $requester_lat . "," . $requester_lng,
+                    "fm_token"       =>  $this->places_key_api,
+                    "currentlatitude"  =>  $requester_lat,
+                    "currentlongitude"  =>  $requester_lng,
                     "radius"    =>  5000,
-                    "input"     =>  $text,
+                    "text"     =>  $text,
                     "language"  =>  "pt-BR"
                 );
 
-                $curl_string    =   $this->url_api . "place/autocomplete/json?" . http_build_query($params);
+                $curl_string    =   $this->url_api . "search?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
                 $response_obj   =   json_decode($php_obj);
-
+               
                 if(
                     isset($response_obj->status) && 
-                    $response_obj->status == "OK" && 
-                    isset($response_obj->predictions) && 
-                    count($response_obj->predictions) > 0)
+                    $response_obj->status == 200 && 
+                    isset($response_obj->data) && 
+                    count($response_obj->data) > 0)
                 {
-                    foreach($response_obj->predictions as $key => $prediction)
-                    {
+                    foreach($response_obj->data as $key => $prediction)
+                    {                        
                         $proPrediction  = $this->processPlacesResponse($prediction);
                         if($proPrediction)
                             $processed[]= $proPrediction;
                     }
                     $success    =   true;
                 }
-                else if(isset($response_obj->predictions) && count($response_obj->predictions) == 0)
+                else if(isset($response_obj->status) == 400 && $response_obj->message != "Successful")
+                {
+                    $error      =   array("error_message" => $response_obj->message);
+                }
+                else if(isset($response_obj->data) && count($response_obj->data) == 0)
                 {
                     $error      =   array("error_message" => trans('maps_lib.no_data_found'));
                 }
@@ -146,14 +154,21 @@ use Codificar\Geolocation\Models\GeolocationSettings;
          */
         private function processPlacesResponse($prediction)
         {
-            if(isset($prediction->place_id) && isset($prediction->description) && isset($prediction->structured_formatting)){
-                $main_text = isset($prediction->structured_formatting->main_text) ? $prediction->structured_formatting->main_text : $prediction->description;
-                $secondary_text = isset($prediction->structured_formatting->secondary_text) ? $prediction->structured_formatting->secondary_text : null;
+            if(isset($prediction->address)){
+                $addressArray = explode(",",$prediction->address);
 
-                $processed['address']        =   $prediction->description;
-                $processed['place_id']       =   $prediction->place_id;
-                $processed['latitude']       =   null;
-                $processed['longitude']      =   null;
+                $contetSize = sizeof($addressArray);
+                $estate = $addressArray[$contetSize-1];
+
+                $address = $addressArray[0]." -".$addressArray[1].",".$addressArray[2]." -".$estate.",".end($addressArray);
+             
+                $main_text = $addressArray[0]." -".$addressArray[1];
+                $secondary_text = $addressArray[2]." -".$estate.",".end($addressArray);
+
+                $processed['address']        =   $address;
+                $processed['place_id']       =   null;
+                $processed['latitude']       =   $prediction->lat;
+                $processed['longitude']      =   $prediction->lng;
                 $processed['main_text']      =   $main_text;
                 $processed['secondary_text'] =   $secondary_text;
             }else{
@@ -275,6 +290,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
          */
         public function getGeocodeWithAddress($address, $placeId = null, $lang = null)
         {
+            return "OK";
             $processed      =   [];
             $success        =   false;
             $error          =   [];

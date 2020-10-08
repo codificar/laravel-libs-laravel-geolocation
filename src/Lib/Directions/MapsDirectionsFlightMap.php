@@ -6,16 +6,19 @@ namespace Codificar\Geolocation\Lib;
 use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Helper;
 
+//External Uses
+use GeometryLibrary\PolyUtil;
+
     /**
-     * Geolocation requests on MapQuest Maps API
+     * Geolocation requests o Flight Map API
      */
-    class MapsDirectionsMapQuestLib implements IMapsDirections
+    class MapsDirectionsFlightMap implements IMapsDirections
     {
 
         /**
          * @var String  $url_api URL to access API
          */
-        private $url_api = "http://www.mapquestapi.com";
+        private $url_api = "https://maps.flightmap.io/api/directions";
 
         /**
          * @var String  $directions_key_api Key of API authentication
@@ -25,7 +28,7 @@ use Codificar\Geolocation\Helper;
         /**
          * @var String  $settings_dist Default distance unit
          */
-        private $settings_dist;
+        private static $settings_dist;
 
         /**
          * @var String  $unit_text Distance unit text
@@ -38,12 +41,12 @@ use Codificar\Geolocation\Helper;
         public function __construct($apiKey = null)
         {
             $this->directions_key_api = $apiKey ? $apiKey : GeolocationSettings::getDirectionsKey();
-            $this->settings_dist = GeolocationSettings::getDefaultDistanceUnit();
-            self::$unit_text = $this->settings_dist==1 ? trans('api.mile') : trans('api.km');
+            self::$settings_dist = GeolocationSettings::getDefaultDistanceUnit();
+            self::$unit_text = self::$settings_dist==1 ? trans('api.mile') : trans('api.km');
         }
 
         /**
-         * Gets and calculate distance on MapQuest Maps
+         * Gets and calculate distance on Google Maps
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -58,15 +61,15 @@ use Codificar\Geolocation\Helper;
             {
                 return array('success' => false);
             }
-            \Log::info("before quest: ". date("d/m/Y H:i:s"));
-            $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api . "&from=" . $source_lat . "," . $source_long . "&to=" . $dest_lat . "," . $dest_long . "&unit=k&timeType=1&useTraffic=true";
+           
+            $curl_string = $this->url_api . "/directions/json?origin=" . $source_lat . "," . $source_long . "&destination=" . $dest_lat . "," . $dest_long . "&key=" . $this->directions_key_api . "";
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj);
-            \Log::info("after quest: ". date("d/m/Y H:i:s"));
+          
 
-            if(isset($response_obj->info->statuscode) && $response_obj->info->statuscode == 0)
+            if($response_obj->status && $response_obj->status == 'OK')
             {
-                $dist = convert_distance_format($this->settings_dist, $response_obj->route->distance*1000);
+                $dist = convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value);
 
                 return array('success' => true, 'data' => [ 'distance' => $dist ]);
             }
@@ -77,7 +80,7 @@ use Codificar\Geolocation\Helper;
         }
 
         /**
-         * Gets and calculate distance and duration on MapQuest Maps
+         * Gets and calculate distance and duration on Google Maps
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -93,17 +96,17 @@ use Codificar\Geolocation\Helper;
                 return array('success' => false);
             }
 
-            $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api . "&from=" . $source_lat . "," . $source_long . "&to=" . $dest_lat . "," . $dest_long . "&unit=k&timeType=1&useTraffic=true";
+            $curl_string = $this->url_api . "/directions/json?origin=" . $source_lat . "," . $source_long . "&destination=" . $dest_lat . "," . $dest_long . "&key=" . $this->directions_key_api . "";
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj);
 
-            if(isset($response_obj->info->statuscode) && $response_obj->info->statuscode == 0)
+            if($response_obj->status && $response_obj->status == 'OK')
             {
-                $dist = convert_distance_format($this->settings_dist, $response_obj->route->legs[0]->distance*1000);
-                $time_in_minutes = convert_to_minutes($response_obj->route->legs[0]->time);
+                $dist = convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value);
+                $time_in_minutes = convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value);
 
-                $distance_text = number_format($response_obj->route->legs[0]->distance,1) . " " . self::$unit_text;
-                $duration_text = ceil(convert_to_minutes($response_obj->route->legs[0]->time)) . " " . trans("api.minutes");
+                $distance_text = number_format(convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value),1) . " " . self::$unit_text;
+                $duration_text = ceil(convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value)) . " " . trans("api.minutes");
 
                 return array('success' => true, 'data' => [ 'distance' => $dist, 'time_in_minutes' => $time_in_minutes, 'distance_text' => $distance_text, 'duration_text' => $duration_text ]);
             }
@@ -114,7 +117,7 @@ use Codificar\Geolocation\Helper;
         }
 
         /**
-         * Return intermediaries multiple points in the route using MapQuest Maps
+         * Return intermediaries multiple points in the route using Google Maps
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -130,13 +133,13 @@ use Codificar\Geolocation\Helper;
                 return false;
             }
 
-            $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api . "&from=" . $source_lat . "," . $source_long . "&to=" . $dest_lat . "," . $dest_long . "&unit=k&timeType=1&useTraffic=true&fullShape=true";
+            $curl_string = $this->url_api . "/directions/json?origin=" . $source_lat . "," . $source_long . "&destination=" . $dest_lat . "," . $dest_long . "&key=" . $this->directions_key_api . "";
 
             return self::polylineProcess($curl_string);
         }
 
         /**
-         * Return intermediaries multiple points in the route using MapQuest Maps
+         * Return intermediaries multiple points in the route using Google Maps
          *
          * @param String       $source_address         String that represents the starting address of the request.
          * @param String       $destination_address    String that represents the destination address of the request.
@@ -154,7 +157,7 @@ use Codificar\Geolocation\Helper;
                 return false;
             }
 
-            $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api . "&from=" . urlencode($source_address) . "&to=" . urlencode($destination_address) . "&unit=k&timeType=1&useTraffic=true&fullShape=true";
+            $curl_string = $this->url_api . "/directions/json?origin=" . urlencode($source_address) . "&destination=" . urlencode($destination_address) . "&key=" . $this->directions_key_api . "";
 
             return self::polylineProcess($curl_string);
         }
@@ -164,7 +167,7 @@ use Codificar\Geolocation\Helper;
          *
          * @param String       $curl_string         URL called on curl request.
          *
-         * @return Object      $msg_chk             Response on curl request
+         * @return Object      $msg_chk             Response json on curl request
          */
         private static function curlCall($curl_string)
         {
@@ -200,7 +203,7 @@ use Codificar\Geolocation\Helper;
                 $duration_format = $duration;
             }
 
-            return $duration_format . trans("api.minutes");
+            return $duration_format . ' ' . trans("api.minutes");
         }
 
         /**
@@ -208,42 +211,47 @@ use Codificar\Geolocation\Helper;
          *
          * @param String      $curl_string         URL called by curl.
          *
-         * @return Array      $polyline            Array with polyline and estimates.
+         * @return Array      $array_resp          Array with polyline and estimates.
          */
         private static function polylineProcess($curl_string)
         {
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj, true);
 
-            $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
-            $position = 0;
-
-            if(isset($response_obj['info']['statuscode']) && $response_obj['info']['statuscode'] == 0)
+            if($response_obj['status'] && $response_obj['status'] == 'OK')
             {
-                foreach($response_obj['route']['shape']['shapePoints'] as $index => $point)
+                $polyline['points'] = $response_obj['routes'][0]['overview_polyline']['points'];
+
+                $needle = metaphone('points');
+
+                // get polyline response
+                $obj = $polyline;
+
+                // flatten array into single level array using 'dot' notation
+                $obj_dot = array_dot($obj);
+                // create empty array_resp
+                $array_resp = [];
+                // iterate
+                foreach( $obj_dot as $key => $val)
                 {
-                    if($index%2 == 0)
-                    {
-                        $polyline['points'][$position]['lat'] = $point;
-                    }
-                    else
-                    {
-                        $polyline['points'][$position]['lng'] = $point;
-                        $position++;
-                    }
+                    // Calculate the metaphone key and compare with needle
+                    $val =  strcmp( metaphone($key, strlen($needle)), $needle) === 0 
+                            ? PolyUtil::decode($val) // if matched decode polyline
+                            : $val;
+                    array_set($array_resp, $key, $val);
                 }
 
-                $polyline['distance_text'] = number_format($response_obj['route']['legs'][0]['distance'],1) . self::$unit_text;
-                $polyline['duration_text'] = self::formatTime($response_obj['route']['legs'][0]['time']);
-                $polyline['distance_value'] = $response_obj['route']['legs'][0]['distance'];
-                $polyline['duration_value'] = convert_to_minutes($response_obj['route']['legs'][0]['time']);
+                $array_resp['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['legs'][0]['distance']['value']),1) . ' ' . self::$unit_text;
+                $array_resp['duration_text'] = self::formatTime($response_obj['routes'][0]['legs'][0]['duration']['value']);
+                $array_resp['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['legs'][0]['distance']['value']);
+                $array_resp['duration_value'] = convert_to_minutes($response_obj['routes'][0]['legs'][0]['duration']['value']);
             }
             else
             {
                 return false;
             }
 
-            return $polyline;
+            return $array_resp;
         }
 
     }

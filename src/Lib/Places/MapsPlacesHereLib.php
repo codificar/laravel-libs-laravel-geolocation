@@ -1,9 +1,9 @@
 <?php
 
-namespace Codificar\Geocode\Lib;
+namespace Codificar\Geolocation\Lib;
 
 //Internal Uses
-use Codificar\GatewayNfe\Models\GeolocationSettings;
+use Codificar\Geolocation\Models\GeolocationSettings;
 
 class MapsPlacesHereLib implements IMapsPlaces {
 

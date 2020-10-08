@@ -1,10 +1,10 @@
 <?php
 
-namespace Codificar\Geocode\Lib;
+namespace Codificar\Geolocation\Lib;
 
 //Internal Uses
-use Codificar\GatewayNfe\Models\GeolocationSettings;
-use Codificar\GatewayNfe\Helper;
+use Codificar\Geolocation\Models\GeolocationSettings;
+use Codificar\Geolocation\Helper;
 
     /**
      * Geolocation requests on MapBox Maps API

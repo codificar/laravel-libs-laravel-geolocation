@@ -1,9 +1,11 @@
 <?php 
 
-namespace Codificar\Geocode\Lib;
-
+namespace Codificar\Geolocation\Lib;
 //Internal Uses
-use Codificar\GatewayNfe\Models\GeolocationSettings;
+use Codificar\Geolocation\Models\GeolocationSettings;
+//Places
+use Codificar\Geolocation\Lib\Places\MapsPlacesGoogleLib;
+use Codificar\Geolocation\Lib\Places\MapsPlacesFlightMap;
 
     /**
      * This class define the requisition type of geolocation
@@ -20,6 +22,7 @@ use Codificar\GatewayNfe\Models\GeolocationSettings;
         const MAPS_PELIAS       = 'pelias_maps';
         const MAPS_ALGOLIA      = 'algolia_maps';
         const MAPS_HERE         = 'here_maps';
+        const MAPS_FLIGHT       = 'flight_map';
 
         /** GETOLOCATION REQUEST TYPES */
         const TYPE_DIRECTIONS   = 'directions';
@@ -60,6 +63,8 @@ use Codificar\GatewayNfe\Models\GeolocationSettings;
                         return(new MapsDirectionsMapBoxLib());
                     case self::MAPS_OPENROUTE:
                         return(new MapsDirectionsOpenRouteLib());
+                    case self::MAPS_FLIGHT:
+                            return(new MapsDirectionsFlightMap());
                     default:
                         return(new MapsDirectionsGoogleLib());
                 }
@@ -76,6 +81,8 @@ use Codificar\GatewayNfe\Models\GeolocationSettings;
                         return(new MapsPlacesAlgoliaLib());
                     case self::MAPS_HERE:
                         return(new MapsPlacesHereLib());
+                    case self::MAPS_FLIGHT:
+                        return(new MapsPlacesFlightMap());
                     default:
                         return(new MapsPlacesGoogleLib());
                 }

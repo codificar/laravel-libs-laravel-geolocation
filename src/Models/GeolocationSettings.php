@@ -205,4 +205,19 @@ class GeolocationSettings extends Settings {
 			return false;
 	}
 
+	/**
+	 * Obtém a regra de redundância de places
+	 *
+	 * @return void
+	 */
+	public static function getPlacesRedundancyRule()
+	{
+        $settings = self::where('key', 'places_redundancy_rule')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
+			return false;
+	}
+
 }

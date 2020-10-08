@@ -2,6 +2,12 @@ window.vue = require('vue');
 require('lodash');
 import Vue from 'vue';
 
+// register the plugin on vue
+import Toasted from 'vue-toasted';
+
+
+Vue.use(Toasted);
+
 //Allows localization using trans()
 Vue.prototype.trans = (key) => {
     return _.get(window.lang, key, key);
@@ -11,6 +17,9 @@ Vue.prototype.isEmpty = (obj) => {
     return _.isEmpty(obj);
 };
 
+//Provider Company
+import teste from './pages/teste.vue';
+// import AddressAutocomplete from './components/AddressAutocomplete';
 
 //Main vue instance
 new Vue({
@@ -20,7 +29,7 @@ new Vue({
     },
 
     components: {
-       
+        teste: teste
     },
 
     created: function () {

@@ -1,6 +1,6 @@
 <?php 
 
-namespace Codificar\Geocode\Lib;
+namespace Codificar\Geolocation\Lib;
 
     interface IMapsDirections
     {

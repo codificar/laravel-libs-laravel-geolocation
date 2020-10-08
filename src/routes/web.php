@@ -1,12 +1,15 @@
 <?php
 //Admin
-// Route::group(['middleware' => 'auth.admin'], function(){	
-Route::group(['prefix' => '/admin', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function(){	
-    Route::get('/geolocate', function(){
-        return "OK";
-    });
+Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.admin_api', 'cors']], function () {  
+    Route::get('/', ['as' => 'inputTeste', 'uses' => 'GeolocationController@index']);
+    Route::get('/admin/get_address_string', ['as' => 'adminAutocompleteUrlGeolocationLib', 'uses' => 'GeolocationController@getAddressByString']);
+    Route::get('/admin/geocode', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocode']);
 });
-// });
+
+Route::group(['namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.admin_api', 'cors']], function () {  
+    Route::get('/teste/places', ['as' => 'placesTest', 'uses' => 'GeolocationController@autocompleteTest']);
+    Route::get('/teste/geocode', ['as' => 'geocodeTest', 'uses' => 'GeolocationController@geocodeTeste']);
+});
 
 /**
  * Rota para permitir utilizar arquivos de traducao do laravel (dessa lib) no vue js
