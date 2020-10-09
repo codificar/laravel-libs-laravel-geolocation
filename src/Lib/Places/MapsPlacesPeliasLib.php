@@ -135,7 +135,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
          *                      'error_message'
          *                     ]
          */
-        public function getGeocodeWithAddress($address, $placeId = null, $lang = null)
+        public function getGeocodeWithAddress($address, $placeId = null, $lang = null, $latitude = null, $longitude = null)
         {
             $processed      =   [];
             $success        =   false;

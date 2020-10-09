@@ -10,6 +10,7 @@ use View;
 //Internal Uses
 use App\Http\Requests\api\v3\PlacesFormRequest;
 use App\Http\Requests\api\v3\GeocodeFormRequest;
+use App\Http\Requests\api\v3\GeocodeReverseFormRequest;
 use App\Http\Resources\api\v3\PlacesResource;
 use App\Http\Resources\api\v3\GeocodeResource;
 
@@ -60,10 +61,10 @@ class GeolocationController extends Controller {
     public function geocode(GeocodeFormRequest $request) {
         $placesClicker = $request->clicker == "redundancy" ? "redundancy_places" : "places";
         $this->factory = new MapsFactory($placesClicker);
-
+        
         if($this->factory) {
             $this->clicker = $this->factory->createMaps();
-            $response = $this->clicker->getGeocodeWithAddress($request->address, $request->place_id, $request->lang);
+            $response = $this->clicker->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, $request->latitude, $request->longitude);
         }
         else {
             $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
@@ -72,28 +73,24 @@ class GeolocationController extends Controller {
         if($response['success']) $response['data']['address'] = $request->address;
 
         return new GeocodeResource(["response" => $response]);
-    }    
-    
-    public function autocompleteTest(){
-        $this->factory = new MapsFactory('places');
-        $this->clicker = $this->factory->createMaps();
-        $place = "Rua alto do tanque";
-        $latitude = -19.743745;
-        $longitude = -43.8386481;
-        $response = $this->clicker->getAddressByTextWithLatLng($place, $latitude, $longitude);
-    
-        return $response;
-    }
+    } 
 
-    public function geocodeTeste(){
-        $this->factory = new MapsFactory('places');
-        $this->clicker = $this->factory->createMaps();
-        $place = "Rua alto do tanque";
-        $latitude = -19.743745;
-        $longitude = -43.8386481;
-        $response =  $this->clicker->getGeocodeWithAddress($place, $latitude, $longitude);
-    
-        return $response;
+    public function geocodeReverse(GeocodeReverseFormRequest $request)
+    {
+        $placesClicker = $request->clicker == "redundancy" ? "redundancy_places" : "places";
+        $this->factory = new MapsFactory($placesClicker);
+
+        if($this->factory)
+        {
+            $this->clicker = $this->factory->createMaps();
+            $response = $this->clicker->getGeocodeByLatLng($request->latitude, $request->longitude);
+        }
+        else
+        {
+            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+        }
+
+        return new GeocodeResource(["response" => $response]);
     }
     
 }

@@ -40,6 +40,8 @@ interface IMapsPlaces
      * @param String       $andress         String that represents andress.
      * @param String       $placeId         String hash that represents unique id of the place.
      * @param String       $lang            String that represents language used in request.
+     * @param Decimal      $latitude        Decimal that represents the requester latitude.
+     * @param Decimal      $longitude       Decimal that represents the requester longitude.
      * 
      * @return Array       [
      *                      'success',
@@ -54,7 +56,7 @@ interface IMapsPlaces
      *                      'error_message'
      *                     ]
      */
-    public function getGeocodeWithAddress($address, $placeId = null, $lang = null);
+    public function getGeocodeWithAddress($address, $placeId = null, $lang = null, $latitude = null, $longitude = null);
 
     /**
      * Gets attributes with reverse geocode by API.

@@ -86,13 +86,16 @@ use Codificar\Geolocation\Models\GeolocationSettings;
             }
             else
             {
+                $lang = isset($lang) ? $lang : $this->sysLang;
+                $this->setCountryLang($lang);
+
                 $params         =   array(
                     "fm_token"       =>  $this->places_key_api,
                     "currentlatitude"  =>  $requester_lat,
                     "currentlongitude"  =>  $requester_lng,
                     "radius"    =>  5000,
                     "text"     =>  $text,
-                    "language"  =>  "pt-BR"
+                    "language"  =>  $lang
                 );
 
                 $curl_string    =   $this->url_api . "search?" . http_build_query($params);
@@ -166,7 +169,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
                 $secondary_text = $addressArray[2]." -".$estate.",".end($addressArray);
 
                 $processed['address']        =   $address;
-                $processed['place_id']       =   null;
+                $processed['place_id']       =   $prediction->lat.','.$prediction->lng;
                 $processed['latitude']       =   $prediction->lat;
                 $processed['longitude']      =   $prediction->lng;
                 $processed['main_text']      =   $main_text;
@@ -187,24 +190,38 @@ use Codificar\Geolocation\Models\GeolocationSettings;
          */
         private function processGeocodeResponse($prediction)
         {
+            $address = $prediction->address;
+            // Get address Number and CEP
+            $re = '/[0-9]+/im';                 
+            preg_match_all($re, $address, $matches, PREG_SET_ORDER, 0);   
+            $streetNumber = $matches[0][0];
+            $postalCode = isset($matches[1]) ? $matches[1][0] : null;
+            if(strlen($streetNumber) >= 4){
+               $postalCode = $streetNumber;              
+            }
+
+            $addressArray = explode(",", $address);
+            $contetSize = sizeof($addressArray);
+            $estate = $addressArray[$contetSize-1];
+            $formattedAddress = $addressArray[0]." -".$addressArray[1].",".$addressArray[2]." -".$estate.",".end($addressArray);           
+            $streetName = $addressArray[0];
+
             if(
-                property_exists($prediction[0], 'address_components') && 
-                count($prediction[0]->address_components) > 0
+                isset($addressArray)
             )
             {
-                $processed['address']       =   $prediction[0]->formatted_address;
-                $processed['place_id']      =   $prediction[0]->place_id;
-                $processed['street_name']   =   $prediction[0]->address_components[1]->long_name;
-                $processed['street_number'] =   $prediction[0]->address_components[0]->long_name;
-                $processed['postal_code']   =   isset($prediction[0]->address_components[6]) ? $prediction[0]->address_components[6]->long_name : null;
-                $processed['latitude']      =   $prediction[0]->geometry->location->lat;
-                $processed['longitude']     =   $prediction[0]->geometry->location->lng;
+                $processed['address']       =   $formattedAddress;
+                $processed['place_id']      =   null;
+                $processed['street_name']   =   $streetName;
+                $processed['street_number'] =   $streetNumber;
+                $processed['postal_code']   =   $postalCode;
+                $processed['latitude']      =   $prediction->lat;
+                $processed['longitude']     =   $prediction->lng;
             }
             else
             {
                 $processed  =  false;
             }
-
             return $processed;
         }
 
@@ -288,47 +305,46 @@ use Codificar\Geolocation\Models\GeolocationSettings;
          *                      'error_message'
          *                     ]
          */
-        public function getGeocodeWithAddress($address, $placeId = null, $lang = null)
-        {
-            return "OK";
+        public function getGeocodeWithAddress($address, $placeId = null, $lang = null, $latitude = null, $longitude = null)
+        {           
             $processed      =   [];
             $success        =   false;
             $error          =   [];
-
-            if(!$this->url_api ||!$this->places_key_api || !$address)
-            {
+           
+            if(!$this->url_api ||!$this->places_key_api || !$address || $latitude == null || $longitude == null)
+            {               
                 $error      =   array("error_message" => trans('maps_lib.incomplete_parameters'));
             }
             else
-            {
+            {               
                 $lang = isset($lang) ? $lang : $this->sysLang;
                 $this->setCountryLang($lang);
 
-                $default        =   array(
-                    "key"       =>  $this->places_key_api,
-                    "language"  =>  $this->lang
+                $params         =   array(
+                    "fm_token"       =>  $this->places_key_api,                    
+                    "radius"    =>  5000,
+                    "text"     =>  $address,
+                    "language"  =>  $lang,
+                    "currentlatitude"  =>  $latitude,
+                    "currentlongitude"  =>  $longitude,
                 );
 
-                if($placeId && !empty($placeId))
-                    $wanted = array("place_id" => $placeId);
-                else
-                    $wanted = array("address" => $address, "region" => $this->country);
-
-                $params = array_merge($default, $wanted);
-
-                $curl_string    =   $this->url_api . "geocode/json?" . http_build_query($params);
+                $curl_string    =   $this->url_api . "search?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
-                $response_obj   =   json_decode($php_obj);
+                $json_data      = json_decode($php_obj);
+                $response_obj   =   $json_data;
             }
-
+          
             if(
                 isset($response_obj->status) && 
-                $response_obj->status == "OK" && 
-                isset($response_obj->results) && 
-                count($response_obj->results) > 0
+                $response_obj->status == 200 && 
+                isset($response_obj->data) && 
+                count($response_obj->data) > 0
             )
             {
-                $processed  =   $this->processGeocodeResponse($response_obj->results);
+               
+                $locate   =   $json_data->data[0];
+                $processed  =   $this->processGeocodeResponse($locate);
                 $success    =   true;
             }
 
@@ -377,27 +393,32 @@ use Codificar\Geolocation\Models\GeolocationSettings;
             {
                 $lang = isset($lang) ? $lang : $this->sysLang;
                 $this->setCountryLang($lang);
-
+             
                 $params         =   array(
-                    "key"       =>  $this->places_key_api,
-                    "language"  =>  $this->lang,
-                    "latlng"    =>  $latitude.",".$longitude
+                    "fm_token"       =>  $this->places_key_api,
+                    "lat"  =>  $latitude,
+                    "lng"    =>  $longitude,
+                    "zoom" => 18,
+                    "language"  =>  $lang
                 );
 
-                $curl_string    =   $this->url_api . "geocode/json?" . http_build_query($params);
+                $curl_string    =   $this->url_api . "search_reverse?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
-                $response_obj   =   json_decode($php_obj);
+                $response_obj   =   json_decode($php_obj);                
             }
-
+            
             if(
+                isset($response_obj->message) &&                
                 isset($response_obj->status) && 
-                $response_obj->status == "OK" && 
-                isset($response_obj->results) && 
-                count($response_obj->results) > 0
-            )
-            {
-                $processed  =   $this->processGeocodeResponse($response_obj->results);
+                isset($response_obj->data) &&
+                $response_obj->message == "Successful" &&
+                $response_obj->status == 200
+            ){
+                $processed  =   $this->processGeocodeResponse($response_obj->data);
                 $success    =   true;
+            }else {
+                $success    =   false;
+                $error      =   array("error_message" => trans('maps_lib.no_data_found'));
             }
 
             if(!count($processed) || !$processed)
