@@ -5,11 +5,7 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
     Route::get('/admin/get_address_string', ['as' => 'adminAutocompleteUrlGeolocationLib', 'uses' => 'GeolocationController@getAddressByString']);
     Route::get('/admin/geocode', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocode']);
     Route::get('/admin/geocode_reverse', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocodeReverse']);
-});
-
-Route::group(['namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.admin_api', 'cors']], function () {  
-    Route::get('/teste/places', ['as' => 'placesTest', 'uses' => 'GeolocationController@autocompleteTest']);
-    Route::get('/teste/geocode', ['as' => 'geocodeTest', 'uses' => 'GeolocationController@geocodeTeste']);
+    Route::get('/admin/get_place_details', 'GeolocationController@getDetailsById');
 });
 
 /**

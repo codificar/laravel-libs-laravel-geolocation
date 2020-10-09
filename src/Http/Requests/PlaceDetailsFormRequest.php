@@ -9,10 +9,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 use Codificar\Geolocation\Http\Rules\CheckUserToken;
 use Codificar\Geolocation\Http\Rules\CheckUserId;
-use Codificar\Geolocation\Http\Rules\CheckLat;
-use Codificar\Geolocation\Http\Rules\CheckLong;
 
-class GeocodeReverseFormRequest extends FormRequest
+class PlaceDetailsFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,9 +32,7 @@ class GeocodeReverseFormRequest extends FormRequest
         $this->user = \User::whereId(request()->id)->whereToken(request()->token)->first();
         
         return [
-            'latitude'      =>  ['required', new CheckLat($this->latitude)],
-            'longitude'     =>  ['required', new CheckLong($this->longitude)],
-            'clicker'       =>  ['']
+            'place_id'  =>  ['required']
 		];
     }
 
@@ -51,7 +47,8 @@ class GeocodeReverseFormRequest extends FormRequest
             'token.required'    =>  trans('userController.token_missing'),
             'id.required'       =>  trans('userController.unique_id_missing'),
             'id.integer'        =>  trans('validation.integer', ['attribute' => trans('user.id')]),
-            'token.string'      =>  trans('validation.string', ['attribute' => 'token'])
+            'token.string'      =>  trans('validation.string', ['attribute' => 'token']),
+            'place_id.required' =>  trans('maps_lib.place_id_required'),
         ];
     }
 

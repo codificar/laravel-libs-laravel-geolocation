@@ -8,11 +8,14 @@ use App\Http\Controllers\Controller;
 use View;
 
 //Internal Uses
-use App\Http\Requests\api\v3\PlacesFormRequest;
-use App\Http\Requests\api\v3\GeocodeFormRequest;
-use App\Http\Requests\api\v3\GeocodeReverseFormRequest;
-use App\Http\Resources\api\v3\PlacesResource;
-use App\Http\Resources\api\v3\GeocodeResource;
+use Codificar\Geolocation\Http\Requests\PlacesFormRequest;
+use Codificar\Geolocation\Http\Requests\GeocodeFormRequest;
+use Codificar\Geolocation\Http\Requests\GeocodeReverseFormRequest;
+use Codificar\Geolocation\Http\Requests\PlaceDetailsFormRequest;
+
+use Codificar\Geolocation\Http\Resources\PlacesResource;
+use Codificar\Geolocation\Http\Resources\GeocodeResource;
+use Codificar\Geolocation\Http\Resources\PlaceDetailsResource;
 
 // use MapsFactory, Settings;
 use Codificar\Geolocation\Lib\MapsFactory;
@@ -75,8 +78,7 @@ class GeolocationController extends Controller {
         return new GeocodeResource(["response" => $response]);
     } 
 
-    public function geocodeReverse(GeocodeReverseFormRequest $request)
-    {
+    public function geocodeReverse(GeocodeReverseFormRequest $request) {
         $placesClicker = $request->clicker == "redundancy" ? "redundancy_places" : "places";
         $this->factory = new MapsFactory($placesClicker);
 
@@ -93,4 +95,20 @@ class GeolocationController extends Controller {
         return new GeocodeResource(["response" => $response]);
     }
     
+    public function getDetailsById(PlaceDetailsFormRequest $request) {
+        if(GeolocationSettings::getPlacesProvider() == "google_maps"){
+            $this->factory = new MapsFactory('places');
+
+            if($this->factory){
+                $this->clicker = $this->factory->createMaps();
+                $response = $this->clicker->getDetailsById($request->place_id);
+            }else{
+                $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            }
+        }else{
+            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_google_lib'));
+        }
+		
+        return new PlaceDetailsResource(["response" => $response]);
+    }
 }
