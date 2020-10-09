@@ -182,6 +182,45 @@ use Codificar\Geolocation\Models\GeolocationSettings;
         }
 
         /**
+         * Processes the Reverse Geocode curl response and returns a formatted address array.
+         * 
+         * @param Object      $prediction       A prediction object to be formatted.
+         * @param Decimal      $requester_lat   Decimal that represents the requester latitude.
+         * @param Decimal      $requester_lng   Decimal that represents the requester longitude.
+         *
+         * @return Array      $processed        Formatted array of addresses.
+         */
+        private function processReverseGeocodeResponse($prediction, $latitude, $longitude)
+        {
+           
+            $addressArray = $prediction->address_components[0];
+            // Get address Number and CEP
+          
+            $formattedAddress = $addressArray->route.", ".$addressArray->street_number.$addressArray->sublocality_level_1." - ".
+            $addressArray->administrative_area_level_1.", ".$addressArray->postal_code.", ".$addressArray->country;       
+
+            if(
+                isset($addressArray)
+            )
+            {
+                $processed['address']       =   $formattedAddress;
+                $processed['place_id']      =   null;
+                $processed['street_name']   =   $addressArray->route;
+                $processed['street_number'] =   $addressArray->street_number;
+                $processed['postal_code']   =   $addressArray->postal_code;
+                $processed['latitude']      =   $latitude;
+                $processed['longitude']     =   $longitude;
+            }
+            else
+            {
+                $processed  =  false;
+            }
+            
+            return $processed;
+        }
+
+
+        /**
          * Processes the Geocode curl response and returns a formatted address array.
          * 
          * @param Object      $prediction       A prediction object to be formatted.
@@ -404,7 +443,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
 
                 $curl_string    =   $this->url_api . "search_reverse?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
-                $response_obj   =   json_decode($php_obj);                
+                $response_obj   =   json_decode($php_obj);                 
             }
             
             if(
@@ -414,7 +453,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
                 $response_obj->message == "Successful" &&
                 $response_obj->status == 200
             ){
-                $processed  =   $this->processGeocodeResponse($response_obj->data);
+                $processed  =   $this->processReverseGeocodeResponse($response_obj->data, $latitude, $longitude);
                 $success    =   true;
             }else {
                 $success    =   false;
