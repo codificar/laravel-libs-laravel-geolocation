@@ -33273,50 +33273,94 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["enum", "model"],
+  props: ["enum", "model", "placeSaveRoute"],
   components: {
     Card: __WEBPACK_IMPORTED_MODULE_2__components_Layout_Card___default.a
   },
   data: function data() {
     return {
       placesOptions: [],
-      selectedPlacesService: null,
-      placeApiKey: null,
+      placesDataModel: {
+        places_provider_redundancy: "",
+        places_provider: "",
+        places_redundancy_rule: "",
+        places_key: "",
+        places_key_redundancy: ""
+      },
       enablePlacesRedundancy: false,
 
-      directionsOptions: [],
-      selectedDirectionsService: null
+      directionsOptions: []
     };
   },
 
   methods: {
-    savePlaces: function savePlaces(selectedData) {
-      console.log("enablePlacesRedundancy", this.enablePlacesRedundancy);
-      this.selectedDirectionsService = selectedData;
-    }
+    selectPlaceService: function selectPlaceService(selectedData) {
+      this.placesDataModel.places_provider.value = selectedData.value;
+    },
+    selectPlaceRedundancyService: function selectPlaceRedundancyService(selectedData) {
+      this.placesDataModel.places_provider_redundancy.value = selectedData.value;
+    },
+    updatePlacesRedundancy: function updatePlacesRedundancy(checkedValue) {
+      var value = checkedValue.target.value;
+      this.placesDataModel.places_redundancy_rule.value = value;
+    },
+    savePlaces: function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+        var _this = this;
+
+        var arrayDataModel, response;
+        return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                //Format Data in Array
+                arrayDataModel = Object.keys(this.placesDataModel).map(function (key) {
+                  return _this.placesDataModel[key];
+                });
+                _context.next = 3;
+                return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.placeSaveRoute, arrayDataModel);
+
+              case 3:
+                response = _context.sent;
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function savePlaces() {
+        return _ref.apply(this, arguments);
+      }
+
+      return savePlaces;
+    }()
   },
   mounted: function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
       var optionsList;
-      return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+      return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               optionsList = JSON.parse(this.enum);
 
+              this.placesDataModel = JSON.parse(this.model);
               this.directionsOptions = optionsList.directions_provider;
               this.placesOptions = optionsList.places_provider;
 
-            case 3:
+            case 4:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, this);
+      }, _callee2, this);
     }));
 
     function mounted() {
-      return _ref.apply(this, arguments);
+      return _ref2.apply(this, arguments);
     }
 
     return mounted;
@@ -33538,12 +33582,12 @@ var render = function() {
             { staticClass: "form-group" },
             [
               _c("label", [
-                _vm._v("\n              Provedor do serviços *\n            ")
+                _vm._v("\n              Provedor do serviços*\n            ")
               ]),
               _vm._v(" "),
               _c("v-select", {
                 attrs: { options: _vm.placesOptions, label: "name" },
-                on: { input: _vm.savePlaces }
+                on: { input: _vm.selectPlaceService }
               })
             ],
             1
@@ -33553,12 +33597,103 @@ var render = function() {
         _c("div", { staticClass: "col-lg-6" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", [
-              _vm._v("\n              Chave de autenticação *\n            ")
+              _vm._v("\n              Chave de autenticação*\n            ")
             ]),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.placesDataModel.places_key.value,
+                  expression: "placesDataModel.places_key.value"
+                }
+              ],
               staticClass: "form-control",
-              attrs: { type: "text" }
+              attrs: { type: "text" },
+              domProps: { value: _vm.placesDataModel.places_key.value },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.placesDataModel.places_key,
+                    "value",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-lg-6" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", [
+              _vm._v("\n              URL do servidor*\n            ")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.placesDataModel.places_key.value,
+                  expression: "placesDataModel.places_key.value"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.placesDataModel.places_key.value },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.placesDataModel.places_key,
+                    "value",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-lg-6" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", [
+              _vm._v("\n              ID da aplicação*\n            ")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.placesDataModel.places_key.value,
+                  expression: "placesDataModel.places_key.value"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.placesDataModel.places_key.value },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.placesDataModel.places_key,
+                    "value",
+                    $event.target.value
+                  )
+                }
+              }
             })
           ])
         ])
@@ -33573,53 +33708,103 @@ var render = function() {
             _vm._v(" "),
             _c("label", { staticClass: "pl-1" }, [
               _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.enablePlacesRedundancy,
-                    expression: "enablePlacesRedundancy"
-                  }
-                ],
-                attrs: { type: "radio", name: "placaRed" },
-                domProps: {
-                  value: true,
-                  checked: _vm._q(_vm.enablePlacesRedundancy, true)
-                },
-                on: {
-                  change: function($event) {
-                    _vm.enablePlacesRedundancy = true
-                  }
-                }
+                attrs: { type: "radio", name: "placaRed", value: "1" },
+                on: { change: _vm.updatePlacesRedundancy }
               }),
               _vm._v("Sim")
             ]),
             _vm._v(" "),
             _c("label", { staticClass: "pl-1" }, [
               _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.enablePlacesRedundancy,
-                    expression: "enablePlacesRedundancy"
-                  }
-                ],
-                attrs: { type: "radio", name: "placaRed", checked: "" },
-                domProps: {
-                  value: false,
-                  checked: _vm._q(_vm.enablePlacesRedundancy, false)
+                attrs: {
+                  type: "radio",
+                  name: "placaRed",
+                  checked: "",
+                  value: "0"
                 },
-                on: {
-                  change: function($event) {
-                    _vm.enablePlacesRedundancy = false
-                  }
-                }
+                on: { change: _vm.updatePlacesRedundancy }
               }),
               _vm._v("Não")
             ])
           ])
         ])
+      ]),
+      _vm._v(" "),
+      _vm.placesDataModel.places_redundancy_rule.value == 1
+        ? _c("div", [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-lg-6" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", [
+                      _vm._v(
+                        "\n                Provedor do serviço de redundância*\n              "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("v-select", {
+                      attrs: { options: _vm.placesOptions, label: "name" },
+                      on: { input: _vm.selectPlaceRedundancyService }
+                    })
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-6" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", [
+                    _vm._v(
+                      "\n                Chave de autenticação de redundância*\n              "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.placesDataModel.places_key_redundancy.value,
+                        expression:
+                          "placesDataModel.places_key_redundancy.value"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text" },
+                    domProps: {
+                      value: _vm.placesDataModel.places_key_redundancy.value
+                    },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.placesDataModel.places_key_redundancy,
+                          "value",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ])
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "box-footer pull-right" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success right",
+            attrs: { type: "button" },
+            on: { click: _vm.savePlaces }
+          },
+          [_vm._v("\n          Salvar\n        ")]
+        )
       ])
     ])
   ])

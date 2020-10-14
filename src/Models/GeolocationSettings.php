@@ -17,6 +17,15 @@ class GeolocationSettings extends Settings {
 	const GeolocationCategory = 'enum.category.Geolocation';
 
 	/**
+	 * Get Geolocation Category
+	 *
+	 * @return Object
+	*/
+	public static function getGeolocationCategory (){
+		return Config::get(self::GeolocationCategory);		
+	}
+
+	/**
 	 * Get Data by category
 	 *
 	 * @return Object

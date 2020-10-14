@@ -56,35 +56,31 @@ class GeolocationSettingsController extends Controller
 	/**
 	 *  Save Or Update NFE Gateway Settings
 	 */
-	public function store($request = null)
-	{
+	public function store(Request $request)
+	{			
+		//Get Setting Category Data
+		$settingCategory = GeolocationSettings::getGeolocationCategory();
+			
+		$params = $request->all();
 		
-		$settingCategory = 10;
-		$first_setting = GeolocationSettings::first();
-		
-		foreach (($request ? $request : Input::all()) as $key => $item) {
-			$temp_setting = GeolocationSettings::find($key);
-			if(!$temp_setting)
-				$temp_setting =  GeolocationSettings::where('key', '=', $key)->first();
-			if ($temp_setting && isset($item)) {
-				$temp_setting->value = $item;
-				$temp_setting->save();
-			} elseif (!is_numeric($key) && $first_setting && isset($item)) {
-				$new_setting = new GeolocationSettings();
-				$new_setting->key = $key;
-				$new_setting->value = $item;
-				$new_setting->page = 1;
-				$new_setting->category = $settingCategory;
-				$new_setting->save();
-			}
+		foreach ($params as $key => $value) {
+			$settings = GeolocationSettings::where('key', $value['key'])->first();
+			
+			if($settings){
+				$settings->value = $value['value'];				
+			}else{
+				$settings = new GeolocationSettings;
+				$settings->key = $value['key'];
+				$settings->value = $value['value'];
+				$settings->tool_tip = $value['tool_tip'];
+				$settings->page = $value['page'];
+				$settings->category = $value['category'];
+				$settings->sub_category = $value['sub_category'];
+			}		
+
+			$settings->save();
 		}
 
-		if($request)
-			return true;
-
-		$alert = array('class' => 'success', 'msg' => trans('dashboard.settings_saved'));
-
-		// return Redirect::to(URL::Route('NfeGatewaySettings'))->with('alert', $alert);
 	}
 
 	/**

@@ -21,6 +21,7 @@
 	<geolocationsettings
         enum  = "{{ $enum }}"
 		model = "{{ $model }}"
+		place-save-route = "{{ URL::Route($enviroment.'GeolocationSettingSave') }}"
     />
 	
 	</div>
