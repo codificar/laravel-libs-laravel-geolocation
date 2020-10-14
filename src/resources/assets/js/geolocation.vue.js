@@ -4,9 +4,11 @@ import Vue from 'vue';
 
 // register the plugin on vue
 import Toasted from 'vue-toasted';
-
-
 Vue.use(Toasted);
+
+import vSelect from "vue-select";
+Vue.component("v-select", vSelect);
+import "vue-select/dist/vue-select.css";
 
 //Allows localization using trans()
 Vue.prototype.trans = (key) => {
@@ -19,6 +21,7 @@ Vue.prototype.isEmpty = (obj) => {
 
 //Provider Company
 import teste from './pages/teste.vue';
+import GeoLocationSettings from './pages/Settings';
 // import AddressAutocomplete from './components/AddressAutocomplete';
 
 //Main vue instance
@@ -26,10 +29,12 @@ new Vue({
     el: '#VueJs',
 
     data: {
+        
     },
 
     components: {
-        teste: teste
+        teste: teste,
+        geolocationsettings: GeoLocationSettings
     },
 
     created: function () {

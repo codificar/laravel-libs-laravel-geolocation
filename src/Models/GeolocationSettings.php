@@ -11,8 +11,21 @@ use Eloquent;
 
 //External Uses
 use Settings;
+use Config;
 
 class GeolocationSettings extends Settings {
+	const GeolocationCategory = 'enum.category.Geolocation';
+
+	/**
+	 * Get Data by category
+	 *
+	 * @return Object
+	*/
+	public static function getCategoryList (){
+		return self::where('category', Config::get(self::GeolocationCategory))->get();		
+	}
+
+
 	/**
 	 * Get Unit Distance
 	 *

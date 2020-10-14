@@ -111,4 +111,15 @@ class GeolocationController extends Controller {
 		
         return new PlaceDetailsResource(["response" => $response]);
     }
+
+    public function getDirectionsDistanceAndTime(Request $request) {      
+        $this->factory = new MapsFactory('directions');
+        $this->clicker = $this->factory->createMaps();
+
+        if ($this->clicker)
+        {
+            $response = $this->clicker->getDistanceAndTimeByDirections($request->startLat, $request->startLng, $request->destLat, $request->destLng);           
+        }        
+        return $response;
+    }
 }

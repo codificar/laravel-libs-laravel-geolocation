@@ -1,11 +1,25 @@
 <?php
-//Admin
+//Admin APIs
 Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.admin_api', 'cors']], function () {  
+    //Places and Geocode
     Route::get('/', ['as' => 'inputTeste', 'uses' => 'GeolocationController@index']);
     Route::get('/admin/get_address_string', ['as' => 'adminAutocompleteUrlGeolocationLib', 'uses' => 'GeolocationController@getAddressByString']);
     Route::get('/admin/geocode', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocode']);
     Route::get('/admin/geocode_reverse', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocodeReverse']);
     Route::get('/admin/get_place_details', 'GeolocationController@getDetailsById');
+
+    Route::post('/admin/directions', 'GeolocationController@getDirectionsDistanceAndTime');
+
+   
+});
+
+//Admin Painel Routes
+Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.admin'], function(){
+    //Settings
+    Route::group(['prefix' => '/settings'], function () {  
+        Route::get('/', array('as' => 'adminGeolocationSetting', 'uses' => 'GeolocationSettingsController@create'));
+        Route::post('/', array('as' => 'adminGeolocationSettingSave', 'uses' => 'GeolocationSettingsController@store'));      
+    });
 });
 
 /**

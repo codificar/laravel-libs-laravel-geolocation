@@ -13,25 +13,44 @@ use Illuminate\Http\Request;
 //Internal Uses
 use Codificar\Geolocation\Models\GeolocationSettings;
 
+use Codificar\Geolocation\Enums\DirectionsEnum;
+use Codificar\Geolocation\Enums\PlacesEnum;
 //External Uses
-
 
 class GeolocationSettingsController extends Controller
 {	
 
+
 	public function create()
-	{
-		// Category 10			
-		$setting = 10;
-		$list = GeolocationSettings::where('category', $setting)->get();
+	{			
+		//Settings Env
+		$enviroment = 'admin';
+
+		//Get Settings Data
+		$list = GeolocationSettings::getCategoryList();		
+
+		// Format Data
 		$model = $this->getViewModel($list);
-		
-		$title = ucwords(trans('customize.Settings'));
 	
-		// return View::make('gateway_nfe::settings.gateway') 			
-		// 	->with('title', $title)
-		// 	->with('page', 'settings')
-		// 	->with('model', $model);
+		// Get Enum Values
+		$enums = array(
+			'directions_provider'	=>	DirectionsEnum::DirectionsProvider,
+			'places_provider'		=>	PlacesEnum::PlacesProvider
+		);
+
+		// Get Page Title
+		$title = ucwords(trans('customize.Settings'));
+
+		// Get Places Value
+		$placesProvider = GeolocationSettings::getPlacesProvider();
+		
+		return View::make('geolocation::settings.index')
+			->with('enviroment', $enviroment)
+			->with('enum', json_encode($enums))
+			->with('title', $title)
+			->with('page', 'settings')
+			->with('placesProvider', $placesProvider)
+			->with('model', json_encode($model));
 	}
 
 	/**
@@ -66,6 +85,14 @@ class GeolocationSettingsController extends Controller
 		$alert = array('class' => 'success', 'msg' => trans('dashboard.settings_saved'));
 
 		// return Redirect::to(URL::Route('NfeGatewaySettings'))->with('alert', $alert);
+	}
+
+	/**
+	* getObjetoSettings -
+	*/
+	private function getObjetoSettings($category) {
+		$list = GeolocationSettings::where('category', Config::get($category))->get();
+		return $list;
 	}
 
 	private function getViewModel($list)
