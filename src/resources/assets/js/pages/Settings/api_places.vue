@@ -128,7 +128,27 @@ export default {
         isValid = false
         this.placesDataErrors.places_application_id = "Preencha este campo"
       } 
-      console.log("isValid", isValid)
+     
+      if(this.placesDataModel.places_redundancy_rule.value == 1){
+        if(this.placesDataModel.places_key_redundancy.value == null || this.placesDataModel.places_key_redundancy.value.trim() == ""){
+          isValid = false
+          this.placesDataErrors.places_key_redundancy = "Preencha este campo"
+        } 
+        if(this.placesDataModel.places_provider_redundancy.value == null || this.placesDataModel.places_provider_redundancy.value.trim() == ""){
+          isValid = false
+          this.placesDataErrors.places_provider_redundancy = "Preencha este campo"
+        } 
+
+        if((this.placesDataModel.places_url_redundancy.value == null || this.placesDataModel.places_url_redundancy.value.trim() == "") && this.placesProviderRedundancyRule.redundancy_url){
+          isValid = false
+          this.placesDataErrors.places_url_redundancy = "Preencha este campo"
+        }
+        if((this.placesDataModel.places_application_id_redundancy.value == null || this.placesDataModel.places_application_id_redundancy.value.trim() == "") && this.placesProviderRedundancyRule.redundancy_id){
+          isValid = false
+          this.placesDataErrors.places_application_id_redundancy = "Preencha este campo"
+        } 
+      }
+      
       return isValid        
     }
   },
@@ -202,8 +222,8 @@ export default {
             <div class="form-check">            
               <label class="form-check-label pl-0"><h3 style="color: #54667a;">{{ trans("geolocation.enable_red") }}</h3> </label>
               
-              <label class="pl-1"><input type="radio" name="placaRed" value="1" @change=updatePlacesRedundancy v-model="this.placesDataModel.places_redundancy_rule.value">{{ trans("geolocation.yes") }}</label>
-              <label class="pl-1"><input type="radio" name="placaRed" value="0" @change=updatePlacesRedundancy v-model="this.placesDataModel.places_redundancy_rule.value">{{ trans("geolocation.no") }}</label>
+              <label class="pl-1"><input type="radio" name="placaRed" value="1" @change=updatePlacesRedundancy v-model="placesDataModel.places_redundancy_rule.value">{{ trans("geolocation.yes") }}</label>
+              <label class="pl-1"><input type="radio" name="placaRed" value="0" @change=updatePlacesRedundancy v-model="placesDataModel.places_redundancy_rule.value">{{ trans("geolocation.no") }}</label>
               
             </div>
           </div>
