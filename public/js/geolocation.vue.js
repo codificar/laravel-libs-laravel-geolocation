@@ -33885,8 +33885,18 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   data: function data() {
     return {
       placesOptions: [],
-      placesProviderRule: {},
-      placesProviderRedundancyRule: {},
+      placesProviderRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
+      placesProviderRedundancyRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
       placesDataModel: {
         places_provider: "",
         places_key: "",
@@ -34134,7 +34144,7 @@ var render = function() {
         attrs: { slot: "card-title" },
         slot: "card-title"
       },
-      [_vm._v("API Places")]
+      [_vm._v(_vm._s(_vm.trans("geolocation.api_places")))]
     ),
     _vm._v(" "),
     _c("h3", {
@@ -34151,7 +34161,11 @@ var render = function() {
             { staticClass: "form-group" },
             [
               _c("label", [
-                _vm._v("\n              Provedor do serviços*\n            ")
+                _vm._v(
+                  "\n              " +
+                    _vm._s(_vm.trans("geolocation.api_places_provider")) +
+                    "*\n            "
+                )
               ]),
               _vm._v(" "),
               _c("v-select", {
@@ -34173,7 +34187,11 @@ var render = function() {
         _c("div", { staticClass: "col-lg-6" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", [
-              _vm._v("\n              Chave de autenticação*\n            ")
+              _vm._v(
+                "\n              " +
+                  _vm._s(_vm.trans("geolocation.api_places_key")) +
+                  "*\n            "
+              )
             ]),
             _vm._v(" "),
             _c("input", {
@@ -34222,7 +34240,11 @@ var render = function() {
           [
             _c("div", { staticClass: "form-group" }, [
               _c("label", [
-                _vm._v("\n              URL do servidor*\n            ")
+                _vm._v(
+                  "\n              " +
+                    _vm._s(_vm.trans("geolocation.api_places_url")) +
+                    "*\n            "
+                )
               ]),
               _vm._v(" "),
               _c("input", {
@@ -34270,7 +34292,11 @@ var render = function() {
           [
             _c("div", { staticClass: "form-group" }, [
               _c("label", [
-                _vm._v("\n              ID da aplicação*\n            ")
+                _vm._v(
+                  "\n              " +
+                    _vm._s(_vm.trans("geolocation.api_places_id")) +
+                    "*\n            "
+                )
               ]),
               _vm._v(" "),
               _c("input", {
@@ -34309,7 +34335,9 @@ var render = function() {
         _c("div", { staticClass: "col-lg-12" }, [
           _c("div", { staticClass: "form-check" }, [
             _c("label", { staticClass: "form-check-label pl-0" }, [
-              _c("h3", [_vm._v("Habilitar redundância na consulta ?")])
+              _c("h3", { staticStyle: { color: "#54667a" } }, [
+                _vm._v(_vm._s(_vm.trans("geolocation.enable_red")))
+              ])
             ]),
             _vm._v(" "),
             _c("label", { staticClass: "pl-1" }, [
@@ -34343,7 +34371,7 @@ var render = function() {
                   ]
                 }
               }),
-              _vm._v("Sim")
+              _vm._v(_vm._s(_vm.trans("geolocation.yes")))
             ]),
             _vm._v(" "),
             _c("label", { staticClass: "pl-1" }, [
@@ -34377,7 +34405,7 @@ var render = function() {
                   ]
                 }
               }),
-              _vm._v("Não")
+              _vm._v(_vm._s(_vm.trans("geolocation.no")))
             ])
           ])
         ])
@@ -34393,7 +34421,11 @@ var render = function() {
                   [
                     _c("label", [
                       _vm._v(
-                        "\n                Provedor do serviço de redundância*\n              "
+                        "\n                " +
+                          _vm._s(
+                            _vm.trans("geolocation.red_api_places_provider")
+                          ) +
+                          "*\n              "
                       )
                     ]),
                     _vm._v(" "),
@@ -34417,7 +34449,9 @@ var render = function() {
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", [
                     _vm._v(
-                      "\n                Chave de autenticação de redundância*\n              "
+                      "\n                " +
+                        _vm._s(_vm.trans("geolocation.red_api_places_key")) +
+                        "*\n              "
                     )
                   ]),
                   _vm._v(" "),
@@ -34470,7 +34504,11 @@ var render = function() {
                 [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", [
-                      _vm._v("\n              URL do servidor*\n            ")
+                      _vm._v(
+                        "\n              " +
+                          _vm._s(_vm.trans("geolocation.red_api_places_url")) +
+                          "*\n            "
+                      )
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -34522,7 +34560,11 @@ var render = function() {
                 [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", [
-                      _vm._v("\n              ID da aplicação*\n            ")
+                      _vm._v(
+                        "\n              " +
+                          _vm._s(_vm.trans("geolocation.red_api_places_id")) +
+                          "*\n            "
+                      )
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -34573,7 +34615,13 @@ var render = function() {
             attrs: { type: "button" },
             on: { click: _vm.savePlaces }
           },
-          [_vm._v("\n          Salvar\n        ")]
+          [
+            _vm._v(
+              "\n          " +
+                _vm._s(_vm.trans("geolocation.save")) +
+                "\n        "
+            )
+          ]
         )
       ])
     ])

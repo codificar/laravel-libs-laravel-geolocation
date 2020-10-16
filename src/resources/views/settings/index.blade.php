@@ -16,7 +16,7 @@
 @stop
 	
 @section('content')
-	<div id="VueJs">
+	<div id="VueJs">		
 		<geolocationsettings
 			enum-data  = "{{ $enum }}"
 			model = "{{ $model }}"
@@ -27,6 +27,6 @@
 @stop
 
 @section('javascripts')
-<script src="/libs/geolocation/lang.trans/geolocation"></script> 
+<script src="/libs/geolocation/lang.trans/geolocation"></script>
 <script src="{{ elixir('vendor/codificar/geolocation/geolocation.vue.js') }}"> </script> 
 @stop

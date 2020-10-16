@@ -28,6 +28,6 @@
 @stop
 
 @section('javascripts')
-<script src="/libs/geolocation/lang.trans/geolocation"></script> 
+<script src="/libs/geolocation/lang.trans/settings,basic"></script> 
 <script src="{{ elixir('vendor/codificar/geolocation/geolocation.vue.js') }}"> </script> 
 @stop

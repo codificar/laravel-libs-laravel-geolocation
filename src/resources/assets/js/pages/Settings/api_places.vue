@@ -9,8 +9,18 @@ export default {
   data() {
     return {     
       placesOptions: [],
-      placesProviderRule: {},
-      placesProviderRedundancyRule: {},
+      placesProviderRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
+      placesProviderRedundancyRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
       placesDataModel: {
         places_provider: "",
         places_key: "",
@@ -63,7 +73,7 @@ export default {
 </script>
 <template>
   <Card>
-    <h4 slot="card-title" class="m-b-0 text-white">API Places</h4>
+    <h4 slot="card-title" class="m-b-0 text-white">{{ trans("geolocation.api_places") }}</h4>
 
     <h3 slot="card-content-title" class="box-title"></h3>
       <div slot="card-content">
@@ -71,7 +81,7 @@ export default {
           <div class="col-lg-6">
             <div class="form-group">
               <label>
-                Provedor do serviços*
+                {{ trans("geolocation.api_places_provider") }}*
               </label>           
               <v-select @input="selectPlaceService" :options="placesOptions" label="name"  v-model="placesProviderRule"/>
             </div>
@@ -80,7 +90,7 @@ export default {
           <div class="col-lg-6">
             <div class="form-group">
               <label>
-                Chave de autenticação*
+                {{ trans("geolocation.api_places_key") }}*
               </label>
               <input v-model=placesDataModel.places_key.value type="text" class="form-control" />
             </div>
@@ -91,7 +101,7 @@ export default {
           <div v-show=placesProviderRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                URL do servidor*
+                {{ trans("geolocation.api_places_url") }}*
               </label>           
               <input v-model=placesDataModel.places_url.value type="text" class="form-control" />
             </div>
@@ -100,7 +110,7 @@ export default {
           <div v-show=placesProviderRule.redundancy_id class="col-lg-6">
             <div class="form-group">
               <label>
-                ID da aplicação*
+                {{ trans("geolocation.api_places_id") }}*
               </label>
               <input v-model=placesDataModel.places_application_id.value type="text" class="form-control" />
             </div>
@@ -110,10 +120,10 @@ export default {
         <div class="row">
           <div class="col-lg-12">
             <div class="form-check">            
-              <label class="form-check-label pl-0"><h3>Habilitar redundância na consulta ?</h3> </label>
+              <label class="form-check-label pl-0"><h3 style="color: #54667a;">{{ trans("geolocation.enable_red") }}</h3> </label>
               
-              <label class="pl-1"><input type="radio" name="placaRed" value="1" @change=updatePlacesRedundancy v-model="this.placesDataModel.places_redundancy_rule.value">Sim</label>
-              <label class="pl-1"><input type="radio" name="placaRed" value="0" @change=updatePlacesRedundancy v-model="this.placesDataModel.places_redundancy_rule.value">Não</label>
+              <label class="pl-1"><input type="radio" name="placaRed" value="1" @change=updatePlacesRedundancy v-model="this.placesDataModel.places_redundancy_rule.value">{{ trans("geolocation.yes") }}</label>
+              <label class="pl-1"><input type="radio" name="placaRed" value="0" @change=updatePlacesRedundancy v-model="this.placesDataModel.places_redundancy_rule.value">{{ trans("geolocation.no") }}</label>
               
             </div>
           </div>
@@ -124,7 +134,7 @@ export default {
             <div class="col-lg-6">
               <div class="form-group">
                 <label>
-                  Provedor do serviço de redundância*
+                  {{ trans("geolocation.red_api_places_provider") }}*
                 </label>           
                 <v-select @input="selectPlaceRedundancyService" :options="placesOptions" label="name" v-model="placesProviderRedundancyRule"/>
               </div>
@@ -133,7 +143,7 @@ export default {
             <div class="col-lg-6">
               <div class="form-group">
                 <label>
-                  Chave de autenticação de redundância*
+                  {{ trans("geolocation.red_api_places_key") }}*
                 </label>
                 <input v-model=placesDataModel.places_key_redundancy.value type="text" class="form-control" />
               </div>
@@ -144,7 +154,7 @@ export default {
           <div v-show=placesProviderRedundancyRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                URL do servidor*
+                {{ trans("geolocation.red_api_places_url") }}*
               </label>           
               <input v-model=placesDataModel.places_url_redundancy.value type="text" class="form-control" />
             </div>
@@ -153,7 +163,7 @@ export default {
           <div v-show=placesProviderRedundancyRule.redundancy_id class="col-lg-6">
             <div class="form-group">
               <label>
-                ID da aplicação*
+                {{ trans("geolocation.red_api_places_id") }}*
               </label>
               <input v-model=placesDataModel.places_application_id_redundancy.value type="text" class="form-control" />
             </div>
@@ -167,7 +177,7 @@ export default {
             class="btn btn-success right"
             type="button"
           >
-            Salvar
+            {{ trans("geolocation.save") }}
           </button>
         </div>
        
