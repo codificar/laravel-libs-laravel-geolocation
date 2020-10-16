@@ -21,7 +21,9 @@ Vue.prototype.isEmpty = (obj) => {
 
 //Provider Company
 import teste from './pages/teste.vue';
-import GeoLocationSettings from './pages/Settings';
+import PlacesSettings from './pages/Settings/api_places.vue';
+import DirectionsSettings from './pages/Settings/api_directions.vue';
+import GeolocationSettings from './pages/Settings';
 // import AddressAutocomplete from './components/AddressAutocomplete';
 
 //Main vue instance
@@ -34,7 +36,9 @@ new Vue({
 
     components: {
         teste: teste,
-        geolocationsettings: GeoLocationSettings
+        placessettings: PlacesSettings,
+        directionssettings: DirectionsSettings,
+        geolocationsettings: GeolocationSettings
     },
 
     created: function () {

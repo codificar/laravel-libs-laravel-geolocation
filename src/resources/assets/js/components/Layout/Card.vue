@@ -8,15 +8,11 @@
         </div>
         <!--/ Content -->
         <div class="card-block">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="box box-warning">
-                <div class="box-header">
-                  <slot name="card-content-title"> </slot>
-                </div>
-                <slot name="card-content"> </slot>
-              </div>
+          <div class="box box-warning">
+            <div class="box-header">
+              <slot name="card-content-title"> </slot>
             </div>
+            <slot name="card-content"> </slot>
           </div>
         </div>
       </div>

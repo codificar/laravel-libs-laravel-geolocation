@@ -17,13 +17,11 @@
 	
 @section('content')
 	<div id="VueJs">
-		
-	<geolocationsettings
-        enum  = "{{ $enum }}"
-		model = "{{ $model }}"
-		place-save-route = "{{ URL::Route($enviroment.'GeolocationSettingSave') }}"
-    />
-	
+		<geolocationsettings
+			enum-data  = "{{ $enum }}"
+			model = "{{ $model }}"
+			place-save-route = "{{ URL::Route($enviroment.'GeolocationSettingSave') }}"
+		/>
 	</div>
 
 @stop
