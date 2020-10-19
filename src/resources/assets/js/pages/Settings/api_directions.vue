@@ -221,8 +221,8 @@ export default {
             <div class="form-check">            
               <label class="form-check-label pl-0"><h3 style="color: #54667a;">{{ trans("geolocation.enable_red") }}</h3> </label>
               
-              <label class="pl-1"><input type="radio" name="placaRed" value="1" @change=updateDirectionRedundancy v-model="directionsDataModel.directions_redundancy_rule.value">{{ trans("geolocation.yes") }}</label>
-              <label class="pl-1"><input type="radio" name="placaRed" value="0" @change=updateDirectionRedundancy v-model="directionsDataModel.directions_redundancy_rule.value">{{ trans("geolocation.no") }}</label>
+              <label class="pl-1"><input type="radio" name="radioDirections" value="1" @change=updateDirectionRedundancy v-model="directionsDataModel.directions_redundancy_rule.value">{{ trans("geolocation.yes") }}</label>
+              <label class="pl-1"><input type="radio" name="radioDirections" value="0" @change=updateDirectionRedundancy v-model="directionsDataModel.directions_redundancy_rule.value">{{ trans("geolocation.no") }}</label>
               
             </div>
           </div>

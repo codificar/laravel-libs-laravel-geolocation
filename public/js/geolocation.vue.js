@@ -34480,7 +34480,7 @@ var render = function() {
                     expression: "placesDataModel.places_redundancy_rule.value"
                   }
                 ],
-                attrs: { type: "radio", name: "placaRed", value: "1" },
+                attrs: { type: "radio", name: "radioPlaces", value: "1" },
                 domProps: {
                   checked: _vm._q(
                     _vm.placesDataModel.places_redundancy_rule.value,
@@ -34513,7 +34513,7 @@ var render = function() {
                     expression: "placesDataModel.places_redundancy_rule.value"
                   }
                 ],
-                attrs: { type: "radio", name: "placaRed", value: "0" },
+                attrs: { type: "radio", name: "radioPlaces", value: "0" },
                 domProps: {
                   checked: _vm._q(
                     _vm.placesDataModel.places_redundancy_rule.value,
@@ -35322,7 +35322,7 @@ var render = function() {
                       "directionsDataModel.directions_redundancy_rule.value"
                   }
                 ],
-                attrs: { type: "radio", name: "placaRed", value: "1" },
+                attrs: { type: "radio", name: "radioDirections", value: "1" },
                 domProps: {
                   checked: _vm._q(
                     _vm.directionsDataModel.directions_redundancy_rule.value,
@@ -35357,7 +35357,7 @@ var render = function() {
                       "directionsDataModel.directions_redundancy_rule.value"
                   }
                 ],
-                attrs: { type: "radio", name: "placaRed", value: "0" },
+                attrs: { type: "radio", name: "radioDirections", value: "0" },
                 domProps: {
                   checked: _vm._q(
                     _vm.directionsDataModel.directions_redundancy_rule.value,
