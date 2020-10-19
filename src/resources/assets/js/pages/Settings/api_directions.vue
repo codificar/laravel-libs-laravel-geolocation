@@ -155,10 +155,7 @@ export default {
    
     this.directionsDataModel = JSON.parse(this.model)   
     this.directionsOptions = optionsList.directions_provider
-
-    console.log("optionsList", optionsList);
-    console.log("this.directionsDataModel", this.directionsDataModel);
-    console.log("this.directionsOptions", this.directionsOptions);
+    
     //Set Selected Directions Provider
     const selectedDirectionProvider = this.directionsOptions.filter(objectData => objectData.value == this.directionsDataModel.directions_provider.value);
     if(selectedDirectionProvider.length > 0) this.selectDirectionService(selectedDirectionProvider[0]) 

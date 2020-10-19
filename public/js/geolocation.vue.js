@@ -35029,9 +35029,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               this.directionsDataModel = JSON.parse(this.model);
               this.directionsOptions = optionsList.directions_provider;
 
-              console.log("optionsList", optionsList);
-              console.log("this.directionsDataModel", this.directionsDataModel);
-              console.log("this.directionsOptions", this.directionsOptions);
               //Set Selected Directions Provider
               selectedDirectionProvider = this.directionsOptions.filter(function (objectData) {
                 return objectData.value == _this2.directionsDataModel.directions_provider.value;
@@ -35046,7 +35043,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
               if (selectedDirectionRedundancyProvider.length > 0) this.selectDirectionRedundancyService(selectedDirectionRedundancyProvider[0]);
 
-            case 10:
+            case 7:
             case "end":
               return _context2.stop();
           }
