@@ -242,4 +242,19 @@ class GeolocationSettings extends Settings {
 			return false;
 	}
 
+	/**
+	 * Obtém a regra de redundância de directions
+	 *
+	 * @return void
+	 */
+	public static function getDirectionsRedundancyRule()
+	{
+        $settings = self::where('key', 'directions_redundancy_rule')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
+			return false;
+	}
+
 }

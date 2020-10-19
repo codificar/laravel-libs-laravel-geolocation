@@ -2,8 +2,9 @@
 
 namespace Codificar\Geolocation\Lib;
 
-//Internal Uses
+//Internal uses
 use Codificar\Geolocation\Models\GeolocationSettings;
+use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
 class MapsPlacesHereLib implements IMapsPlaces {
 

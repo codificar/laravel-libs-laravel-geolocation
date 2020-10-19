@@ -4,6 +4,7 @@ namespace Codificar\Geolocation\Lib;
 
 //Internal Uses
 use Codificar\Geolocation\Models\GeolocationSettings;
+use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
     /**
      * Geolocation requests on Algolia Maps API

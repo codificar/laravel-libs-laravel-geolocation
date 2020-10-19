@@ -2,8 +2,9 @@
 
 namespace Codificar\Geolocation\Lib\Places;
 
-//Internal Uses
+//Internal uses
 use Codificar\Geolocation\Models\GeolocationSettings;
+use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
     /**
      * Geolocation requests on Google Maps API
