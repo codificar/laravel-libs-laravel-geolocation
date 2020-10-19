@@ -33925,9 +33925,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         places_key_redundancy: "",
         places_url_redundancy: "",
         places_application_id_redundancy: ""
-      },
-
-      enablePlacesRedundancy: false
+      }
     };
   },
 
@@ -34845,36 +34843,63 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   },
   data: function data() {
     return {
-      placesOptions: [],
-      placesProviderRule: {},
-      placesDataModel: {
-        places_provider_redundancy: "",
-        places_provider: "",
-        places_url: "",
+      directionsOptions: [],
+
+      directionsProviderRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
+
+      directionsProviderRedundancyRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
+      directionsDataModel: {
+        directions_provider: "",
+        directions_key: "",
+        directions_url: "",
         places_application_id: "",
 
-        places_redundancy_rule: "",
-        places_key: "",
-        places_key_redundancy: ""
-      },
-      enablePlacesRedundancy: false,
+        directions_redundancy_rule: "",
 
-      directionsOptions: []
+        directions_provider_redundancy: "",
+        directions_key_redundancy: "",
+        directions_url_redundancy: "",
+        places_application_id_redundancy: ""
+      },
+
+      directionsDataErrors: {
+        directions_provider: "",
+        directions_key: "",
+        directions_url: "",
+        places_application_id: "",
+
+        directions_redundancy_rule: "",
+
+        directions_provider_redundancy: "",
+        directions_key_redundancy: "",
+        directions_url_redundancy: "",
+        places_application_id_redundancy: ""
+      }
     };
   },
 
   methods: {
-    selectPlaceService: function selectPlaceService(selectedData) {
-      this.placesProviderRule = selectedData;
-      this.placesDataModel.places_provider.value = selectedData.value;
-      console.log("this.placesProviderRule", this.placesProviderRule);
+    selectDirectionService: function selectDirectionService(selectedData) {
+      this.directionsProviderRule = selectedData;
+      this.directionsDataModel.directions_provider.value = selectedData.value;
     },
-    selectPlaceRedundancyService: function selectPlaceRedundancyService(selectedData) {
-      this.placesDataModel.places_provider_redundancy.value = selectedData.value;
+    selectDirectionRedundancyService: function selectDirectionRedundancyService(selectedData) {
+      this.directionsProviderRedundancyRule = selectedData;
+      this.directionsDataModel.directions_provider_redundancy.value = selectedData.value;
     },
-    updatePlacesRedundancy: function updatePlacesRedundancy(checkedValue) {
+    updateDirectionRedundancy: function updateDirectionRedundancy(checkedValue) {
       var value = checkedValue.target.value;
-      this.placesDataModel.places_redundancy_rule.value = value;
+      this.directionsDataModel.directions_redundancy_rule.value = value;
     },
     savePlaces: function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
@@ -34885,17 +34910,39 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                //Format Data in Array
-                arrayDataModel = Object.keys(this.placesDataModel).map(function (key) {
-                  return _this.placesDataModel[key];
-                });
-                _context.next = 3;
-                return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.placeSaveRoute, arrayDataModel);
+                if (this.validate(this.directionsDataModel)) {
+                  _context.next = 4;
+                  break;
+                }
 
-              case 3:
-                response = _context.sent;
+                this.$toasted.show("Preencha todos os campo obrigatorios", {
+                  theme: "bubble",
+                  type: "error",
+                  position: "bottom-center",
+                  duration: 3000
+                });
+                _context.next = 10;
+                break;
 
               case 4:
+                arrayDataModel = Object.keys(this.directionsDataModel).map(function (key) {
+                  return _this.directionsDataModel[key];
+                });
+                _context.next = 7;
+                return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.placeSaveRoute, arrayDataModel);
+
+              case 7:
+                response = _context.sent;
+
+                this.$toasted.show("Salvo com sucesso", {
+                  theme: "bubble",
+                  type: "success",
+                  position: "bottom-center",
+                  duration: 3000
+                });
+                this.cleanErrors();
+
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -34908,22 +34955,98 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       }
 
       return savePlaces;
-    }()
+    }(),
+    cleanErrors: function cleanErrors() {
+      this.directionsDataErrors = {
+        directions_provider: "",
+        directions_key: "",
+        directions_url: "",
+        places_application_id: "",
+
+        directions_redundancy_rule: "",
+
+        directions_provider_redundancy: "",
+        directions_key_redundancy: "",
+        directions_url_redundancy: "",
+        places_application_id_redundancy: ""
+      };
+    },
+    validate: function validate(data) {
+      var isValid = true;
+      if (this.directionsDataModel.directions_key.value == null || this.directionsDataModel.directions_key.value.trim() == "") {
+        isValid = false;
+        this.directionsDataErrors.directions_key = "Preencha este campo";
+      }
+      if (this.directionsDataModel.directions_provider.value == null || this.directionsDataModel.directions_provider.value.trim() == "") {
+        isValid = false;
+        this.directionsDataErrors.directions_provider = "Preencha este campo";
+      }
+
+      if ((this.directionsDataModel.directions_url.value == null || this.directionsDataModel.directions_url.value.trim() == "") && this.directionsProviderRule.redundancy_url) {
+        isValid = false;
+        this.directionsDataErrors.directions_url = "Preencha este campo";
+      }
+      if ((this.directionsDataModel.places_application_id.value == null || this.directionsDataModel.places_application_id.value.trim() == "") && this.directionsProviderRule.redundancy_id) {
+        isValid = false;
+        this.directionsDataErrors.places_application_id = "Preencha este campo";
+      }
+
+      if (this.directionsDataModel.directions_redundancy_rule.value == 1) {
+        if (this.directionsDataModel.directions_key_redundancy.value == null || this.directionsDataModel.directions_key_redundancy.value.trim() == "") {
+          isValid = false;
+          this.directionsDataErrors.directions_key_redundancy = "Preencha este campo";
+        }
+        if (this.directionsDataModel.directions_provider_redundancy.value == null || this.directionsDataModel.directions_provider_redundancy.value.trim() == "") {
+          isValid = false;
+          this.directionsDataErrors.directions_provider_redundancy = "Preencha este campo";
+        }
+
+        if ((this.directionsDataModel.directions_url_redundancy.value == null || this.directionsDataModel.directions_url_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_url) {
+          isValid = false;
+          this.directionsDataErrors.directions_url_redundancy = "Preencha este campo";
+        }
+        if ((this.directionsDataModel.places_application_id_redundancy.value == null || this.directionsDataModel.places_application_id_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_id) {
+          isValid = false;
+          this.directionsDataErrors.places_application_id_redundancy = "Preencha este campo";
+        }
+      }
+
+      return isValid;
+    }
   },
   mounted: function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
-      var optionsList;
+      var _this2 = this;
+
+      var optionsList, selectedDirectionProvider, selectedDirectionRedundancyProvider;
       return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               optionsList = JSON.parse(this.enumData);
 
-              this.placesDataModel = JSON.parse(this.model);
-              this.directionsOptions = optionsList.directions_provider;
-              this.placesOptions = optionsList.places_provider;
 
-            case 4:
+              this.directionsDataModel = JSON.parse(this.model);
+              this.directionsOptions = optionsList.directions_provider;
+
+              console.log("optionsList", optionsList);
+              console.log("this.directionsDataModel", this.directionsDataModel);
+              console.log("this.directionsOptions", this.directionsOptions);
+              //Set Selected Directions Provider
+              selectedDirectionProvider = this.directionsOptions.filter(function (objectData) {
+                return objectData.value == _this2.directionsDataModel.directions_provider.value;
+              });
+
+              if (selectedDirectionProvider.length > 0) this.selectDirectionService(selectedDirectionProvider[0]);
+
+              //Set Selected Redundancy Place Provider
+              selectedDirectionRedundancyProvider = this.directionsOptions.filter(function (objectData) {
+                return objectData.value == _this2.directionsDataModel.directions_provider_redundancy.value;
+              });
+
+              if (selectedDirectionRedundancyProvider.length > 0) this.selectDirectionRedundancyService(selectedDirectionRedundancyProvider[0]);
+
+            case 10:
             case "end":
               return _context2.stop();
           }
@@ -34955,7 +35078,7 @@ var render = function() {
         attrs: { slot: "card-title" },
         slot: "card-title"
       },
-      [_vm._v("API Places")]
+      [_vm._v(_vm._s(_vm.trans("geolocation.api_places")))]
     ),
     _vm._v(" "),
     _c("h3", {
@@ -34972,13 +35095,33 @@ var render = function() {
             { staticClass: "form-group" },
             [
               _c("label", [
-                _vm._v("\n              Provedor do serviços*\n            ")
+                _vm._v(
+                  "\n              " +
+                    _vm._s(_vm.trans("geolocation.api_directions_provider")) +
+                    "*\n            "
+                )
               ]),
               _vm._v(" "),
               _c("v-select", {
-                attrs: { options: _vm.placesOptions, label: "name" },
-                on: { input: _vm.selectPlaceService }
-              })
+                attrs: { options: _vm.directionsOptions, label: "name" },
+                on: { input: _vm.selectDirectionService },
+                model: {
+                  value: _vm.directionsProviderRule,
+                  callback: function($$v) {
+                    _vm.directionsProviderRule = $$v
+                  },
+                  expression: "directionsProviderRule"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "help-block with-errors",
+                  staticStyle: { color: "red" }
+                },
+                [_vm._v(_vm._s(_vm.directionsDataErrors.directions_provider))]
+              )
             ],
             1
           )
@@ -34987,7 +35130,11 @@ var render = function() {
         _c("div", { staticClass: "col-lg-6" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", [
-              _vm._v("\n              Chave de autenticação*\n            ")
+              _vm._v(
+                "\n              " +
+                  _vm._s(_vm.trans("geolocation.api_directions_key")) +
+                  "*\n            "
+              )
             ]),
             _vm._v(" "),
             _c("input", {
@@ -34995,26 +35142,35 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.placesDataModel.places_key.value,
-                  expression: "placesDataModel.places_key.value"
+                  value: _vm.directionsDataModel.directions_key.value,
+                  expression: "directionsDataModel.directions_key.value"
                 }
               ],
               staticClass: "form-control",
               attrs: { type: "text" },
-              domProps: { value: _vm.placesDataModel.places_key.value },
+              domProps: { value: _vm.directionsDataModel.directions_key.value },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
                   _vm.$set(
-                    _vm.placesDataModel.places_key,
+                    _vm.directionsDataModel.directions_key,
                     "value",
                     $event.target.value
                   )
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "help-block with-errors",
+                staticStyle: { color: "red" }
+              },
+              [_vm._v(_vm._s(_vm.directionsDataErrors.directions_key))]
+            )
           ])
         ])
       ]),
@@ -35027,8 +35183,8 @@ var render = function() {
               {
                 name: "show",
                 rawName: "v-show",
-                value: _vm.placesProviderRule.redundancy_url,
-                expression: "placesProviderRule.redundancy_url"
+                value: _vm.directionsProviderRule.redundancy_url,
+                expression: "directionsProviderRule.redundancy_url"
               }
             ],
             staticClass: "col-lg-6"
@@ -35036,7 +35192,11 @@ var render = function() {
           [
             _c("div", { staticClass: "form-group" }, [
               _c("label", [
-                _vm._v("\n              URL do servidor*\n            ")
+                _vm._v(
+                  "\n              " +
+                    _vm._s(_vm.trans("geolocation.api_directions_url")) +
+                    "*\n            "
+                )
               ]),
               _vm._v(" "),
               _c("input", {
@@ -35044,26 +35204,37 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.placesDataModel.places_url.value,
-                    expression: "placesDataModel.places_url.value"
+                    value: _vm.directionsDataModel.directions_url.value,
+                    expression: "directionsDataModel.directions_url.value"
                   }
                 ],
                 staticClass: "form-control",
                 attrs: { type: "text" },
-                domProps: { value: _vm.placesDataModel.places_url.value },
+                domProps: {
+                  value: _vm.directionsDataModel.directions_url.value
+                },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
                     _vm.$set(
-                      _vm.placesDataModel.places_url,
+                      _vm.directionsDataModel.directions_url,
                       "value",
                       $event.target.value
                     )
                   }
                 }
-              })
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "help-block with-errors",
+                  staticStyle: { color: "red" }
+                },
+                [_vm._v(_vm._s(_vm.directionsDataErrors.directions_url))]
+              )
             ])
           ]
         ),
@@ -35075,8 +35246,8 @@ var render = function() {
               {
                 name: "show",
                 rawName: "v-show",
-                value: _vm.placesProviderRule.redundancy_id,
-                expression: "placesProviderRule.redundancy_id"
+                value: _vm.directionsProviderRule.redundancy_id,
+                expression: "directionsProviderRule.redundancy_id"
               }
             ],
             staticClass: "col-lg-6"
@@ -35084,7 +35255,11 @@ var render = function() {
           [
             _c("div", { staticClass: "form-group" }, [
               _c("label", [
-                _vm._v("\n              ID da aplicação*\n            ")
+                _vm._v(
+                  "\n              " +
+                    _vm._s(_vm.trans("geolocation.api_places_id")) +
+                    "*\n            "
+                )
               ]),
               _vm._v(" "),
               _c("input", {
@@ -35092,14 +35267,15 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.placesDataModel.places_application_id.value,
-                    expression: "placesDataModel.places_application_id.value"
+                    value: _vm.directionsDataModel.places_application_id.value,
+                    expression:
+                      "directionsDataModel.places_application_id.value"
                   }
                 ],
                 staticClass: "form-control",
                 attrs: { type: "text" },
                 domProps: {
-                  value: _vm.placesDataModel.places_application_id.value
+                  value: _vm.directionsDataModel.places_application_id.value
                 },
                 on: {
                   input: function($event) {
@@ -35107,13 +35283,22 @@ var render = function() {
                       return
                     }
                     _vm.$set(
-                      _vm.placesDataModel.places_application_id,
+                      _vm.directionsDataModel.places_application_id,
                       "value",
                       $event.target.value
                     )
                   }
                 }
-              })
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "help-block with-errors",
+                  staticStyle: { color: "red" }
+                },
+                [_vm._v(_vm._s(_vm.directionsDataErrors.places_application_id))]
+              )
             ])
           ]
         )
@@ -35123,34 +35308,85 @@ var render = function() {
         _c("div", { staticClass: "col-lg-12" }, [
           _c("div", { staticClass: "form-check" }, [
             _c("label", { staticClass: "form-check-label pl-0" }, [
-              _c("h3", [_vm._v("Habilitar redundância na consulta ?")])
+              _c("h3", { staticStyle: { color: "#54667a" } }, [
+                _vm._v(_vm._s(_vm.trans("geolocation.enable_red")))
+              ])
             ]),
             _vm._v(" "),
             _c("label", { staticClass: "pl-1" }, [
               _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value:
+                      _vm.directionsDataModel.directions_redundancy_rule.value,
+                    expression:
+                      "directionsDataModel.directions_redundancy_rule.value"
+                  }
+                ],
                 attrs: { type: "radio", name: "placaRed", value: "1" },
-                on: { change: _vm.updatePlacesRedundancy }
+                domProps: {
+                  checked: _vm._q(
+                    _vm.directionsDataModel.directions_redundancy_rule.value,
+                    "1"
+                  )
+                },
+                on: {
+                  change: [
+                    function($event) {
+                      return _vm.$set(
+                        _vm.directionsDataModel.directions_redundancy_rule,
+                        "value",
+                        "1"
+                      )
+                    },
+                    _vm.updateDirectionRedundancy
+                  ]
+                }
               }),
-              _vm._v("Sim")
+              _vm._v(_vm._s(_vm.trans("geolocation.yes")))
             ]),
             _vm._v(" "),
             _c("label", { staticClass: "pl-1" }, [
               _c("input", {
-                attrs: {
-                  type: "radio",
-                  name: "placaRed",
-                  checked: "",
-                  value: "0"
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value:
+                      _vm.directionsDataModel.directions_redundancy_rule.value,
+                    expression:
+                      "directionsDataModel.directions_redundancy_rule.value"
+                  }
+                ],
+                attrs: { type: "radio", name: "placaRed", value: "0" },
+                domProps: {
+                  checked: _vm._q(
+                    _vm.directionsDataModel.directions_redundancy_rule.value,
+                    "0"
+                  )
                 },
-                on: { change: _vm.updatePlacesRedundancy }
+                on: {
+                  change: [
+                    function($event) {
+                      return _vm.$set(
+                        _vm.directionsDataModel.directions_redundancy_rule,
+                        "value",
+                        "0"
+                      )
+                    },
+                    _vm.updateDirectionRedundancy
+                  ]
+                }
               }),
-              _vm._v("Não")
+              _vm._v(_vm._s(_vm.trans("geolocation.no")))
             ])
           ])
         ])
       ]),
       _vm._v(" "),
-      _vm.placesDataModel.places_redundancy_rule.value == 1
+      _vm.directionsDataModel.directions_redundancy_rule.value == 1
         ? _c("div", [
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-lg-6" }, [
@@ -35160,14 +35396,41 @@ var render = function() {
                   [
                     _c("label", [
                       _vm._v(
-                        "\n                Provedor do serviço de redundância*\n              "
+                        "\n                " +
+                          _vm._s(
+                            _vm.trans("geolocation.red_api_directions_provider")
+                          ) +
+                          "*\n              "
                       )
                     ]),
                     _vm._v(" "),
                     _c("v-select", {
-                      attrs: { options: _vm.placesOptions, label: "name" },
-                      on: { input: _vm.selectPlaceRedundancyService }
-                    })
+                      attrs: { options: _vm.directionsOptions, label: "name" },
+                      on: { input: _vm.selectDirectionRedundancyService },
+                      model: {
+                        value: _vm.directionsProviderRedundancyRule,
+                        callback: function($$v) {
+                          _vm.directionsProviderRedundancyRule = $$v
+                        },
+                        expression: "directionsProviderRedundancyRule"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "help-block with-errors",
+                        staticStyle: { color: "red" }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(
+                            _vm.directionsDataErrors
+                              .directions_provider_redundancy
+                          )
+                        )
+                      ]
+                    )
                   ],
                   1
                 )
@@ -35177,7 +35440,11 @@ var render = function() {
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", [
                     _vm._v(
-                      "\n                Chave de autenticação de redundância*\n              "
+                      "\n                " +
+                        _vm._s(
+                          _vm.trans("geolocation.red_api_directions_key")
+                        ) +
+                        "*\n              "
                     )
                   ]),
                   _vm._v(" "),
@@ -35186,15 +35453,18 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.placesDataModel.places_key_redundancy.value,
+                        value:
+                          _vm.directionsDataModel.directions_key_redundancy
+                            .value,
                         expression:
-                          "placesDataModel.places_key_redundancy.value"
+                          "directionsDataModel.directions_key_redundancy.value"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: { type: "text" },
                     domProps: {
-                      value: _vm.placesDataModel.places_key_redundancy.value
+                      value:
+                        _vm.directionsDataModel.directions_key_redundancy.value
                     },
                     on: {
                       input: function($event) {
@@ -35202,15 +35472,110 @@ var render = function() {
                           return
                         }
                         _vm.$set(
-                          _vm.placesDataModel.places_key_redundancy,
+                          _vm.directionsDataModel.directions_key_redundancy,
                           "value",
                           $event.target.value
                         )
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "help-block with-errors",
+                      staticStyle: { color: "red" }
+                    },
+                    [
+                      _vm._v(
+                        _vm._s(
+                          _vm.directionsDataErrors.directions_key_redundancy
+                        )
+                      )
+                    ]
+                  )
                 ])
               ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        _vm.directionsProviderRedundancyRule.redundancy_url,
+                      expression:
+                        "directionsProviderRedundancyRule.redundancy_url"
+                    }
+                  ],
+                  staticClass: "col-lg-6"
+                },
+                [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", [
+                      _vm._v(
+                        "\n              " +
+                          _vm._s(
+                            _vm.trans("geolocation.red_api_directions_url")
+                          ) +
+                          "*\n            "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value:
+                            _vm.directionsDataModel.directions_url_redundancy
+                              .value,
+                          expression:
+                            "directionsDataModel.directions_url_redundancy.value"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text" },
+                      domProps: {
+                        value:
+                          _vm.directionsDataModel.directions_url_redundancy
+                            .value
+                      },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.directionsDataModel.directions_url_redundancy,
+                            "value",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "help-block with-errors",
+                        staticStyle: { color: "red" }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(
+                            _vm.directionsDataErrors.directions_url_redundancy
+                          )
+                        )
+                      ]
+                    )
+                  ])
+                ]
+              )
             ])
           ])
         : _vm._e(),
@@ -35223,7 +35588,13 @@ var render = function() {
             attrs: { type: "button" },
             on: { click: _vm.savePlaces }
           },
-          [_vm._v("\n          Salvar\n        ")]
+          [
+            _vm._v(
+              "\n          " +
+                _vm._s(_vm.trans("geolocation.save")) +
+                "\n        "
+            )
+          ]
         )
       ])
     ])

@@ -8,55 +8,170 @@ export default {
   },
   data() {
     return {     
-      placesOptions: [],
-      placesProviderRule: {},
-      placesDataModel: {
-        places_provider_redundancy: "",
-        places_provider: "",
-        places_url: "",
-        places_application_id: "",
-
-
-        places_redundancy_rule: "",
-        places_key: "",
-        places_key_redundancy: ""
-      },    
-      enablePlacesRedundancy: false,
-
-      
       directionsOptions: [],
+
+      directionsProviderRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
+
+      directionsProviderRedundancyRule: {
+        name: "",
+        redundancy_id: false,
+        redundancy_url: false,
+        value: ""
+      },
+      directionsDataModel: {
+        directions_provider: "",
+        directions_key: "",
+        directions_url: "",
+        places_application_id: "",      
+
+        directions_redundancy_rule: "",
+
+        directions_provider_redundancy: "",       
+        directions_key_redundancy: "",
+        directions_url_redundancy: "",
+        places_application_id_redundancy: ""
+      },  
+      
+      directionsDataErrors: {
+        directions_provider: "",
+        directions_key: "",
+        directions_url: "",
+        places_application_id: "",      
+
+        directions_redundancy_rule: "",
+
+        directions_provider_redundancy: "",       
+        directions_key_redundancy: "",
+        directions_url_redundancy: "",
+        places_application_id_redundancy: ""
+      },  
     };
   },
   methods: {
-    selectPlaceService(selectedData){
-      this.placesProviderRule = selectedData
-      this.placesDataModel.places_provider.value = selectedData.value
-      console.log("this.placesProviderRule", this.placesProviderRule);
+    selectDirectionService(selectedData){
+      this.directionsProviderRule = selectedData
+      this.directionsDataModel.directions_provider.value = selectedData.value
     },
-    selectPlaceRedundancyService(selectedData){
-      this.placesDataModel.places_provider_redundancy.value = selectedData.value
+    selectDirectionRedundancyService(selectedData){
+      this.directionsProviderRedundancyRule = selectedData
+      this.directionsDataModel.directions_provider_redundancy.value = selectedData.value
     },
-    updatePlacesRedundancy(checkedValue){
+    updateDirectionRedundancy(checkedValue){
       const value = checkedValue.target.value;
-      this.placesDataModel.places_redundancy_rule.value = value
+      this.directionsDataModel.directions_redundancy_rule.value = value
     },
     async savePlaces(){
       //Format Data in Array
-      let arrayDataModel = Object.keys(this.placesDataModel).map(key => this.placesDataModel[key]);
-      const response = await axios.post(this.placeSaveRoute, arrayDataModel)      
+      if(!this.validate(this.directionsDataModel)){
+        this.$toasted.show(
+        "Preencha todos os campo obrigatorios", 
+          { 
+            theme: "bubble", 
+            type: "error" ,
+            position: "bottom-center", 
+            duration : 3000
+          }
+        );
+      }else{
+        let arrayDataModel = Object.keys(this.directionsDataModel).map(key => this.directionsDataModel[key]);
+        const response = await axios.post(this.placeSaveRoute, arrayDataModel)     
+        this.$toasted.show(
+        "Salvo com sucesso", 
+          { 
+            theme: "bubble", 
+            type: "success" ,
+            position: "bottom-center", 
+            duration : 3000
+          }
+        ); 
+        this.cleanErrors()
+      }      
+    },
+    cleanErrors(){
+       this.directionsDataErrors = {
+        directions_provider: "",
+        directions_key: "",
+        directions_url: "",
+        places_application_id: "",      
+
+        directions_redundancy_rule: "",
+
+        directions_provider_redundancy: "",       
+        directions_key_redundancy: "",
+        directions_url_redundancy: "",
+        places_application_id_redundancy: ""
+      } 
+    },
+    validate(data){
+      let isValid = true
+      if(this.directionsDataModel.directions_key.value == null || this.directionsDataModel.directions_key.value.trim() == ""){
+        isValid = false
+        this.directionsDataErrors.directions_key = "Preencha este campo"
+      } 
+      if(this.directionsDataModel.directions_provider.value == null || this.directionsDataModel.directions_provider.value.trim() == ""){
+        isValid = false
+        this.directionsDataErrors.directions_provider = "Preencha este campo"
+      } 
+
+      if((this.directionsDataModel.directions_url.value == null || this.directionsDataModel.directions_url.value.trim() == "") && this.directionsProviderRule.redundancy_url){
+        isValid = false
+        this.directionsDataErrors.directions_url = "Preencha este campo"
+      }
+      if((this.directionsDataModel.places_application_id.value == null || this.directionsDataModel.places_application_id.value.trim() == "") && this.directionsProviderRule.redundancy_id){
+        isValid = false
+        this.directionsDataErrors.places_application_id = "Preencha este campo"
+      } 
+     
+      if(this.directionsDataModel.directions_redundancy_rule.value == 1){
+        if(this.directionsDataModel.directions_key_redundancy.value == null || this.directionsDataModel.directions_key_redundancy.value.trim() == ""){
+          isValid = false
+          this.directionsDataErrors.directions_key_redundancy = "Preencha este campo"
+        } 
+        if(this.directionsDataModel.directions_provider_redundancy.value == null || this.directionsDataModel.directions_provider_redundancy.value.trim() == ""){
+          isValid = false
+          this.directionsDataErrors.directions_provider_redundancy = "Preencha este campo"
+        } 
+
+        if((this.directionsDataModel.directions_url_redundancy.value == null || this.directionsDataModel.directions_url_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_url){
+          isValid = false
+          this.directionsDataErrors.directions_url_redundancy = "Preencha este campo"
+        }
+        if((this.directionsDataModel.places_application_id_redundancy.value == null || this.directionsDataModel.places_application_id_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_id){
+          isValid = false
+          this.directionsDataErrors.places_application_id_redundancy = "Preencha este campo"
+        } 
+      }
+      
+      return isValid        
     }
   },
-  async mounted() {
+  async mounted() {   
     const optionsList = JSON.parse(this.enumData)
-    this.placesDataModel = JSON.parse(this.model)
+   
+    this.directionsDataModel = JSON.parse(this.model)   
     this.directionsOptions = optionsList.directions_provider
-    this.placesOptions = optionsList.places_provider
+
+    console.log("optionsList", optionsList);
+    console.log("this.directionsDataModel", this.directionsDataModel);
+    console.log("this.directionsOptions", this.directionsOptions);
+    //Set Selected Directions Provider
+    const selectedDirectionProvider = this.directionsOptions.filter(objectData => objectData.value == this.directionsDataModel.directions_provider.value);
+    if(selectedDirectionProvider.length > 0) this.selectDirectionService(selectedDirectionProvider[0]) 
+
+    //Set Selected Redundancy Place Provider
+    const selectedDirectionRedundancyProvider = this.directionsOptions.filter(objectData => objectData.value == this.directionsDataModel.directions_provider_redundancy.value);
+    if(selectedDirectionRedundancyProvider.length > 0) this.selectDirectionRedundancyService(selectedDirectionRedundancyProvider[0]) 
   },
 };
 </script>
 <template>
   <Card>
-    <h4 slot="card-title" class="m-b-0 text-white">API Places</h4>
+    <h4 slot="card-title" class="m-b-0 text-white">{{ trans("geolocation.api_places") }}</h4>
 
     <h3 slot="card-content-title" class="box-title"></h3>
       <div slot="card-content">
@@ -64,38 +179,42 @@ export default {
           <div class="col-lg-6">
             <div class="form-group">
               <label>
-                Provedor do serviços*
+                {{ trans("geolocation.api_directions_provider") }}*
               </label>           
-              <v-select @input="selectPlaceService" :options="placesOptions" label="name"/>
+              <v-select @input="selectDirectionService" :options="directionsOptions" label="name"  v-model="directionsProviderRule"/>
+              <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_provider}}</div>	
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
               <label>
-                Chave de autenticação*
+                {{ trans("geolocation.api_directions_key") }}*
               </label>
-              <input v-model=placesDataModel.places_key.value type="text" class="form-control" />
+              <input v-model=directionsDataModel.directions_key.value type="text" class="form-control" />
+              <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_key}}</div>	
             </div>
           </div>
         </div>
 
-         <div class="row">
-          <div v-show=placesProviderRule.redundancy_url class="col-lg-6">
+        <div class="row">
+          <div v-show=directionsProviderRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                URL do servidor*
+                {{ trans("geolocation.api_directions_url") }}*
               </label>           
-              <input v-model=placesDataModel.places_url.value type="text" class="form-control" />
+              <input v-model=directionsDataModel.directions_url.value type="text" class="form-control" />
+              <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url}}</div>	
             </div>
           </div>
 
-          <div v-show=placesProviderRule.redundancy_id class="col-lg-6">
+          <div v-show=directionsProviderRule.redundancy_id class="col-lg-6">
             <div class="form-group">
               <label>
-                ID da aplicação*
+                {{ trans("geolocation.api_places_id") }}*
               </label>
-              <input v-model=placesDataModel.places_application_id.value type="text" class="form-control" />
+              <input v-model=directionsDataModel.places_application_id.value type="text" class="form-control" />
+              <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.places_application_id}}</div>	
             </div>
           </div>
         </div>
@@ -103,35 +222,50 @@ export default {
         <div class="row">
           <div class="col-lg-12">
             <div class="form-check">            
-              <label class="form-check-label pl-0"><h3>Habilitar redundância na consulta ?</h3> </label>
+              <label class="form-check-label pl-0"><h3 style="color: #54667a;">{{ trans("geolocation.enable_red") }}</h3> </label>
               
-              <label class="pl-1"><input type="radio" name="placaRed" value="1" @change=updatePlacesRedundancy>Sim</label>
-              <label class="pl-1"><input type="radio" name="placaRed" checked value="0" @change=updatePlacesRedundancy>Não</label>
+              <label class="pl-1"><input type="radio" name="placaRed" value="1" @change=updateDirectionRedundancy v-model="directionsDataModel.directions_redundancy_rule.value">{{ trans("geolocation.yes") }}</label>
+              <label class="pl-1"><input type="radio" name="placaRed" value="0" @change=updateDirectionRedundancy v-model="directionsDataModel.directions_redundancy_rule.value">{{ trans("geolocation.no") }}</label>
               
             </div>
           </div>
         </div>
-        <!-- Placed redundancy -->
-        <div v-if="placesDataModel.places_redundancy_rule.value == 1">
+        <!-- Directions redundancy -->
+        <div v-if="directionsDataModel.directions_redundancy_rule.value == 1">
           <div class="row">
             <div class="col-lg-6">
               <div class="form-group">
                 <label>
-                  Provedor do serviço de redundância*
+                  {{ trans("geolocation.red_api_directions_provider") }}*
                 </label>           
-                <v-select @input="selectPlaceRedundancyService" :options="placesOptions" label="name"/>
+                <v-select @input="selectDirectionRedundancyService" :options="directionsOptions" label="name" v-model="directionsProviderRedundancyRule"/>
+                <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_provider_redundancy}}</div>	
               </div>
             </div>
 
             <div class="col-lg-6">
               <div class="form-group">
                 <label>
-                  Chave de autenticação de redundância*
+                  {{ trans("geolocation.red_api_directions_key") }}*
                 </label>
-                <input v-model=placesDataModel.places_key_redundancy.value type="text" class="form-control" />
+                <input v-model=directionsDataModel.directions_key_redundancy.value type="text" class="form-control" />
+                <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_key_redundancy}}</div>	
               </div>
             </div>
           </div>
+
+          <div class="row">
+          <div v-show=directionsProviderRedundancyRule.redundancy_url class="col-lg-6">
+            <div class="form-group">
+              <label>
+                {{ trans("geolocation.red_api_directions_url") }}*
+              </label>           
+              <input v-model=directionsDataModel.directions_url_redundancy.value type="text" class="form-control" />
+              <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url_redundancy}}</div>	
+            </div>
+          </div>
+
+        </div>
         </div>
 
         <div class="box-footer pull-right">
@@ -140,7 +274,7 @@ export default {
             class="btn btn-success right"
             type="button"
           >
-            Salvar
+            {{ trans("geolocation.save") }}
           </button>
         </div>
        

@@ -49,9 +49,7 @@ export default {
         places_key_redundancy: "",
         places_url_redundancy: "",
         places_application_id_redundancy: ""
-      },  
-      
-      enablePlacesRedundancy: false
+      }
     };
   },
   methods: {
