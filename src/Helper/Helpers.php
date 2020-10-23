@@ -23,3 +23,12 @@ function convert_to_minutes($response_time){
 
 	return $time_in_Minutes;
 }
+
+function convert_to_miliseconds_to_minutes($response_time){
+	if (isset($response_time))
+		$time_in_Minutes = ($response_time / 60000);
+	else
+		$time_in_Minutes = 0;
+
+	return $time_in_Minutes;
+}

@@ -18,7 +18,7 @@ use GeometryLibrary\PolyUtil;
         /**
          * @var String  $url_api URL to access API
          */
-        private $url_api = "https://maps.flightmap.io/api/directions";
+        private $url_api = "https://maps.flightmap.io/api/";
 
         /**
          * @var String  $directions_key_api Key of API authentication
@@ -46,7 +46,7 @@ use GeometryLibrary\PolyUtil;
         }
 
         /**
-         * Gets and calculate distance on Google Maps
+         * Gets and calculate distance on Flight Map
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -80,7 +80,7 @@ use GeometryLibrary\PolyUtil;
         }
 
         /**
-         * Gets and calculate distance and duration on Google Maps
+         * Gets and calculate distance and duration on Flight Map
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -96,28 +96,34 @@ use GeometryLibrary\PolyUtil;
                 return array('success' => false);
             }
 
-            $curl_string = $this->url_api . "/directions/json?origin=" . $source_lat . "," . $source_long . "&destination=" . $dest_lat . "," . $dest_long . "&key=" . $this->directions_key_api . "";
-            $php_obj = self::curlCall($curl_string);
-            $response_obj = json_decode($php_obj);
+            
+            $points = '[{"lat":"'.$source_lat.'","lng":"'.$source_long.'"},{"lat":"'.$dest_lat.'","lng":"'.$dest_long.'"}]';
+            
+            $params         =   array(
+                "fm_token"       =>  $this->directions_key_api,
+                "points"  =>  $points,
+                "driving_mode"  =>  'car',
+            );
 
-            if($response_obj->status && $response_obj->status == 'OK')
-            {
-                $dist = convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value);
-                $time_in_minutes = convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value);
+            $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
+            $php_obj        =   self::curlCall($curl_string);
+            $response_obj   =   json_decode($php_obj);
+            
+            if($response_obj->status == 200 && $response_obj->message == 'Successful')
+            {                     
+                $values = $this->formatDistanceTimeText($response_obj);
 
-                $distance_text = number_format(convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value),1) . " " . self::$unit_text;
-                $duration_text = ceil(convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value)) . " " . trans("api.minutes");
-
-                return array('success' => true, 'data' => [ 'distance' => $dist, 'time_in_minutes' => $time_in_minutes, 'distance_text' => $distance_text, 'duration_text' => $duration_text ]);
+                return array('success' => true, 'data' => [ 'distance' => $values['convertDist'], 'time_in_minutes' => $values['convertTime'], 
+                'distance_text' => $values['distance_text'], 'duration_text' => $values['duration_text'] ]);
             }
             else
             {
                 return array('success' => false);
             }
-        }
+        }       
 
         /**
-         * Return intermediaries multiple points in the route using Google Maps
+         * Return intermediaries multiple points in the route using Flight Map
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -133,13 +139,21 @@ use GeometryLibrary\PolyUtil;
                 return false;
             }
 
-            $curl_string = $this->url_api . "/directions/json?origin=" . $source_lat . "," . $source_long . "&destination=" . $dest_lat . "," . $dest_long . "&key=" . $this->directions_key_api . "";
+            $points = '[{"lat":"'.$source_lat.'","lng":"'.$source_long.'"},{"lat":"'.$dest_lat.'","lng":"'.$dest_long.'"}]';
+            
+            $params         =   array(
+                "fm_token"       =>  $this->directions_key_api,
+                "points"  =>  $points,
+                "driving_mode"  =>  'car',
+            );
 
+            $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
+           
             return self::polylineProcess($curl_string);
         }
 
         /**
-         * Return intermediaries multiple points in the route using Google Maps
+         * Return intermediaries multiple points in the route using Flight Map
          *
          * @param String       $source_address         String that represents the starting address of the request.
          * @param String       $destination_address    String that represents the destination address of the request.
@@ -216,11 +230,12 @@ use GeometryLibrary\PolyUtil;
         private static function polylineProcess($curl_string)
         {
             $php_obj = self::curlCall($curl_string);
-            $response_obj = json_decode($php_obj, true);
-
-            if($response_obj['status'] && $response_obj['status'] == 'OK')
-            {
-                $polyline['points'] = $response_obj['routes'][0]['overview_polyline']['points'];
+            $response_obj = json_decode($php_obj);
+           
+            if($response_obj->status == 200 && $response_obj->message == 'Successful')
+            {                            
+                $originalPoints = $response_obj->data->paths[0]->points;
+                $polyline['points'] = $originalPoints;
 
                 $needle = metaphone('points');
 
@@ -240,18 +255,57 @@ use GeometryLibrary\PolyUtil;
                             : $val;
                     array_set($array_resp, $key, $val);
                 }
-
-                $array_resp['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['legs'][0]['distance']['value']),1) . ' ' . self::$unit_text;
-                $array_resp['duration_text'] = self::formatTime($response_obj['routes'][0]['legs'][0]['duration']['value']);
-                $array_resp['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['legs'][0]['distance']['value']);
-                $array_resp['duration_value'] = convert_to_minutes($response_obj['routes'][0]['legs'][0]['duration']['value']);
+                $values = self::formatDistanceTimeText($response_obj);
+                $array_resp['distance_text'] = $values['distance_text'];
+                $array_resp['duration_text'] = $values['duration_text'];
+                $array_resp['distance_value'] = $values['convertDist'];
+                $array_resp['duration_value'] = $values['convertTime'];
             }
             else
             {
                 return false;
             }
-
+           
             return $array_resp;
+        }
+
+        private function formatDistanceTimeText($response_obj){
+            $responseArray = array();
+            $responseArray['originalTime'] = $response_obj->data->paths[0]->time;
+            $responseArray['originalDistance'] = $response_obj->data->paths[0]->distance;    
+
+            $responseArray['convertDist'] = self::convert_meters(self::$settings_dist, $responseArray['originalDistance']);
+            $responseArray['convertTime'] = self::convert_to_miliseconds_to_minutes($responseArray['originalTime']);
+            
+            $responseArray['distance_text'] = number_format($responseArray['convertDist'], 1) . " " . self::$unit_text;
+            $responseArray['duration_text'] = ceil($responseArray['convertTime']) . " " . trans("api.minutes");
+
+            return $responseArray;
+        }
+
+        private function convert_meters($unit_dist, $response_dist){
+            if (isset($response_dist)) {
+                if ($unit_dist == 1) {
+                    //Miles
+                    $dist = $response_dist * 0.0006213712;
+                } else {
+                    //Km
+                    $dist = $response_dist* 0.001;
+                }
+            } else {
+                $dist = 0;
+            }
+        
+            return $dist;
+        }
+
+        private function convert_to_miliseconds_to_minutes($response_time){
+            if (isset($response_time))
+                $time_in_Minutes = ($response_time / 60000);
+            else
+                $time_in_Minutes = 0;
+        
+            return $time_in_Minutes;
         }
 
     }
