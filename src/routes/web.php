@@ -13,6 +13,22 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
    
 });
 
+//User APIs
+Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
+    //PLACES
+    //Get Geocode By PlaceId
+    Route::post('/getAddressFromPlaceId', 'GeolocationController@geocode');
+    //Get Geocode Reverse
+    Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
+    //Get Geocode
+    Route::post('/getLatLngFromAddress', 'GeolocationController@geocode');   
+
+    //DIRECTIONS
+    Route::post('/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');   
+    Route::post('/get_distance_time', 'DirectionsController@getDistanceAndTimeByDirections');   
+    Route::post('/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddresses');  
+});
+
 //Admin Painel Routes
 Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function(){
     //Settings
