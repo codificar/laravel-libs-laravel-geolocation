@@ -21,4 +21,6 @@ return [
     "red_api_places_id"             => "ID da aplicação de redundância ",   
     
     "save"                          => "Salvar",  
+
+    "api_directions"                    => "API Directions",
 ];

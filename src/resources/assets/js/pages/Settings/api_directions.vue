@@ -168,7 +168,7 @@ export default {
 </script>
 <template>
   <Card>
-    <h4 slot="card-title" class="m-b-0 text-white">{{ trans("geolocation.api_places") }}</h4>
+    <h4 slot="card-title" class="m-b-0 text-white">{{ trans("geolocation.api_directions") }}</h4>
 
     <h3 slot="card-content-title" class="box-title"></h3>
       <div slot="card-content">
@@ -176,7 +176,7 @@ export default {
           <div class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.api_directions_provider") }}*
+                {{ trans("geolocation.api_places_provider") }}*
               </label>           
               <v-select @input="selectDirectionService" :options="directionsOptions" label="name"  v-model="directionsProviderRule"/>
               <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_provider}}</div>	
@@ -186,7 +186,7 @@ export default {
           <div class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.api_directions_key") }}*
+                {{ trans("geolocation.api_places_key") }}*
               </label>
               <input v-model=directionsDataModel.directions_key.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_key}}</div>	
@@ -233,7 +233,7 @@ export default {
             <div class="col-lg-6">
               <div class="form-group">
                 <label>
-                  {{ trans("geolocation.red_api_directions_provider") }}*
+                  {{ trans("geolocation.red_api_places_provider") }}*
                 </label>           
                 <v-select @input="selectDirectionRedundancyService" :options="directionsOptions" label="name" v-model="directionsProviderRedundancyRule"/>
                 <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_provider_redundancy}}</div>	
@@ -243,7 +243,7 @@ export default {
             <div class="col-lg-6">
               <div class="form-group">
                 <label>
-                  {{ trans("geolocation.red_api_directions_key") }}*
+                  {{ trans("geolocation.red_api_places_key") }}*
                 </label>
                 <input v-model=directionsDataModel.directions_key_redundancy.value type="text" class="form-control" />
                 <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_key_redundancy}}</div>	
@@ -255,7 +255,7 @@ export default {
           <div v-show=directionsProviderRedundancyRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.red_api_directions_url") }}*
+                {{ trans("geolocation.api_places_url") }}*
               </label>           
               <input v-model=directionsDataModel.directions_url_redundancy.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url_redundancy}}</div>	
