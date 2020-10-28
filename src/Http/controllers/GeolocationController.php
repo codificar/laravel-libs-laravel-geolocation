@@ -12,6 +12,7 @@ use Codificar\Geolocation\Http\Requests\PlacesFormRequest;
 use Codificar\Geolocation\Http\Requests\GeocodeFormRequest;
 use Codificar\Geolocation\Http\Requests\GeocodeReverseFormRequest;
 use Codificar\Geolocation\Http\Requests\PlaceDetailsFormRequest;
+use Codificar\Geolocation\Http\Requests\GeocodePlaceIdFormRequest;
 
 use Codificar\Geolocation\Http\Resources\PlacesResource;
 use Codificar\Geolocation\Http\Resources\GeocodeResource;
@@ -58,6 +59,23 @@ class GeolocationController extends Controller {
         }
 
         return new PlacesResource(["response" => $response]);
+    }
+
+    public function geocodeByPlaceId(GeocodePlaceIdFormRequest $request) {
+        $placesClicker = $request->clicker == "redundancy" ? "redundancy_places" : "places";
+        $this->factory = new MapsFactory($placesClicker);
+        
+        if($this->factory) {
+            $this->clicker = $this->factory->createMaps();
+            $response = $this->clicker->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, null, null);
+        }
+        else {
+            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+        }
+
+        if($response['success']) $response['data']['address'] = $request->address;
+
+        return new GeocodeResource(["response" => $response]);
     }
    
    

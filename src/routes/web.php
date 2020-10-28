@@ -17,7 +17,7 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
 Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
     //PLACES
     //Get Geocode By PlaceId
-    Route::post('/getAddressFromPlaceId', 'GeolocationController@geocode');
+    Route::post('/getAddressFromPlaceId', 'GeolocationController@geocodeByPlaceId');
     //Get Geocode Reverse
     Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
     //Get Geocode
