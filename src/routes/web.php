@@ -1,21 +1,36 @@
 <?php
+
 //Admin APIs
-Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.admin_api', 'cors']], function () {  
-    //Places and Geocode
-    Route::get('/', ['as' => 'inputTeste', 'uses' => 'GeolocationController@index']);
-    Route::get('/admin/get_address_string', ['as' => 'adminAutocompleteUrlGeolocationLib', 'uses' => 'GeolocationController@getAddressByString']);
-    Route::get('/admin/geocode', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocode']);
+Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.admin_api', 'cors']], function () { 
+
+    Route::get('/admin/get_address_string', ['as' => 'adminAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
+    Route::get('/admin/geocode', ['as' => 'adminGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
+    
     Route::get('/admin/geocode_reverse', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocodeReverse']);
     Route::get('/admin/get_place_details', 'GeolocationController@getDetailsById');
 
     Route::post('/admin/directions', 'DirectionsController@getDirectionsDistanceAndTime');
-
    
 });
 
-//User APIs
+//Corp APIs
+Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.corp_api', 'cors']], function () {  
+    Route::get('/corp/get_address_string', ['as' => 'corpAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
+    Route::get('/corp/geocode', ['as' => 'corpGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
+});
+
+
+//User Painel APIs
+Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.user_api', 'cors']], function () {  
+    Route::get('/user/get_address_string', ['as' => 'userAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
+    Route::get('/user/geocode', ['as' => 'userGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
+});
+
+//User APP APIs
 Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
     //PLACES
+    //Auto complete
+    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
     //Get Geocode By PlaceId
     Route::post('/getAddressFromPlaceId', 'GeolocationController@geocodeByPlaceId');
     //Get Geocode Reverse
@@ -28,6 +43,26 @@ Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Co
     Route::post('/get_distance_time', 'DirectionsController@getDistanceAndTimeByDirections');   
     Route::post('/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddresses');  
 });
+
+//Provider APP APIs
+Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
+    //PLACES   
+    //Auto complete
+    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
+    //Get Geocode Reverse
+    Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
+    //Get Geocode
+    Route::post('/getLatLngFromAddress', 'GeolocationController@geocode');   
+
+    //DIRECTIONS
+    Route::post('/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');      
+});
+
+
+
+
+
+
 
 //Admin Painel Routes
 Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function(){
