@@ -14,7 +14,7 @@ class ChangeGeocodeMenuRoute extends Migration
     public function up()
     {
         $permission = Permission::where('name', 'Geolocation')->where('url', '/admin/settings/geolocation')
-        ->update(['url' => '/admin/libs/geolocation']);
+        ->update(['url' => '/admin/libs/geolocation/settings']);
     }
 
     /**
@@ -24,7 +24,7 @@ class ChangeGeocodeMenuRoute extends Migration
      */
     public function down()
     {
-        $permission = Permission::where('name', 'Geolocation')->where('url', '/admin/libs/geolocation')
+        $permission = Permission::where('name', 'Geolocation')->where('url', '/admin/libs/geolocation/settings')
         ->update(['url' => '/admin/settings/geolocation']);
     }
 }
