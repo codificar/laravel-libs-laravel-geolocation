@@ -10,13 +10,18 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
     Route::get('/admin/get_place_details', 'GeolocationController@getDetailsById');
 
     Route::post('/admin/directions', 'DirectionsController@getDirectionsDistanceAndTime');
-   
+
+    //Only Motoboys
+    Route::get('admin/get_polyline_waypoints', array('as' => 'adminPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));   
 });
 
 //Corp APIs
 Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.corp_api', 'cors']], function () {  
     Route::get('/corp/get_address_string', ['as' => 'corpAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
     Route::get('/corp/geocode', ['as' => 'corpGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
+
+    //Only Motoboys
+    Route::get('corp/get_polyline_waypoints', array('as' => 'corpPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));  
 });
 
 
@@ -24,6 +29,9 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
 Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.user_api', 'cors']], function () {  
     Route::get('/user/get_address_string', ['as' => 'userAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
     Route::get('/user/geocode', ['as' => 'userGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
+
+    //Only Motoboys
+    Route::get('user/get_polyline_waypoints', array('as' => 'userPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi')); 
 });
 
 //User APP APIs

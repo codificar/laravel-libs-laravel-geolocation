@@ -246,4 +246,107 @@ use Codificar\Geolocation\Helper;
             return $polyline;
         }
 
+        /**
+         * Returns intermediaries points in the route between multiple locations using MapQuest Maps
+         *
+         * @param String        $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
+         *
+         * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
+         */
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+        {
+            $waysFormatted = [];
+            if (!$this->directions_key_api || (!is_string($wayPoints) || !is_array(json_decode($wayPoints, true))))
+            {
+                return false;
+            }
+
+            $ways = json_decode($wayPoints);
+            $waysLen = count($ways);
+            if($waysLen < 2){
+                return false;
+            }else{
+
+                $waysFormatted = '{"locations": [';
+
+                foreach($ways as $index => $way){
+                    $waysFormatted .= '{"latLng":{"lat":'.$way[0].',"lng":'.$way[1].'}},';
+                }
+                $waysFormatted = rtrim($waysFormatted, ",");
+
+                $postFields = $waysFormatted.'],
+                "options": {
+                    "fullShape": true,
+                    "shapeFormat": "raw",
+                    "unit": "k",
+                    "timeType": 1,
+                    "useTraffic": true
+                }}';
+            }
+
+            $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api;
+
+            return $this->polylineProcessWithPoints($curl_string, 'post', $postFields);
+        }
+
+        /**
+         * Process curl response and return array with polyline and estimates.
+         *
+         * @param String      $curl_string      URL called by curl.
+         * @param String      $verb             Defines the request verb.
+         * @param String      $postFields       Params to POST request.
+         *
+         * @return Array      $polyline         Array with polyline and estimates.
+         */
+        private function polylineProcessWithPoints($curl_string, $verb=null, $postFields=null)
+        {
+            $php_obj = $this->curlCall($curl_string, $verb, $postFields);
+            $response_obj = json_decode($php_obj, true);
+
+            $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
+            $position = 0;
+
+            if(isset($response_obj['info']['statuscode']) && $response_obj['info']['statuscode'] == 0)
+            {
+                foreach($response_obj['route']['shape']['shapePoints'] as $index => $point)
+                {
+                    if($index%2 == 0)
+                    {
+                        $polyline['points'][$position]['lat'] = $point;
+                    }
+                    else
+                    {
+                        $polyline['points'][$position]['lng'] = $point;
+                        $position++;
+                    }
+                }
+
+                $partialDistances = [];
+                $partialDurations = [];
+                $totalDistance = 0;
+                $totalDuration = 0;
+
+                foreach($response_obj['route']['legs'] as $index=>$leg)
+                {
+                    $partialDistances[$index] = number_format(($leg['distance'] / 1000), 2);
+                    $partialDurations[$index] = number_format(($leg['time'] / 60), 2);
+                    $totalDistance += $leg['distance'];
+                    $totalDuration += $leg['time'];
+                }
+
+                $polyline['distance_text'] = number_format($totalDistance,1) . self::$unit_text;
+                $polyline['duration_text'] = self::formatTime($totalDuration);
+                $polyline['distance_value'] = $totalDistance;
+                $polyline['duration_value'] = convert_to_minutes($totalDuration);
+                $polyline['partial_distances'] = $partialDistances;
+                $polyline['partial_durations'] = $partialDurations;
+            }
+            else
+            {
+                return false;
+            }
+
+            return $polyline;
+        }
+
     }

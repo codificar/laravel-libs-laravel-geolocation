@@ -217,7 +217,7 @@ use GeometryLibrary\PolyUtil;
         {
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj, true);
-
+            
             if($response_obj['status'] && $response_obj['status'] == 'OK')
             {
                 $polyline['points'] = $response_obj['routes'][0]['overview_polyline']['points'];
@@ -245,6 +245,120 @@ use GeometryLibrary\PolyUtil;
                 $array_resp['duration_text'] = self::formatTime($response_obj['routes'][0]['legs'][0]['duration']['value']);
                 $array_resp['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['legs'][0]['distance']['value']);
                 $array_resp['duration_value'] = convert_to_minutes($response_obj['routes'][0]['legs'][0]['duration']['value']);
+            }
+            else
+            {
+                return false;
+            }
+
+            return $array_resp;
+        }
+
+         /**
+         * Returns intermediaries points in the route between multiple locations using Google Maps
+         *
+         * @param String        $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
+         *
+         * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
+         */
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+        {
+
+            $waysFormatted = '';
+            if (!$this->directions_key_api || (!is_string($wayPoints) || !is_array(json_decode($wayPoints, true))))
+            {
+                \Log::info("getPolylineAndEstimateWithWayPoints:false");
+                return false;
+            }
+
+            $ways = json_decode($wayPoints);
+            $waysLen = count($ways);
+            if($optimize == 1) {
+                $optimizeRoute = "optimize:true|";
+            } else {
+                $optimizeRoute = "optimize:false|";
+            }
+
+            if($waysLen > 2){
+                foreach($ways as $index => $way){
+                    if($index != 0 && $index < ($waysLen-1))
+                        $waysFormatted .= !$waysFormatted ? ("&waypoints=" . $optimizeRoute . $way[0] . "," . $way[1]) : "|" . $way[0] . "," . $way[1];
+                }
+
+                $waysFormatted = rtrim($waysFormatted, "|");
+            }else if($waysLen < 2){
+                return false;
+            }
+            //Se tem otimizacao, usa a chave especifica pra otimizacao, senao, utiliza a chave normalmente
+            if($optimize == 1) {
+                $google_key = GeolocationSettings::getDirectionsGoogleOptimizeRoute();
+            } else {
+                $google_key = $this->directions_key_api;
+            }
+            $curl_string = $this->url_api . "/directions/json?key=" . $google_key . "&origin=" . urlencode($ways[0][0].",".$ways[0][1]) . "&destination=" . urlencode($ways[$waysLen-1][0].",".$ways[$waysLen-1][1]) . $waysFormatted;
+           
+            return self::polylineProcessWithPoints($curl_string);
+        }
+
+         /**
+         * Process curl response and return array with polyline and estimates.
+         *
+         * @param String      $curl_string         URL called by curl.
+         *
+         * @return Array      $array_resp          Array with polyline and estimates.
+         */
+        private static function polylineProcessWithPoints($curl_string)
+        {
+            $php_obj = self::curlCall($curl_string);
+            $response_obj = json_decode($php_obj, true);
+
+            if($response_obj['status'] && $response_obj['status'] == 'OK')
+            {
+                $polyline['points'] = $response_obj['routes'][0]['overview_polyline']['points'];
+
+                // Get the waypoint order, (needs if has optimize route)
+                $waypoint_order = $response_obj['routes'][0]['waypoint_order'];
+
+                $needle = metaphone('points');
+
+                // get polyline response
+                $obj = $polyline;
+
+                // flatten array into single level array using 'dot' notation
+                $obj_dot = array_dot($obj);
+                // create empty array_resp
+                $array_resp = [];
+                // iterate
+                foreach( $obj_dot as $key => $val)
+                {
+                    // Calculate the metaphone key and compare with needle
+                    $val =  strcmp( metaphone($key, strlen($needle)), $needle) === 0 
+                            ? PolyUtil::decode($val) // if matched decode polyline
+                            : $val;
+                    array_set($array_resp, $key, $val);
+                }
+
+                $partialDistances = [];
+                $partialDurations = [];
+                $totalDistance = 0;
+                $totalDuration = 0;
+
+                foreach($response_obj['routes'][0]['legs'] as $index=>$leg)
+                {
+                    $partialDistances[$index] = number_format(($leg['distance']['value'] / 1000), 2);
+                    $partialDurations[$index] = number_format(($leg['duration']['value'] / 60), 2);
+
+                    $totalDistance += $leg['distance']['value'];
+                    $totalDuration += $leg['duration']['value'];
+                }
+
+                $array_resp['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $totalDistance),1) . self::$unit_text;
+                $array_resp['duration_text'] = self::formatTime($totalDuration);
+                $array_resp['distance_value'] = convert_distance_format(self::$settings_dist, $totalDistance);
+                $array_resp['duration_value'] = convert_to_minutes($totalDuration);
+                $array_resp['partial_distances'] = $partialDistances;
+                $array_resp['partial_durations'] = $partialDurations;
+                $array_resp['waypoint_order'] = $waypoint_order;
             }
             else
             {

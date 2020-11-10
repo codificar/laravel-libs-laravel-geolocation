@@ -238,4 +238,81 @@ use Codificar\Geolocation\Helper;
             return $polyline;
         }
 
+        /**
+         * Returns intermediaries points in the route between multiple locations using Bing Maps
+         *
+         * @param String        $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
+         *
+         * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
+         */
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+        {
+            $waysFormatted = '';
+            if (!$this->directions_key_api || (!is_string($wayPoints) || !is_array(json_decode($wayPoints, true))))
+            {
+                return false;
+            }
+
+            $ways = json_decode($wayPoints,true);
+            $waysLen = count($ways);
+
+            if($waysLen >= 2){
+                foreach($ways as $index => $way){
+                    $waysFormatted .= "&wp." . $index . "=". $way[0] . "," . $way[1];
+                }
+            }else if($waysLen < 2){
+                return false;
+            }
+
+            $curl_string = $this->url_api . "/Routes/driving?key=". $this->directions_key_api ."&o=json&c=en-US&fi=true". $waysFormatted . "&routePathOutput=Points";
+
+            return self::polylineProcessWithPoints($curl_string);
+        }
+
+        /**
+         * Process curl response and return array with polyline and estimates.
+         *
+         * @param String      $curl_string         URL called by curl.
+         *
+         * @return Array      $polyline            Array with polyline and estimates.
+         */
+        private static function polylineProcessWithPoints($curl_string)
+        {
+            $php_obj = self::curlCall($curl_string);
+            $response_obj = json_decode($php_obj, true);
+
+            $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
+            $position = 0;
+
+            if($response_obj['statusCode'] && $response_obj['statusCode'] == 200)
+            {
+                foreach($response_obj['resourceSets'][0]['resources'][0]['routePath']['line']['coordinates'] as $index => $point)
+                {
+                    $polyline['points'][$index]['lat'] = $point[0];
+                    $polyline['points'][$index]['lng'] = $point[1];
+                }
+
+                $partialDistances = [];
+                $partialDurations = [];
+                foreach($response_obj['resourceSets'][0]['resources'][0]['routeLegs'] as $index=>$leg)
+                {
+                    $partialDistances[$index] = number_format(($leg['travelDistance'] / 1000), 2);
+                    $partialDurations[$index] = number_format(($leg['travelDuration'] / 60), 2);
+                }
+
+                $polyline['distance_text'] = number_format($response_obj['resourceSets'][0]['resources'][0]['travelDistance'],1) . self::$unit_text;
+                $polyline['duration_text'] = self::formatTime($response_obj['resourceSets'][0]['resources'][0]['travelDurationTraffic']);
+                $polyline['distance_value'] = $response_obj['resourceSets'][0]['resources'][0]['travelDistance'];
+                $polyline['duration_value'] = convert_to_minutes($response_obj['resourceSets'][0]['resources'][0]['travelDurationTraffic']);
+                $polyline['partial_distances'] = $partialDistances;
+                $polyline['partial_durations'] = $partialDurations;
+            }
+            else
+            {
+                return false;
+            }
+
+            return $polyline;
+        }
+
     }

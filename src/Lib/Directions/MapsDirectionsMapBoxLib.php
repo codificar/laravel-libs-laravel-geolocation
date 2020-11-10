@@ -241,4 +241,82 @@ use Codificar\Geolocation\Helper;
             return $polyline;
         }
 
+        /**
+         * Returns intermediaries points in the route between multiple locations using MapBox Maps
+         *
+         * @param String        $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
+         *
+         * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
+         */
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+        {
+            $waysFormatted = '';
+            if (!$this->directions_key_api || (!is_string($wayPoints) || !is_array(json_decode($wayPoints, true))))
+            {
+                return false;
+            }
+
+            $ways = json_decode($wayPoints,true);
+            $waysLen = count($ways);
+
+            if($waysLen >= 2){
+                foreach($ways as $index => $way){
+                    $waysFormatted .= $way[1] . "," . $way[0] . ";";
+                }
+
+                $waysFormatted = rtrim($waysFormatted, ";");
+            }else if($waysLen < 2){
+                return false;
+            }
+
+            $curl_string = $this->url_api . "/mapbox/driving-traffic/" . $waysFormatted . "?&access_token=" . $this->directions_key_api . "&steps=true";
+
+            return self::polylineProcessWithPoints($curl_string);
+        }
+
+        private static function polylineProcessWithPoints($curl_string)
+        {
+            $php_obj = self::curlCall($curl_string);
+            $response_obj = json_decode($php_obj, true);
+
+            $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
+            $index = 0;
+
+            if(is_array($response_obj) && array_key_exists('code', $response_obj) && $response_obj['code'] == 'Ok')
+            {
+                foreach($response_obj['routes'][0]['legs'] as $leg){
+                    foreach($leg['steps'] as $step)
+                    {
+                        foreach($step['intersections'] as $intersections)
+                        {
+                            $polyline['points'][$index]['lat'] = $intersections['location'][1];
+                            $polyline['points'][$index]['lng'] = $intersections['location'][0];
+                            $index ++;
+                        }
+                    }
+                }
+
+                $partialDistances = [];
+                $partialDurations = [];
+                foreach($response_obj['routes'][0]['legs'] as $index=>$leg)
+                {
+                    $partialDistances[$index] = number_format(($leg['distance'] / 1000), 2);
+                    $partialDurations[$index] = number_format(($leg['duration'] / 60), 2);
+                }
+
+                $polyline['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['distance']),1) . self::$unit_text;
+                $polyline['duration_text'] = self::formatTime($response_obj['routes'][0]['duration']);
+                $polyline['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['distance']);
+                $polyline['duration_value'] = convert_to_minutes($response_obj['routes'][0]['duration']);
+                $polyline['partial_distances'] = $partialDistances;
+                $polyline['partial_durations'] = $partialDurations;
+            }
+            else
+            {
+                return false;
+            }
+
+            return $polyline;
+        }
+
     }

@@ -12,10 +12,12 @@ use Codificar\Geolocation\Http\Requests\PlacesFormRequest;
 use Codificar\Geolocation\Http\Requests\GeocodeFormRequest;
 use Codificar\Geolocation\Http\Requests\GeocodeReverseFormRequest;
 use Codificar\Geolocation\Http\Requests\PlaceDetailsFormRequest;
+use Codificar\Geolocation\Http\Requests\RouteWayPointsRequest;
 
 use Codificar\Geolocation\Http\Resources\PlacesResource;
 use Codificar\Geolocation\Http\Resources\GeocodeResource;
 use Codificar\Geolocation\Http\Resources\PlaceDetailsResource;
+use Codificar\Geolocation\Http\Resources\PolylineResource;
 
 // use MapsFactory, Settings;
 use Codificar\Geolocation\Lib\MapsFactory;
@@ -134,5 +136,92 @@ class DirectionsController extends Controller {
 
         return $requestTimeDistance;
     }
+
+    public function getPolylineAndEstimateWithWayPoints($allPointsAPI){
+		$factory = new MapsFactory('directions');
+        $clicker = $factory->createMaps();
+
+        if ($clicker)
+            $response = $clicker->getPolylineAndEstimateWithWayPoints(
+                $allPointsAPI
+            );
+
+        if ((!is_array($response) || !$response) && Settings::getDirectionsRedundancyRule()) {
+            $factoryRedundancy = new MapsFactory('redundancy_directions');
+
+            if ($factoryRedundancy) {
+                $clickerRedundancy = $factoryRedundancy->createMaps();
+                $response = $clickerRedundancy->getPolylineAndEstimateWithWayPoints(
+                    $allPointsAPI
+                );
+            }
+        }
+        return $response;
+	}
+
+    public function getPolylineAndEstimateWithWayPointsApi(RouteWayPointsRequest $request){
+		$factory = new MapsFactory('directions');
+		$clicker = $factory->createMaps();
+		$response = false;
+		$error = '';
+		$optimizeRoute = (isset($request->optimize_route) && $request->optimize_route == 1) ? 1 : 0;
+		if ($clicker) {
+			$response = $clicker->getPolylineAndEstimateWithWayPoints(
+				$request->waypoints,
+				$optimizeRoute
+			);
+		}
+		if((!is_array($response) || !$response) && GeolocationSettings::getDirectionsRedundancyRule()){
+			$factoryRedundancy = new MapsFactory('redundancy_directions');
+
+			if($factoryRedundancy){
+				$clickerRedundancy = $factoryRedundancy->createMaps();
+				$response = $clickerRedundancy->getPolylineAndEstimateWithWayPoints(
+					$request->waypoints,
+					$optimizeRoute
+				);
+			}
+		}
+        
+		if ($response) {
+			$success = true;
+			$polyline = $response['points'];
+			$distanceText = $response['distance_text'];
+			$durationText = $response['duration_text'];
+			$distanceValue = $response['distance_value'];
+			$durationValue = $response['duration_value'];
+			$partialDistances = $response['partial_distances'];
+			$partialDurations = $response['partial_durations'];
+			$waypointOrder = $response['waypoint_order'];
+		}
+		else
+		{
+			$success = false;
+			$polyline = '';
+			$distanceText = '';
+			$durationText = '';
+			$distanceValue = '';
+			$durationValue = '';
+			$partialDistances = [];
+			$partialDurations = [];
+			$waypointOrder = [];
+			$error = trans('googleMapsController.no_result_found');
+		}
+
+		$response_array = array(
+			'success'           => $success, 
+			'points'            => $polyline,
+			'distance_text'     => $distanceText,
+			'duration_text'     => $durationText,
+			'distance_value'    => $distanceValue,
+			'duration_value'    => $durationValue,
+			'partial_distances'	=> $partialDistances,
+			'partial_durations'	=> $partialDurations,
+			'waypoint_order'	=> $waypointOrder,
+			'error'             => $error
+		);
+        
+		return new PolylineResource(['data' => $response_array]);
+	}
 
 }

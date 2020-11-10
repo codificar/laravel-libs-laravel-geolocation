@@ -257,4 +257,14 @@ class GeolocationSettings extends Settings {
 			return false;
 	}
 
+	public static function getDirectionsGoogleOptimizeRoute()
+	{
+		$settings = self::where('key', 'directions_google_optimize_route')->first();
+
+		if ($settings)
+			return $settings->value;
+		else
+			return null;
+	}
+
 }

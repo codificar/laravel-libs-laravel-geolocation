@@ -53,4 +53,13 @@ namespace Codificar\Geolocation\Lib;
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value']
          */
         public function getPolylineAndEstimateByAddresses($source_address, $destination_address, $source_lat, $source_long, $dest_lat, $dest_long);
+
+        /**
+         * Gets polyline and estimate route with multiples points by directions API.
+         *
+         * @param String       $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
+         *
+         * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
+         */
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0);
     }
