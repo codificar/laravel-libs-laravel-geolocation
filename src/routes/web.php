@@ -31,16 +31,16 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
     Route::get('/user/geocode', ['as' => 'userGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
 
     //Only Motoboys
-    Route::get('user/get_polyline_waypoints', array('as' => 'userPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi')); 
+    Route::get('/user/get_polyline_waypoints', array('as' => 'userPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi')); 
 });
 
-//User APP APIs
+//User APP APIs Uberclone
 Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
     //PLACES
     //Auto complete
     Route::get('/get_address_string', 'GeolocationController@getAddressByString');
     //Get Geocode By PlaceId
-    Route::post('/getAddressFromPlaceId', 'GeolocationController@geocodeByPlaceId');
+    Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
     //Get Geocode Reverse
     Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
     //Get Geocode
@@ -51,6 +51,21 @@ Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Co
     Route::post('/get_distance_time', 'DirectionsController@getDistanceAndTimeByDirections');   
     Route::post('/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddresses');  
 });
+
+//User APP APIs Motoboys
+Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
+    //PLACES
+
+    //Places AutoComplete
+    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
+    //Get Reverse Geocode
+    Route::post('/get_address_from_lat_long', 'GeolocationController@geocodeReverse');  
+    //Get Geocode
+    Route::post('/get_lat_long_from_address', 'GeolocationController@geocode');  
+    //Get Geocode By PlaceId
+    Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
+});
+
 
 //Provider APP APIs
 Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
