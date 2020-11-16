@@ -157,17 +157,17 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
         {
             if(isset($prediction->address)){
                 $addressArray = explode(",",$prediction->address);
-
+              
                 $contetSize = sizeof($addressArray);
                 $estate = $addressArray[$contetSize-1];
 
-                $address = $addressArray[0]." -".$addressArray[1].",".$addressArray[2]." -".$estate.",".end($addressArray);
+                $address = $addressArray[0]." -".$addressArray[1]."-".$estate.",".end($addressArray);
              
                 $main_text = $addressArray[0]." -".$addressArray[1];
-                $secondary_text = $addressArray[2]." -".$estate.",".end($addressArray);
+                $secondary_text = " -".$estate.",".end($addressArray);
 
                 $processed['address']        =   $address;
-                $processed['place_id']       =   $prediction->lat.','.$prediction->lng;
+                $processed['place_id']       =   null;
                 $processed['latitude']       =   $prediction->lat;
                 $processed['longitude']      =   $prediction->lng;
                 $processed['main_text']      =   $main_text;
@@ -240,7 +240,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
             $addressArray = explode(",", $address);
             $contetSize = sizeof($addressArray);
             $estate = $addressArray[$contetSize-1];
-            $formattedAddress = $addressArray[0]." -".$addressArray[1].",".$addressArray[2]." -".$estate.",".end($addressArray);           
+            $formattedAddress = $addressArray[0]." -".$addressArray[1]." -".$estate.",".end($addressArray);           
             $streetName = $addressArray[0];
 
             if(
