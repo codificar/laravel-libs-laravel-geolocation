@@ -308,4 +308,17 @@ use GeometryLibrary\PolyUtil;
             return $time_in_Minutes;
         }
 
+
+        /**
+         * Returns intermediaries points in the route between multiple locations using OpenRoute Maps
+         *
+         * @param String        $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
+         *
+         * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
+         */
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+        {
+            
+        }
+
     }
