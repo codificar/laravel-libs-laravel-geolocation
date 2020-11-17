@@ -161,10 +161,13 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $contetSize = sizeof($addressArray);
                 $estate = $addressArray[$contetSize-1];
 
-                $address = $addressArray[0]." -".$addressArray[1]."-".$estate.",".end($addressArray);
+                isset($addressArray[2]) ? $secondaryContet = $addressArray[2] : $secondaryContet = "";
+               
+
+                $address = $addressArray[0]." -".$addressArray[1].",".$secondaryContet." -".$estate.",".end($addressArray);
              
                 $main_text = $addressArray[0]." -".$addressArray[1];
-                $secondary_text = " -".$estate.",".end($addressArray);
+                $secondary_text = $secondaryContet." -".$estate.",".end($addressArray);
 
                 $processed['address']        =   $address;
                 $processed['place_id']       =   null;
