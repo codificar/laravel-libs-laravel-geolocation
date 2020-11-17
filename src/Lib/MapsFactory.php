@@ -6,6 +6,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
 //Places
 use Codificar\Geolocation\Lib\Places\MapsPlacesGoogleLib;
 use Codificar\Geolocation\Lib\Places\MapsPlacesFlightMap;
+use Codificar\Geolocation\Lib\Places\MapsPlacesBing;
 
     /**
      * This class define the requisition type of geolocation
@@ -83,6 +84,8 @@ use Codificar\Geolocation\Lib\Places\MapsPlacesFlightMap;
                         return(new MapsPlacesHereLib());
                     case self::MAPS_FLIGHT:
                         return(new MapsPlacesFlightMap());
+                    case self::MAPS_BING:
+                            return(new MapsPlacesBing());
                     default:
                         return(new MapsPlacesGoogleLib());
                 }
