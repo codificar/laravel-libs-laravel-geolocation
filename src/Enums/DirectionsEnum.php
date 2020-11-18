@@ -14,6 +14,7 @@ class DirectionsEnum {
 	   ,array('value' => 'mapbox_maps', 	'name' => 'MapBox Maps', 'redundancy_url' => false)
 	   ,array('value' => 'openroute_maps', 	'name' => 'OpenRouteService Maps', 'redundancy_url' => true)
 	   ,array('value' => 'flight_map', 'name' => 'Flight Maps', 'redundancy_url' => false)
+	   ,array('value' => 'here_maps', 'name' => 'Here Maps', 'redundancy_url' => false)
 	);
 
 }

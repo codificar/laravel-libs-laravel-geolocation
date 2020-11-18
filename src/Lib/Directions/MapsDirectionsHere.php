@@ -12,13 +12,13 @@ use GeometryLibrary\PolyUtil;
     /**
      * Geolocation requests o Flight Map API
      */
-    class MapsDirectionsFlightMap implements IMapsDirections
+    class MapsDirectionsHere implements IMapsDirections
     {
 
         /**
-         * @var String  $url_api URL to access API
-         */
-        private $url_api = "https://maps.flightmap.io/api/";
+         * @var String  $url_api         URL to access Routes API
+        */
+        private $url_api = "https://router.hereapi.com/v8/";
 
         /**
          * @var String  $directions_key_api Key of API authentication
@@ -95,22 +95,21 @@ use GeometryLibrary\PolyUtil;
             {
                 return array('success' => false);
             }
-
-            
-            $points = '[{"lat":"'.$source_lat.'","lng":"'.$source_long.'"},{"lat":"'.$dest_lat.'","lng":"'.$dest_long.'"}]';
             
             $params         =   array(
-                "fm_token"       =>  $this->directions_key_api,
-                "points"  =>  $points,
-                "driving_mode"  =>  'car',
+                "apiKey"    =>  "$this->directions_key_api",
+                "transportMode"  =>  "car",
+                "return"  =>  "summary",
+                "origin"  =>  $source_lat.",".$source_long,
+                "destination"  =>  $dest_lat.",".$dest_long,
             );
 
-            $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
+            $curl_string    =   $this->url_api . "routes?" . http_build_query($params);
             $php_obj        =   self::curlCall($curl_string);
             $response_obj   =   json_decode($php_obj);
-            
-            if($response_obj->status == 200 && $response_obj->message == 'Successful')
-            {                     
+           
+            if(isset($response_obj->routes[0]))
+            {              
                 $values = $this->formatDistanceTimeText($response_obj);
 
                 return array('success' => true, 'data' => [ 'distance' => $values['convertDist'], 'time_in_minutes' => $values['convertTime'], 
@@ -136,18 +135,18 @@ use GeometryLibrary\PolyUtil;
         {
             if (!$this->directions_key_api)
             {
-                return false;
+                return array('success' => false);
             }
-
-            $points = '[{"lat":"'.$source_lat.'","lng":"'.$source_long.'"},{"lat":"'.$dest_lat.'","lng":"'.$dest_long.'"}]';
             
             $params         =   array(
-                "fm_token"       =>  $this->directions_key_api,
-                "points"  =>  $points,
-                "driving_mode"  =>  'car',
+                "apiKey"    =>  "$this->directions_key_api",
+                "transportMode"  =>  "car",
+                "return"  =>  "polyline,summary",
+                "origin"  =>  $source_lat.",".$source_long,
+                "destination"  =>  $dest_lat.",".$dest_long,
             );
 
-            $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
+            $curl_string = $this->url_api . "routes?" . http_build_query($params);
            
             return self::polylineProcess($curl_string);
         }
@@ -165,21 +164,21 @@ use GeometryLibrary\PolyUtil;
          * @return Array       ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value']
          */
         public function getPolylineAndEstimateByAddresses($source_address, $destination_address, $source_lat = false, $source_long = false, $dest_lat = false, $dest_long = false)
-        {
+        {           
             if (!$this->directions_key_api)
             {
-                return false;
+                return array('success' => false);
             }
-
-            $points = '[{"lat":"'.$source_lat.'","lng":"'.$source_long.'"},{"lat":"'.$dest_lat.'","lng":"'.$dest_long.'"}]';
             
             $params         =   array(
-                "fm_token"       =>  $this->directions_key_api,
-                "points"  =>  $points,
-                "driving_mode"  =>  'car',
+                "apiKey"    =>  "$this->directions_key_api",
+                "transportMode"  =>  "car",
+                "return"  =>  "polyline,summary",
+                "origin"  =>  $source_lat.",".$source_long,
+                "destination"  =>  $dest_lat.",".$dest_long,
             );
 
-            $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
+            $curl_string = $this->url_api . "routes?" . http_build_query($params);
            
             return self::polylineProcess($curl_string);
         }
@@ -239,11 +238,11 @@ use GeometryLibrary\PolyUtil;
         {
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj);
-            
-            if($response_obj->status == 200 && $response_obj->message == 'Successful')
-            {                            
-                $originalPoints = $response_obj->data->paths[0]->points;
-                $polyline['points'] = $originalPoints;
+        
+            if(isset($response_obj->routes[0]))
+            {                                
+                $responsePolyline = $response_obj->routes[0]->sections[0]->polyline;
+                $polyline['points'] = $responsePolyline;
 
                 $needle = metaphone('points');
 
@@ -263,6 +262,7 @@ use GeometryLibrary\PolyUtil;
                             : $val;
                     array_set($array_resp, $key, $val);
                 }
+                
                 $values = self::formatDistanceTimeText($response_obj);
                 $array_resp['distance_text'] = $values['distance_text'];
                 $array_resp['duration_text'] = $values['duration_text'];
@@ -278,12 +278,14 @@ use GeometryLibrary\PolyUtil;
         }
 
         private function formatDistanceTimeText($response_obj){
+            $sumarry = $response_obj->routes[0]->sections[0]->summary;
+
             $responseArray = array();
-            $responseArray['originalTime'] = $response_obj->data->paths[0]->time;
-            $responseArray['originalDistance'] = $response_obj->data->paths[0]->distance;    
+            $responseArray['originalTime'] = number_format(($sumarry->duration/60));
+            $responseArray['originalDistance'] = $sumarry->length;    
 
             $responseArray['convertDist'] = self::convert_meters(self::$settings_dist, $responseArray['originalDistance']);
-            $responseArray['convertTime'] = self::convert_to_miliseconds_to_minutes($responseArray['originalTime']);
+            $responseArray['convertTime'] = $responseArray['originalTime'];
             
             $responseArray['distance_text'] = number_format($responseArray['convertDist'], 1) . " " . self::$unit_text;
             $responseArray['duration_text'] = ceil($responseArray['convertTime']) . " " . trans("api.minutes");
