@@ -146,7 +146,7 @@ class DirectionsController extends Controller {
                 $allPointsAPI
             );
 
-        if ((!is_array($response) || !$response) && Settings::getDirectionsRedundancyRule()) {
+        if ((!is_array($response) || !$response) && GeolocationSettings::getDirectionsRedundancyRule()) {
             $factoryRedundancy = new MapsFactory('redundancy_directions');
 
             if ($factoryRedundancy) {
