@@ -90,6 +90,7 @@ export default {
           }
         ); 
         this.cleanErrors()
+        location.reload(true)
       }      
     },
     cleanErrors(){
