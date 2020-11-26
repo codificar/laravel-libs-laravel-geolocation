@@ -9,8 +9,10 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
     Route::get('/admin/geocode_reverse', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocodeReverse']);
     Route::get('/admin/get_place_details', 'GeolocationController@getDetailsById');
 
-    Route::post('/admin/directions', 'DirectionsController@getDirectionsDistanceAndTime');
-
+    //Directions API
+    Route::get('/admin/geocode/get_estimate', 'DirectionsController@getDirectionsDistanceAndTimeApi');
+    Route::get('/admin/geocode/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByDirectionsApi');
+    Route::get('/admin/address/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddressesApi');
     //Only Motoboys
     Route::get('admin/get_polyline_waypoints', array('as' => 'adminPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));   
 });
@@ -23,7 +25,6 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
     //Only Motoboys
     Route::get('corp/get_polyline_waypoints', array('as' => 'corpPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));  
 });
-
 
 //User Painel APIs
 Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.user_api', 'cors']], function () {  
@@ -66,7 +67,6 @@ Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\
     Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
 });
 
-
 //Provider APP APIs
 Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
     //PLACES   
@@ -80,12 +80,6 @@ Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Htt
     //DIRECTIONS
     Route::post('/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');      
 });
-
-
-
-
-
-
 
 //Admin Painel Routes
 Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function(){
