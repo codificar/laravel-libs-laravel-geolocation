@@ -23,8 +23,7 @@ use Codificar\Geolocation\Http\Resources\PolylineResource;
 use Codificar\Geolocation\Lib\MapsFactory;
 use Codificar\Geolocation\Models\GeolocationSettings;
 
-class DirectionsController extends Controller {      
-    //Directions    
+class DirectionsController extends Controller {  
      /**
          * Gets distance and time by directions API.
          *
@@ -137,6 +136,14 @@ class DirectionsController extends Controller {
         return $requestTimeDistance;
     }
 
+    /**
+         * Gets polyline and estimate route by adresses in directions API.
+         *
+         * @param String        $waypoints: "[[lat, lng]['lat','lng']...]"
+         * 
+         * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value']
+    */
+   
     public function getPolylineAndEstimateWithWayPoints($allPointsAPI){
 		$factory = new MapsFactory('directions');
         $clicker = $factory->createMaps();
@@ -158,6 +165,102 @@ class DirectionsController extends Controller {
         }
         return $response;
 	}
+
+    public function getDirectionsDistanceAndTimeApi(Request $request) {      
+        $startLat = $request->startLat;   
+        $startLng = $request->startLng;   
+        $destLat = $request->destLat;   
+        $destLng = $request->destLng; 
+
+        $factory = new MapsFactory('directions');
+        $clicker = $factory->createMaps();
+
+        if($clicker){
+            $requestTimeDistance = $clicker->getDistanceAndTimeByDirections(
+                $startLat, $startLng, $destLat, $destLng
+            );
+        }
+        
+        if((!isset($requestTimeDistance['success']) || !$requestTimeDistance['success']) && GeolocationSettings::getDirectionsRedundancyRule()){
+            $factoryRedundancy = new MapsFactory('redundancy_directions');
+
+            if($factoryRedundancy){
+                $clickerRedundancy = $factoryRedundancy->createMaps();
+
+                if($clickerRedundancy)
+                    $requestTimeDistance = $clickerRedundancy->getDistanceAndTimeByDirections(
+                        $startLat, $startLng, $destLat, $destLng
+                    );
+            }
+        }
+
+        return $requestTimeDistance;
+    }
+    
+    public function getPolylineAndEstimateByDirectionsApi(Request $request) {      
+        $startLat = $request->startLat;   
+        $startLng = $request->startLng;   
+        $destLat = $request->destLat;   
+        $destLng = $request->destLng;   
+
+        $factory = new MapsFactory('directions');
+        $clicker = $factory->createMaps();
+
+        if($clicker){
+            $requestTimeDistance = $clicker->getPolylineAndEstimateByDirections(
+                $startLat, $startLng, $destLat, $destLng
+            );
+        }
+        
+        if((!isset($requestTimeDistance['success']) || !$requestTimeDistance['success']) && GeolocationSettings::getDirectionsRedundancyRule()){
+            $factoryRedundancy = new MapsFactory('redundancy_directions');
+
+            if($factoryRedundancy){
+                $clickerRedundancy = $factoryRedundancy->createMaps();
+
+                if($clickerRedundancy)
+                    $requestTimeDistance = $clickerRedundancy->getPolylineAndEstimateByDirections(
+                        $startLat, $startLng, $destLat, $destLng
+                    );
+            }
+        }
+
+        return $requestTimeDistance;
+    }
+
+    public function getPolylineAndEstimateByAddressesApi(Request $request) {
+        $srcAddress = $request->srcAddress;   
+        $destAddress = $request->destAddress;   
+        $startLat = $request->startLat;   
+        $startLng = $request->startLng;   
+        $destLat = $request->destLat;   
+        $destLng = $request->destLng;     
+         
+        $factory = new MapsFactory('directions');
+        $clicker = $factory->createMaps();
+
+        if($clicker){
+            $requestTimeDistance = $clicker->getPolylineAndEstimateByAddresses(
+               $srcAddress, $destAddress, $startLat, $startLng, $destLat, $destLng
+            );
+        }
+        
+        if((!isset($requestTimeDistance['success']) || !$requestTimeDistance['success']) && GeolocationSettings::getDirectionsRedundancyRule()){
+            $factoryRedundancy = new MapsFactory('redundancy_directions');
+
+            if($factoryRedundancy){
+                $clickerRedundancy = $factoryRedundancy->createMaps();
+
+                if($clickerRedundancy)
+                    $requestTimeDistance = $clickerRedundancy->getPolylineAndEstimateByAddresses(
+                        $srcAddress, $destAddress, $startLat, $startLng, $destLat, $destLng
+                    );
+            }
+        }
+
+        return $requestTimeDistance;
+    }
+
 
     public function getPolylineAndEstimateWithWayPointsApi(RouteWayPointsRequest $request){
 		$factory = new MapsFactory('directions');
