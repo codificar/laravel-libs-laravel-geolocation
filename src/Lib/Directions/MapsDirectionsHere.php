@@ -5,6 +5,7 @@ namespace Codificar\Geolocation\Lib;
 //Internal Uses
 use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Helper;
+use Codificar\Geolocation\Utils\Polyline\FlexiblePolyline;
 
 //External Uses
 use GeometryLibrary\PolyUtil;
@@ -328,7 +329,98 @@ use GeometryLibrary\PolyUtil;
          */
         public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
         {
+            $ways = json_decode($wayPoints,true);
+            $waysLen = count($ways);
+            if (!$this->directions_key_api || !isset($ways[0]) || !isset($ways[1]) || $waysLen < 2)
+            {
+                return array('success' => false);
+            }
+        
+            $origin = $ways[0][0].",".$ways[0][1];
+            $destination = $ways[0][0].",".$ways[0][1];
+            $via = false;
+            foreach ($ways as $key => $value) {
+                if($key > 1){
+                    $via .= "&via=".$value[0].",".$value[1];
+                }                
+            }          
+            $params         =   array(
+                "apiKey"    =>  "$this->directions_key_api",
+                "transportMode"  =>  "car",
+                "return"  =>  "polyline,summary",
+                "origin"  =>  $origin,                
+                "destination"  =>  $destination              
+            );
+
+            $curl_string = $this->url_api . "routes?" . http_build_query($params);
+            $via ? $curl_string = $curl_string.$via : null;         
+                      
+            return self::polylineProcessWithPoints($curl_string);
+        }
+
+        /**
+         * Process curl response and return array with polyline and estimates.
+         *
+         * @param String      $curl_string      URL called by curl.
+         * @param String      $verb             Defines the request verb.
+         * @param String      $postFields       Params to POST request.
+         *
+         * @return Array      $polyline         Array with polyline and estimates.
+         */
+        private function polylineProcessWithPoints($curl_string, $verb=null, $postFields=null)
+        {
+            $php_obj = self::curlCall($curl_string);
+            $response_obj = json_decode($php_obj);
+        
+            if(isset($response_obj->routes[0])) {             
+                                             
+                return self::formatDistanceTimeTextWithPoints($response_obj);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private function formatDistanceTimeTextWithPoints($response_obj){
+            $routes = $response_obj->routes[0]->sections;
+            $responseArray = array();
+            $totalDistance = 0;
+            $totalDuration = 0;
+
+            $points = [];
+          
+            foreach ($routes as $key => $value) {
+                $points = $this->convertPolyline($value->polyline);
+                $originalTime = number_format(($value->summary->duration/60));
+                $originalDistance = $value->summary->length;    
+                
+                $convertDist = self::convert_meters(self::$settings_dist, $originalDistance);
+                $convertTime = $originalTime;
+
+                $partialDistances[$key] = (string) $convertDist;
+                $partialDurations[$key] = (string) $convertTime;
+
+                $totalDistance += $convertDist;
+                $totalDuration += $convertTime;                            
+            }
+
+            $responseArray['waypoint_order'] = [];
+            $responseArray['points'] = $points;
+            $responseArray['partial_distances'] = $partialDistances;
+            $responseArray['partial_durations'] = $partialDurations;
+
+            $responseArray['distance_value'] = $totalDistance;
+            $responseArray['duration_value'] = $totalDuration;
+
+            $responseArray['distance_text'] = number_format($totalDistance, 1) . " " . self::$unit_text;
+            $responseArray['duration_text'] = ceil($totalDuration) . " " . trans("api.minutes");
             
+            return $responseArray;
+        }
+
+        private function convertPolyline($points){
+            return FlexiblePolyline::decode($points)['polyline'];
         }
 
     }
