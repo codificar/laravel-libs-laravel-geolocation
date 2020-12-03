@@ -71,15 +71,7 @@ Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\
 Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
     //PLACES   
     //Auto complete
-    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
-    
-    //Get Geocode Reverse
-    // Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
-    //Get Geocode
-    // Route::post('/getLatLngFromAddress', 'GeolocationController@geocode');   
-
-    //DIRECTIONS
-    // Route::post('/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');      
+    Route::get('/get_address_string', 'GeolocationController@getAddressByString');       
 });
 
 //Admin Painel Routes
@@ -89,6 +81,16 @@ Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\G
         Route::get('/', array('as' => 'adminGeolocationSetting', 'uses' => 'GeolocationSettingsController@create'));
         Route::post('/', array('as' => 'adminGeolocationSettingSave', 'uses' => 'GeolocationSettingsController@store'));      
     });
+});
+
+
+//User APP APIs OLD Motoboys
+Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api', 'middleware' => 'auth.user_api:api' ], function () {  
+    // Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function () {          
+    Route::post('/getAddressFromPlaceId', 'GeolocationControllerV1@geocodeByPlaceId');
+    Route::post('/getAddressFromLatLong', 'GeolocationControllerV1@geocodeReverse');
+    Route::get('/get_distance_time', 'GeolocationControllerV1@getDirectionsDistanceAndTime');
+    Route::post('/getLatLngFromAddress', 'GeolocationControllerV1@geocode');
 });
 
 /**
