@@ -11,8 +11,8 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
 
     //Directions API
     Route::get('/admin/geocode/get_estimate', 'DirectionsController@getDirectionsDistanceAndTimeApi');
-    Route::get('/admin/geocode/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByDirectionsApi');
-    Route::get('/admin/address/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddressesApi');
+    Route::get('/admin/geocode/get_polyline_and_estimate', ['as' => 'adminPolylineByGeocode', 'uses' => 'DirectionsController@getPolylineAndEstimateByDirectionsApi']);
+    Route::get('/admin/address/get_polyline_and_estimate', ['as' => 'adminPolylineByAddress', 'uses' => 'DirectionsController@getPolylineAndEstimateByAddressesApi']);
     //Only Motoboys
     Route::get('admin/get_polyline_waypoints', array('as' => 'adminPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));   
 });
@@ -43,13 +43,13 @@ Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Co
     //Get Geocode By PlaceId
     Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
     //Get Geocode Reverse
-    Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
+    Route::post('/geolocation/get_address_by_geocode', 'GeolocationController@geocodeReverse');
     //Get Geocode
-    Route::post('/getLatLngFromAddress', 'GeolocationController@geocode');   
+    Route::post('/geolocation/get_geocode_by_address', 'GeolocationController@geocode');   
 
     //DIRECTIONS
-    Route::post('/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');   
-    Route::post('/get_distance_time', 'DirectionsController@getDistanceAndTimeByDirections');   
+    Route::post('/geolocation/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');   
+    Route::post('/geolocation/get_distance_time', 'DirectionsController@getDistanceAndTimeByDirections');   
     Route::post('/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddresses');  
 });
 
@@ -72,13 +72,14 @@ Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Htt
     //PLACES   
     //Auto complete
     Route::get('/get_address_string', 'GeolocationController@getAddressByString');
+    
     //Get Geocode Reverse
-    Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
+    // Route::post('/getAddressFromLatLong', 'GeolocationController@geocodeReverse');
     //Get Geocode
-    Route::post('/getLatLngFromAddress', 'GeolocationController@geocode');   
+    // Route::post('/getLatLngFromAddress', 'GeolocationController@geocode');   
 
     //DIRECTIONS
-    Route::post('/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');      
+    // Route::post('/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');      
 });
 
 //Admin Painel Routes
