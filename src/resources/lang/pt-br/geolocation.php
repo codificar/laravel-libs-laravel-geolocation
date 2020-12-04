@@ -23,4 +23,8 @@ return [
     "save"                          => "Salvar",  
 
     "api_directions"                    => "API Directions",
+
+    "api_maps"                    => "Provedor de Mapas",
+    "api_maps_provider"                    => "Provedor de serviço",
+    "api_maps_key"                    => "Chave de autenticação",
 ];

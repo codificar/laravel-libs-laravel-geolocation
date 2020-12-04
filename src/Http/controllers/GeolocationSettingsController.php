@@ -15,6 +15,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
 
 use Codificar\Geolocation\Enums\DirectionsEnum;
 use Codificar\Geolocation\Enums\PlacesEnum;
+use Codificar\Geolocation\Enums\MapsEnum;
 //External Uses
 
 class GeolocationSettingsController extends Controller
@@ -35,7 +36,8 @@ class GeolocationSettingsController extends Controller
 		// Get Enum Values
 		$enums = array(
 			'directions_provider'	=>	DirectionsEnum::DirectionsProvider,
-			'places_provider'		=>	PlacesEnum::PlacesProvider
+			'places_provider'		=>	PlacesEnum::PlacesProvider,
+			'maps_provider'		    =>	MapsEnum::MapsProvider
 		);
 
 		// Get Page Title

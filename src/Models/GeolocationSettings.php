@@ -267,4 +267,23 @@ class GeolocationSettings extends Settings {
 			return null;
 	}
 
+	public static function getMapProvider(){
+		$settings = self::where('key', 'maps_provider')->first();
+
+		if($settings)
+		   return str_replace(" ", "", $settings->value);
+	   else
+		   return "";
+	}
+
+	 public static function getMapsApiKey(){
+		$settings = self::where('key', 'maps_key')->first();
+
+		if($settings)
+		   return str_replace(" ", "", $settings->value);
+	   else
+		   return "";
+	}
+
+
 }

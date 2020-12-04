@@ -1,11 +1,13 @@
 <script>
 import ApiDirections from "./api_directions";
 import ApiPlaces from "./api_places";
+import ApiMaps from "./api_maps";
 export default {
   props: ["enumData", "model", "placeSaveRoute"],
   components: {
     ApiDirections,
-    ApiPlaces
+    ApiPlaces,
+    ApiMaps
   },
   data() {
     return {     
@@ -21,6 +23,11 @@ export default {
 </script>
 <template>
     <div>
+        <ApiMaps
+          :enum-data="enumData"
+          :model="model"
+          :place-save-route="placeSaveRoute"
+        />
         <ApiPlaces
             :enum-data="enumData"
             :model="model"
@@ -30,6 +37,6 @@ export default {
             :enum-data="enumData"
             :model="model"
             :place-save-route="placeSaveRoute"
-        />
+        />        
     </div>
 </template>

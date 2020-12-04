@@ -87,7 +87,7 @@ class PlacesTest extends TestCase
     public function testGeocodeApi()
     {           
         $response = $this->client->request('GET', $this->GEOCODE_URL, $this->TEST_DATA_GEOCODE);
-        
+     
         //Validando Status HTTP       
         $this->assertEquals(200, $response->getStatusCode());  //Status deve ser 200
 
