@@ -279,8 +279,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
             $processed      =   [];
             $success        =   false;
             $error          =   [];
-
-            if(!$this->url_api ||!$this->places_key_api || !$address)
+            if(!$this->url_api ||!$this->places_key_api)
             {
                 $error      =   array("error_message" => trans('maps_lib.incomplete_parameters'));
             }
@@ -303,7 +302,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
                 $curl_string    =   $this->url_api . "geocode/json?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
-                $response_obj   =   json_decode($php_obj);
+                $response_obj   =   json_decode($php_obj);               
             }
 
             if(
