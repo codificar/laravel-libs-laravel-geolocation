@@ -53,18 +53,13 @@ Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Co
     Route::post('/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddresses');  
 });
 
-//User APP APIs Motoboys
-Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
-    //PLACES
-
-    //Places AutoComplete
-    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
-    //Get Reverse Geocode
-    Route::post('/get_address_from_lat_long', 'GeolocationController@geocodeReverse');  
-    //Get Geocode
-    Route::post('/get_lat_long_from_address', 'GeolocationController@geocode');  
-    //Get Geocode By PlaceId
-    Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
+//User APP APIs OLD UberClone
+Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api', 'middleware' => 'auth.user_api:api' ], function () {  
+    // Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function () {          
+    Route::post('/getAddressFromPlaceId', 'GeolocationControllerV1@geocodeByPlaceId');
+    Route::post('/getAddressFromLatLong', 'GeolocationControllerV1@geocodeReverse');
+    Route::get('/get_distance_time', 'GeolocationControllerV1@getDirectionsDistanceAndTime');
+    Route::post('/getLatLngFromAddress', 'GeolocationControllerV1@geocode');
 });
 
 //Provider APP APIs
@@ -83,14 +78,24 @@ Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\G
     });
 });
 
+//User APP APIs Motoboys
+Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
+    //PLACES
 
-//User APP APIs OLD Motoboys
-Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api', 'middleware' => 'auth.user_api:api' ], function () {  
-    // Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function () {          
-    Route::post('/getAddressFromPlaceId', 'GeolocationControllerV1@geocodeByPlaceId');
-    Route::post('/getAddressFromLatLong', 'GeolocationControllerV1@geocodeReverse');
-    Route::get('/get_distance_time', 'GeolocationControllerV1@getDirectionsDistanceAndTime');
-    Route::post('/getLatLngFromAddress', 'GeolocationControllerV1@geocode');
+    //Places AutoComplete
+    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
+    //Get Reverse Geocode
+    Route::post('/geolocation/get_address_from_lat_long', 'GeolocationController@geocodeReverse');  
+    //Get Geocode
+    Route::post('/get_lat_long_from_address', 'GeolocationController@geocode');  
+    //Get Geocode By PlaceId
+    Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
+});
+
+//Old APP APIs Motoboys
+Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api', 'middleware' => 'auth.user_api:api' ], function () {
+    //Get Reverse Geocode
+    Route::post('/get_address_from_lat_long', 'GeolocationControllerV1@geocodeReverse');  
 });
 
 /**
