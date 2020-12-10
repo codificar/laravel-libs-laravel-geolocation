@@ -170,6 +170,32 @@ class GeolocationControllerV1 extends Controller {
 
         return new GeocodeResource(["response" => $response]);
     } 
+
+    public function getAddressByString(PlacesFormRequest $request)  {
+        $this->factory = new MapsFactory('places');
+        
+        if($this->factory) {
+            $this->clicker = $this->factory->createMaps();
+            $response = $this->clicker->getAddressByTextWithLatLng($request->place,$request->latitude,$request->longitude);
+        }else{
+            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+        }
+
+        $response['clicker'] = "primary";
+
+        if((!$this->factory || $response['success'] == false) && GeolocationSettings::getPlacesRedundancyRule()) {
+            $this->factoryRedundancy = new MapsFactory('redundancy_places');
+
+            if($this->factoryRedundancy){
+                $this->clickerRedundancy = $this->factoryRedundancy->createMaps();
+                $response = $this->clickerRedundancy->getAddressByTextWithLatLng($request->place,$request->latitude,$request->longitude);
+            }
+
+            $response['clicker'] = "redundancy";
+        }
+
+        return new PlacesResource(["response" => $response]);
+    }
    
     
 }

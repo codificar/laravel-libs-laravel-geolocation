@@ -337,7 +337,8 @@ use GeometryLibrary\PolyUtil;
             }
         
             $origin = $ways[0][0].",".$ways[0][1];
-            $destination = $ways[0][0].",".$ways[0][1];
+            $destination = $ways[1][0].",".$ways[1][1];
+           
             $via = false;
             foreach ($ways as $key => $value) {
                 if($key > 1){
@@ -351,10 +352,10 @@ use GeometryLibrary\PolyUtil;
                 "origin"  =>  $origin,                
                 "destination"  =>  $destination              
             );
-
+           
             $curl_string = $this->url_api . "routes?" . http_build_query($params);
             $via ? $curl_string = $curl_string.$via : null;         
-                      
+           
             return self::polylineProcessWithPoints($curl_string);
         }
 
@@ -371,7 +372,7 @@ use GeometryLibrary\PolyUtil;
         {
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj);
-        
+           
             if(isset($response_obj->routes[0])) {             
                                              
                 return self::formatDistanceTimeTextWithPoints($response_obj);
@@ -393,8 +394,8 @@ use GeometryLibrary\PolyUtil;
             foreach ($routes as $key => $value) {
                 $points = $this->convertPolyline($value->polyline);
                 $originalTime = number_format(($value->summary->duration/60));
-                $originalDistance = $value->summary->length;    
-                
+                $originalDistance = $value->summary->length;                  
+
                 $convertDist = self::convert_meters(self::$settings_dist, $originalDistance);
                 $convertTime = $originalTime;
 
@@ -404,7 +405,7 @@ use GeometryLibrary\PolyUtil;
                 $totalDistance += $convertDist;
                 $totalDuration += $convertTime;                            
             }
-
+           
             $responseArray['waypoint_order'] = [];
             $responseArray['points'] = $points;
             $responseArray['partial_distances'] = $partialDistances;
@@ -415,7 +416,7 @@ use GeometryLibrary\PolyUtil;
 
             $responseArray['distance_text'] = number_format($totalDistance, 1) . " " . self::$unit_text;
             $responseArray['duration_text'] = ceil($totalDuration) . " " . trans("api.minutes");
-            
+          
             return $responseArray;
         }
 

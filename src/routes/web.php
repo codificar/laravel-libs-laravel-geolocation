@@ -24,6 +24,9 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
 
     //Only Motoboys
     Route::get('corp/get_polyline_waypoints', array('as' => 'corpPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));  
+
+    //Only Fretes
+    Route::get('/corp/geocode/get_polyline_and_estimate', ['as' => 'corpPolylineByGeocode', 'uses' => 'DirectionsController@getPolylineAndEstimateByDirectionsApi']);
 });
 
 //User Painel APIs
@@ -66,8 +69,15 @@ Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Co
 Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
     //PLACES   
     //Auto complete
-    Route::get('/get_address_string', 'GeolocationController@getAddressByString');       
+    Route::get('/get_address_string', 'GeolocationController@getAddressByString');      
 });
+
+ //Only Fretes
+Route::group(['prefix' => '/api/v1/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
+   //Direction       
+   Route::get('/geolocation/get_polyline', 'DirectionsController@getAddressByString'); 
+});
+
 
 //Admin Painel Routes
 Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function(){
@@ -93,9 +103,11 @@ Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\
 });
 
 //Old APP APIs Motoboys
-Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api', 'middleware' => 'auth.user_api:api' ], function () {
+Route::group(['prefix' => '/api/v1', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api' ], function () {
     //Get Reverse Geocode
-    Route::post('/get_address_from_lat_long', 'GeolocationControllerV1@geocodeReverse');  
+    Route::post('/user/get_address_from_lat_long', 'GeolocationControllerV1@geocodeReverse');  
+
+    Route::get('/geolocation/get_address_string', 'GeolocationControllerV1@getAddressByString');  
 });
 
 /**
