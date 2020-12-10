@@ -338,6 +338,7 @@ use Codificar\Geolocation\Helper;
             $polyline['duration_value'] = convert_to_minutes($partialsAndTotals['total_duration']);
             $polyline['partial_distances'] = $partialsAndTotals['partial_distances'];
             $polyline['partial_durations'] = $partialsAndTotals['partial_durations'];
+            $polyline['waypoint_order'] = [];
 
             return $polyline;
         }

@@ -325,8 +325,86 @@ use GeometryLibrary\PolyUtil;
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
          */
         public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
-        {
+        {           
+            $arrayPoints = json_decode($wayPoints);
+            $waysFormatted = [];
+            foreach ($arrayPoints as $key => $value) {
+                $jsonPoints = (object) array(
+                    "lat" => strval($value[0]),
+                    "lng" => strval($value[1])
+                );
+                array_push($waysFormatted, $jsonPoints);
+            }
+            $params         =   array(
+                "fm_token"       =>  $this->directions_key_api,
+                "points"         =>  json_encode($waysFormatted),
+                "driving_mode"   =>  'car'
+            );
+
+            $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
+            $php_obj        =   self::curlCall($curl_string);
+            $response_obj   =   json_decode($php_obj);
+           
+            if($response_obj->status == 200 && $response_obj->message == 'Successful' && isset($response_obj->data->paths[0])) { 
+                return self::polylineProcessWithPoints($response_obj->data->paths[0], $response_obj);
+            }else {
+                return false;
+            }            
+        }
+
+        /**
+         * Process curl response and return array with polyline and estimates.
+         *
+         * @param String      $curl_string         URL called by curl.
+         *
+         * @return Array      $polyline            Array with polyline and estimates.
+         */
+        private static function polylineProcessWithPoints($values, $infoValue) {
+            $decodedPolyline = self::polylineDecodeWithFlight($values->points);            
+            $distanceTimeValue = self::formatDistanceTimeText($infoValue);
             
+            if(isset($decodedPolyline['points']) && isset($distanceTimeValue)) {
+                $array_resp['waypoint_order'] = [];
+                $array_resp['points'] = $decodedPolyline['points'];    
+    
+                $array_resp['distance_text'] = $distanceTimeValue['distance_text'];
+                $array_resp['duration_text'] = $distanceTimeValue['duration_text'];
+                $array_resp['distance_value'] = round($distanceTimeValue['convertDist'], 2);
+                $array_resp['duration_value'] = round($distanceTimeValue['convertTime'], 2 );
+    
+               
+                $partialDistances = number_format(($distanceTimeValue['convertDist'] / 2), 2);
+                $partialDurations = number_format(($distanceTimeValue['convertTime'] / 2), 2);
+
+                $partialDistances = [];
+                $partialDurations = [];   
+
+                foreach ($values->legs as $key => $value) {
+                    $partialDistances[$key] = number_format(($value->distance / 1000), 2);
+                    $partialDurations[$key] = number_format(($value->time / 60), 2);
+                }
+
+                $array_resp['partial_distances'] = $partialDistances;
+                $array_resp['partial_durations'] = $partialDurations;
+                
+                return $array_resp;
+            }           
+        }
+
+        private static function polylineDecodeWithFlight($originalPoints){
+            $polyline['points'] = $originalPoints;
+            $needle = metaphone('points');
+            $obj = $polyline;
+            $obj_dot = array_dot($obj);
+            $array_resp = [];
+            foreach( $obj_dot as $key => $val)
+            {
+                $val =  strcmp( metaphone($key, strlen($needle)), $needle) === 0 
+                        ? PolyUtil::decode($val) // if matched decode polyline
+                        : $val;
+                array_set($array_resp, $key, $val);
+            }
+            return $array_resp;
         }
 
     }

@@ -306,6 +306,7 @@ use Codificar\Geolocation\Helper;
                 $polyline['duration_value'] = convert_to_minutes($response_obj['resourceSets'][0]['resources'][0]['travelDurationTraffic']);
                 $polyline['partial_distances'] = $partialDistances;
                 $polyline['partial_durations'] = $partialDurations;
+                $polyline['partial_durations'] = $partialDurations;
             }
             else
             {

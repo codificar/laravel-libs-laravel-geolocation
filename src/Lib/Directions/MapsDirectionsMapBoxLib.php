@@ -310,6 +310,7 @@ use Codificar\Geolocation\Helper;
                 $polyline['duration_value'] = convert_to_minutes($response_obj['routes'][0]['duration']);
                 $polyline['partial_distances'] = $partialDistances;
                 $polyline['partial_durations'] = $partialDurations;
+                 $responseArray['waypoint_order'] = [];
             }
             else
             {

@@ -283,9 +283,9 @@ use Codificar\Geolocation\Helper;
                     "useTraffic": true
                 }}';
             }
-
+           
             $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api;
-
+          
             return $this->polylineProcessWithPoints($curl_string, 'post', $postFields);
         }
 
@@ -305,7 +305,7 @@ use Codificar\Geolocation\Helper;
 
             $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
             $position = 0;
-
+           
             if(isset($response_obj['info']['statuscode']) && $response_obj['info']['statuscode'] == 0)
             {
                 foreach($response_obj['route']['shape']['shapePoints'] as $index => $point)
@@ -340,6 +340,7 @@ use Codificar\Geolocation\Helper;
                 $polyline['duration_value'] = convert_to_minutes($totalDuration);
                 $polyline['partial_distances'] = $partialDistances;
                 $polyline['partial_durations'] = $partialDurations;
+                $polyline['waypoint_order'] = [];
             }
             else
             {

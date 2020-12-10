@@ -359,6 +359,7 @@ use GeometryLibrary\PolyUtil;
                 $array_resp['partial_distances'] = $partialDistances;
                 $array_resp['partial_durations'] = $partialDurations;
                 $array_resp['waypoint_order'] = $waypoint_order;
+                $array_resp['waypoint_order'] = [];
             }
             else
             {
