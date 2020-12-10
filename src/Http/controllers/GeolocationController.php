@@ -116,7 +116,9 @@ class GeolocationController extends Controller {
             $response['clicker'] = "redundancy";
         }
 
-        if($response['success']) $response['data']['address'] = $request->address;
+        if($response['success'] && isset($response['data'])){
+            if(!$response['data']['address']) $request->address;
+        }  
 
         return new GeocodeResource(["response" => $response]);
     } 

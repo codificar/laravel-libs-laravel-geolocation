@@ -66,8 +66,8 @@ class DirectionsTest extends TestCase
         $duration = $result->data->time_in_minutes;
         
         $this->assertEquals(true, $result->success);  //success deve ser true  main_text     
-        $this->assertLessThanOrEqual(2, $distance);
-        $this->assertLessThanOrEqual(5, $duration);
+        $this->assertLessThanOrEqual(5, $distance);
+        $this->assertLessThanOrEqual(8, $duration);
     }
 
     /**
@@ -101,8 +101,8 @@ class DirectionsTest extends TestCase
         $this->assertObjectHasAttribute('lat', $pointTwo);
         $this->assertObjectHasAttribute('lng', $pointTwo);
 
-        $this->assertLessThanOrEqual(2, $distance);
-        $this->assertLessThanOrEqual(5, $duration);
+        $this->assertLessThanOrEqual(5, $distance);
+        $this->assertLessThanOrEqual(8, $duration);
     }
     
 
@@ -137,8 +137,8 @@ class DirectionsTest extends TestCase
         $this->assertObjectHasAttribute('lat', $pointTwo);
         $this->assertObjectHasAttribute('lng', $pointTwo);
 
-        $this->assertLessThanOrEqual(2, $distance);
-        $this->assertLessThanOrEqual(5, $duration);
+        $this->assertLessThanOrEqual(5, $distance);
+        $this->assertLessThanOrEqual(8, $duration);
     }
 
 
@@ -173,8 +173,8 @@ class DirectionsTest extends TestCase
         $this->assertObjectHasAttribute('lat', $pointTwo);
         $this->assertObjectHasAttribute('lng', $pointTwo);
 
-        $this->assertLessThanOrEqual(2, $distance);
-        $this->assertLessThanOrEqual(5, $duration);
+        $this->assertLessThanOrEqual(5, $distance);
+        $this->assertLessThanOrEqual(8, $duration);
     }
        
 }

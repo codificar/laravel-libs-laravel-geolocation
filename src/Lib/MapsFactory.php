@@ -7,6 +7,7 @@ use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Lib\Places\MapsPlacesGoogleLib;
 use Codificar\Geolocation\Lib\Places\MapsPlacesFlightMap;
 use Codificar\Geolocation\Lib\Places\MapsPlacesBing;
+use Codificar\Geolocation\Lib\Places\MapsPlacesOpenRoute;
 
     /**
      * This class define the requisition type of geolocation
@@ -79,7 +80,7 @@ use Codificar\Geolocation\Lib\Places\MapsPlacesBing;
                     case self::MAPS_PELIAS:
                         return(new MapsPlacesPeliasLib());
                     case self::MAPS_OPENROUTE:
-                        return(new MapsPlacesPeliasLib()); // same library
+                        return(new MapsPlacesOpenRoute());
                     case self::MAPS_ALGOLIA:
                         return(new MapsPlacesAlgoliaLib());
                     case self::MAPS_HERE:
@@ -103,7 +104,7 @@ use Codificar\Geolocation\Lib\Places\MapsPlacesBing;
                             $placesRedundancyKey
                         ));
                     case self::MAPS_OPENROUTE:
-                        return(new MapsPlacesPeliasLib(
+                        return(new MapsPlacesOpenRoute(
                             GeolocationSettings::getPlacesRedundancyUrl(),
                             $placesRedundancyKey
                         ));
