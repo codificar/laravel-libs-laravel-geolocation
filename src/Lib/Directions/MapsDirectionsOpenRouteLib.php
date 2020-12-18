@@ -214,7 +214,6 @@ use Codificar\Geolocation\Helper;
             try {
                 $php_obj = self::curlCall($curl_string);
                 $response_obj = json_decode($php_obj, true);
-
                 $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
                 if(isset($response_obj['features']) && count($response_obj['features'][0]['geometry']['coordinates']))
                 {
@@ -225,11 +224,15 @@ use Codificar\Geolocation\Helper;
                         $polyline['points'][$index]['lng'] = $point[0];
                     }   
                     $duration = isset($response_obj['features'][0]['properties']['segments'][0]['duration']) ? $response_obj['features'][0]['properties']['segments'][0]['duration'] : 0.0;
-                   
-                    $polyline['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $response_obj['features'][0]['properties']['segments'][0]['distance']),1) . self::$unit_text;
-                    $polyline['duration_text'] = self::formatTime($duration);
-                    $polyline['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['features'][0]['properties']['segments'][0]['distance']);
-                    $polyline['duration_value'] = convert_to_minutes($duration);
+                 
+                    if(isset(self::$settings_dist, $response_obj['features'][0]['properties']['segments'][0]['distance'])){
+                        $polyline['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $response_obj['features'][0]['properties']['segments'][0]['distance']),1) . self::$unit_text;
+                        $polyline['duration_text'] = self::formatTime($duration);
+                        $polyline['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['features'][0]['properties']['segments'][0]['distance']);
+                        $polyline['duration_value'] = convert_to_minutes($duration);
+                    }else {
+                        return false;
+                    }                  
                 }
                 else
                 {
