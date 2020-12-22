@@ -199,7 +199,7 @@ export default {
           <div v-show=directionsProviderRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.api_directions_url") }}*
+                {{ trans("geolocation.api_places_url") }}*
               </label>           
               <input v-model=directionsDataModel.directions_url.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url}}</div>	
