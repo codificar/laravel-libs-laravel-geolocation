@@ -1,114 +1,19 @@
 <?php
+// Settings
+require 'settings.php';
 
-//Admin APIs
-Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.admin_api', 'cors']], function () { 
+// App User
+require 'app/user_delivery_old.php'; // Old Routes
+require 'app/user_mobility_old.php'; // Old Routes
+require 'app/user.php';
 
-    Route::get('/admin/get_address_string', ['as' => 'adminAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
-    Route::get('/admin/geocode', ['as' => 'adminGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
-    
-    Route::get('/admin/geocode_reverse', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocodeReverse']);
-    Route::get('/admin/get_place_details', 'GeolocationController@getDetailsById');
+// App Provider
+require 'app/provider.php';
 
-    //Directions API
-    Route::get('/admin/geocode/get_estimate', 'DirectionsController@getDirectionsDistanceAndTimeApi');
-    Route::get('/admin/geocode/get_polyline_and_estimate', ['as' => 'adminPolylineByGeocode', 'uses' => 'DirectionsController@getPolylineAndEstimateByDirectionsApi']);
-    Route::get('/admin/address/get_polyline_and_estimate', ['as' => 'adminPolylineByAddress', 'uses' => 'DirectionsController@getPolylineAndEstimateByAddressesApi']);
-    //Only Motoboys
-    Route::get('admin/get_polyline_waypoints', array('as' => 'adminPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));   
-});
-
-//Corp APIs
-Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.corp_api', 'cors']], function () {  
-    Route::get('/corp/get_address_string', ['as' => 'corpAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
-    Route::get('/corp/geocode', ['as' => 'corpGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
-
-    //Only Motoboys
-    Route::get('corp/get_polyline_waypoints', array('as' => 'corpPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));  
-
-    //Only Fretes
-    Route::get('/corp/geocode/get_polyline_and_estimate', ['as' => 'corpPolylineByGeocode', 'uses' => 'DirectionsController@getPolylineAndEstimateByDirectionsApi']);
-});
-
-//User Painel APIs
-Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => ['auth.user_api', 'cors']], function () {  
-    Route::get('/user/get_address_string', ['as' => 'userAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
-    Route::get('/user/geocode', ['as' => 'userGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
-
-    //Only Motoboys
-    Route::get('/user/get_polyline_waypoints', array('as' => 'userPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi')); 
-});
-
-//User APP APIs Uberclone
-Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
-    //PLACES
-    //Auto complete
-    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
-    //Get Geocode By PlaceId
-    Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
-    //Get Geocode Reverse
-    Route::post('/geolocation/get_address_by_geocode', 'GeolocationController@geocodeReverse');
-    //Get Geocode
-    Route::post('/geolocation/get_geocode_by_address', 'GeolocationController@geocode');   
-
-    //DIRECTIONS
-    Route::post('/geolocation/get_polyline', 'DirectionsController@getPolylineAndEstimateByDirections');   
-    Route::post('/geolocation/get_distance_time', 'DirectionsController@getDistanceAndTimeByDirections');   
-    Route::post('/get_polyline_and_estimate', 'DirectionsController@getPolylineAndEstimateByAddresses');  
-});
-
-//User APP APIs OLD UberClone
-Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api', 'middleware' => 'auth.user_api:api' ], function () {  
-    // Route::group(['prefix' => '/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function () {          
-    Route::post('/getAddressFromPlaceId', 'GeolocationControllerV1@geocodeByPlaceId');
-    Route::post('/getAddressFromLatLong', 'GeolocationControllerV1@geocodeReverse');
-    Route::get('/get_distance_time', 'GeolocationControllerV1@getDirectionsDistanceAndTime');
-    Route::post('/getLatLngFromAddress', 'GeolocationControllerV1@geocode');
-});
-
-//Provider APP APIs
-Route::group(['prefix' => '/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
-    //PLACES   
-    //Auto complete
-    Route::get('/get_address_string', 'GeolocationController@getAddressByString');      
-});
-
- //Only Fretes
-Route::group(['prefix' => '/api/v1/provider', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.provider_api:api' ], function () {  
-   //Direction       
-   Route::get('/geolocation/get_polyline', 'DirectionsController@getAddressByString'); 
-});
-
-
-//Admin Painel Routes
-Route::group(['prefix' => '/admin/libs/geolocation', 'namespace' => 'Codificar\Geolocation\Http\Controllers'], function(){
-    //Settings
-    Route::group(['prefix' => '/settings'], function () {  
-        Route::get('/', array('as' => 'adminGeolocationSetting', 'uses' => 'GeolocationSettingsController@create'));
-        Route::post('/', array('as' => 'adminGeolocationSettingSave', 'uses' => 'GeolocationSettingsController@store'));      
-    });
-});
-
-//User APP APIs Motoboys
-Route::group(['prefix' => '/api/v1/user', 'namespace' => 'Codificar\Geolocation\Http\Controllers', 'middleware' => 'auth.user_api:api' ], function () {  
-    //PLACES
-
-    //Places AutoComplete
-    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
-    //Get Reverse Geocode
-    Route::post('/geolocation/get_address_from_lat_long', 'GeolocationController@geocodeReverse');  
-    //Get Geocode
-    Route::post('/get_lat_long_from_address', 'GeolocationController@geocode');  
-    //Get Geocode By PlaceId
-    Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
-});
-
-//Old APP APIs Motoboys
-Route::group(['prefix' => '/api/v1', 'namespace' => 'Codificar\Geolocation\Http\Controllers\api' ], function () {
-    //Get Reverse Geocode
-    Route::post('/user/get_address_from_lat_long', 'GeolocationControllerV1@geocodeReverse');  
-
-    Route::get('/geolocation/get_address_string', 'GeolocationControllerV1@getAddressByString');  
-});
+// Painel
+require 'painel/admin.php';
+require 'painel/corp.php';
+require 'painel/user.php';
 
 /**
  * Rota para permitir utilizar arquivos de traducao do laravel (dessa lib) no vue js
