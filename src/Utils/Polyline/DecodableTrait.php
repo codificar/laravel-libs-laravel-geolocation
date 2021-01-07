@@ -36,6 +36,57 @@ trait DecodableTrait
             if ($thirdDim) {
                 $deltaZ = self::toSigned($decoded[$i + 2]) / $factorZ;
                 $lastZ += $deltaZ;
+                $res[] = array(
+                    'lat' => $lastLat,
+                    'lng' => $lastLng,
+                    'delta' => $lastZ,
+                );
+                $i += 3;
+            } else {
+                $res[] = array(
+                    'lat' => $lastLat,
+                    'lng' => $lastLng,
+                );
+                $i += 2;
+            }
+        }
+
+        if ($i !== count($decoded)) {
+            throw new Exception('Invalid encoding. Premature ending reached');
+        }
+
+        return [
+            'precision' => $header['precision'],
+            'thirdDim' => $header['thirdDim'],
+            'thirdDimPrecision' => $header['thirdDimPrecision'],
+            'polyline' => $res
+        ];
+    }
+
+    public static function decodeToObject(string $encoded): array
+    {
+        $decoded = self::decodeUnsignedValues($encoded);
+        $header = self::decodeHeader($decoded[0], $decoded[1]);
+
+        $factorDegree = 10 ** $header['precision'];
+        $factorZ = 10 ** $header['thirdDimPrecision'];
+        $thirdDim = $header['thirdDim'];
+
+        $lastLat = 0;
+        $lastLng = 0;
+        $lastZ = 0;
+        $res = [];
+
+        $i = 2;
+        for (; $i < count($decoded);) {
+            $deltaLat = self::toSigned($decoded[$i]) / $factorDegree;
+            $deltaLng = self::toSigned($decoded[$i + 1]) / $factorDegree;
+            $lastLat += $deltaLat;
+            $lastLng += $deltaLng;
+
+            if ($thirdDim) {
+                $deltaZ = self::toSigned($decoded[$i + 2]) / $factorZ;
+                $lastZ += $deltaZ;
                 $res[] = (object) array(
                     'lat' => $lastLat,
                     'lng' => $lastLng,

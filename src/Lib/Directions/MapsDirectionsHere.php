@@ -11,7 +11,7 @@ use Codificar\Geolocation\Utils\Polyline\FlexiblePolyline;
 use GeometryLibrary\PolyUtil;
 
     /**
-     * Geolocation requests o Flight Map API
+     * Geolocation requests o Here Map API
      */
     class MapsDirectionsHere implements IMapsDirections
     {
@@ -47,7 +47,7 @@ use GeometryLibrary\PolyUtil;
         }
 
         /**
-         * Gets and calculate distance on Flight Map
+         * Gets and calculate distance on Here Map
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -81,7 +81,7 @@ use GeometryLibrary\PolyUtil;
         }
 
         /**
-         * Gets and calculate distance and duration on Flight Map
+         * Gets and calculate distance and duration on Here Map
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -123,7 +123,7 @@ use GeometryLibrary\PolyUtil;
         }       
 
         /**
-         * Return intermediaries multiple points in the route using Flight Map
+         * Return intermediaries multiple points in the route using Here Map
          *
          * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
          * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
@@ -153,7 +153,7 @@ use GeometryLibrary\PolyUtil;
         }
 
         /**
-         * Return intermediaries multiple points in the route using Flight Map
+         * Return intermediaries multiple points in the route using Here Map
          *
          * @param String       $source_address         String that represents the starting address of the request.
          * @param String       $destination_address    String that represents the destination address of the request.
@@ -243,28 +243,10 @@ use GeometryLibrary\PolyUtil;
             if(isset($response_obj->routes[0]))
             {                                
                 $responsePolyline = $response_obj->routes[0]->sections[0]->polyline;
-                $polyline['points'] = $responsePolyline;
-
-                $needle = metaphone('points');
-
-                // get polyline response
-                $obj = $polyline;
-
-                // flatten array into single level array using 'dot' notation
-                $obj_dot = array_dot($obj);
-                // create empty array_resp
-                $array_resp = [];
-                // iterate
-                foreach( $obj_dot as $key => $val)
-                {
-                    // Calculate the metaphone key and compare with needle
-                    $val =  strcmp( metaphone($key, strlen($needle)), $needle) === 0 
-                            ? PolyUtil::decode($val) // if matched decode polyline
-                            : $val;
-                    array_set($array_resp, $key, $val);
-                }
-                
+               
+                $array_resp = [];                
                 $values = self::formatDistanceTimeText($response_obj);
+                $array_resp['points'] = self::decodePolyline($responsePolyline);
                 $array_resp['distance_text'] = $values['distance_text'];
                 $array_resp['duration_text'] = $values['duration_text'];
                 $array_resp['distance_value'] = $values['convertDist'];
@@ -274,7 +256,6 @@ use GeometryLibrary\PolyUtil;
             {
                 return false;
             }
-           
             return $array_resp;
         }
 
@@ -392,7 +373,7 @@ use GeometryLibrary\PolyUtil;
             $points = [];
           
             foreach ($routes as $key => $value) {
-                $points = $this->convertPolyline($value->polyline);
+                $points = $this->decodePolylineToObject($value->polyline);
                 $originalTime = number_format(($value->summary->duration/60));
                 $originalDistance = $value->summary->length;                  
 
@@ -420,8 +401,12 @@ use GeometryLibrary\PolyUtil;
             return $responseArray;
         }
 
-        private function convertPolyline($points){
+        private function decodePolyline($points){
             return FlexiblePolyline::decode($points)['polyline'];
+        }
+
+        private function decodePolylineToObject($points){
+            return FlexiblePolyline::decodeToObject($points)['polyline'];
         }
 
     }
