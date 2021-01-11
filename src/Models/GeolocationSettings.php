@@ -91,7 +91,7 @@ class GeolocationSettings extends Settings {
 		if($settings)
 		   return $settings->value;
 	    else
-		   return null;
+		   return 'pt-br';
 	}
 
 	/**

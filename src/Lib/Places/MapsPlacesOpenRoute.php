@@ -241,7 +241,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     "key"       =>  $this->places_key_api,
                     "place_id"  =>  $placeId,
                     "fields"    =>  "formatted_address,geometry,place_id",
-                    "language"  =>  "pt-BR"
+                    "language"  =>  $this->sysLang
                 );
 
                 $curl_string    =   $this->url_api . "place/details/json?" . http_build_query($params);

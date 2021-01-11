@@ -47,6 +47,8 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $this->places_key_api = GeolocationSettings::getPlacesKey();
 
             $this->sysLang = GeolocationSettings::getLocale();
+            $lang = isset($lang) ? $lang : $this->sysLang;
+            $this->setCountryLang($lang);
         }
 
         /**
@@ -89,9 +91,9 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     "location"  =>  $requester_lat . "," . $requester_lng,
                     "radius"    =>  5000,
                     "input"     =>  $text,
-                    "language"  =>  "pt-BR"
+                    "language"  =>  $this->lang
                 );
-
+               
                 $curl_string    =   $this->url_api . "place/autocomplete/json?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
                 $response_obj   =   json_decode($php_obj);
@@ -224,7 +226,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     "key"       =>  $this->places_key_api,
                     "place_id"  =>  $placeId,
                     "fields"    =>  "formatted_address,geometry,place_id",
-                    "language"  =>  "pt-BR"
+                    "language"  =>  $this->lang
                 );
 
                 $curl_string    =   $this->url_api . "place/details/json?" . http_build_query($params);
@@ -285,9 +287,6 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
             }
             else
             {
-                $lang = isset($lang) ? $lang : $this->sysLang;
-                $this->setCountryLang($lang);
-
                 $default        =   array(
                     "key"       =>  $this->places_key_api,
                     "language"  =>  $this->lang
@@ -358,9 +357,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $error      =   array("error_message" => trans('maps_lib.incomplete_parameters'));
             }
             else
-            {
-                $lang = isset($lang) ? $lang : $this->sysLang;
-                $this->setCountryLang($lang);
+            {                
 
                 $params         =   array(
                     "key"       =>  $this->places_key_api,
