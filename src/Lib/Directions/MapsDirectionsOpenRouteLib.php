@@ -6,6 +6,12 @@ namespace Codificar\Geolocation\Lib;
 use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Helper;
 
+use GuzzleHttp\Client as Guzzle;
+use GuzzleHttp\RequestOptions as GuzzleConvert;
+
+//External Uses
+use GeometryLibrary\PolyUtil;
+
     /**
      * Geolocation requests on OpenRoute Maps API
      */
@@ -15,7 +21,7 @@ use Codificar\Geolocation\Helper;
         /**
          * @var String  $url_api URL to access API
          */
-        private $url_api;
+        private $url_api = "https://api.openrouteservice.org/v2";
 
         /**
          * @var String  $directions_key_api Key of API authentication
@@ -33,12 +39,22 @@ use Codificar\Geolocation\Helper;
         private static $unit_text;
 
         /**
+         * @var String  $Guzzle client
+         */
+        private $client;
+
+        /**
          * Defined properties
          */
         public function __construct($apiKey = null, $apiUrl = null)
         {
             $this->directions_key_api = $apiKey ? $apiKey : GeolocationSettings::getDirectionsKey();
-            $this->url_api = $apiUrl ? $apiUrl :GeolocationSettings::getDirectionsUrl();
+
+            $this->client = new Guzzle([
+                'base_uri' => $this->url_api,
+                'headers' => ['Authorization' => $this->directions_key_api]
+            ]);
+
             self::$settings_dist = GeolocationSettings::getDefaultDistanceUnit();
             self::$unit_text = self::$settings_dist==1 ? trans('api.mile') : trans('api.km');
         }
@@ -59,11 +75,10 @@ use Codificar\Geolocation\Helper;
             {
                 return array('success' => false);
             }
-            \Log::info("before open: ". date("d/m/Y H:i:s"));
+            
             $curl_string = $this->url_api . "/directions/driving-car?api_key=" . $this->directions_key_api . "&start=" . $source_long . "," . $source_lat . "&end=" . $dest_long . "," . $dest_lat . "";
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj);
-            \Log::info("after open: ". date("d/m/Y H:i:s"));
 
             if(isset($response_obj->features[0]->properties->segments[0]->distance))
             {
@@ -263,35 +278,35 @@ use Codificar\Geolocation\Helper;
             }
 
             $ways = json_decode($wayPoints);
-            $waysLen = count($ways);
-            if($waysLen < 2){
-                return false;
-            }else{
-                foreach($ways as $index => $way){
-                    $waysFormatted[] = [$way[1],$way[0]];
-                }
-                $postFields = '{"coordinates":'. json_encode($waysFormatted) .'}';
+
+            foreach($ways as $index => $way){
+                $waysFormatted[] = [$way[1],$way[0]];
             }
 
-            $curl_string = $this->url_api . "/directions/driving-car";
+            $requestBody = [
+                GuzzleConvert::JSON => array(       
+                "coordinates" => $waysFormatted,
+            )];
+            $requestUrl = $this->url_api . "/directions/driving-car";
 
-            return $this->polylineProcessWithPoints($curl_string, 'post', $postFields);
+            $response = $this->client->request(
+                'POST', $requestUrl, $requestBody
+            )->getBody();   
+            
+            return $this->polylineProcessWithPoints($response);
         }
 
         /**
          * Process curl response and return array with polyline and estimates.
          *
-         * @param String      $curl_string      URL called by curl.
-         * @param String      $verb             Defines the request verb.
-         * @param String      $postFields       Params to POST request.
+         * @param Object      $response      
          *
          * @return Array      $polyline         Array with polyline and estimates.
          */
-        private function polylineProcessWithPoints($curl_string, $verb=null, $postFields=null)
+        private function polylineProcessWithPoints($data)
         {
-            $php_obj = $this->curlCall($curl_string, $verb, $postFields);
-            $response_obj = json_decode($php_obj, true);
-
+            $response_obj = json_decode($data, true);
+            
             $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
             if(isset($response_obj['features']) && count($response_obj['features'][0]['geometry']['coordinates']))
             {
@@ -344,6 +359,48 @@ use Codificar\Geolocation\Helper;
             $polyline['waypoint_order'] = [];
 
             return $polyline;
+        }
+
+        /**
+         * Processes duration and distance, partials and totals to add on response API.
+         *
+         * @param Array      $response_obj      Object content part of response in API Directions OpenRoute.
+         *
+         * @return Array/False                  Array with partials and totals of distances and durations.
+         */
+        private function getPartialsAndTotals($response_obj)
+        {
+            if(!isset($response_obj))
+                return false;
+
+            if(isset($response_obj['properties']))
+            {
+                $legs = $response_obj['properties']['segments'];
+                $totalDistance = $response_obj['properties']['summary']['distance'];
+                $totalDuration = $response_obj['properties']['summary']['duration'];
+            }
+            else if(isset($response_obj['segments']))
+            {
+                $legs = $response_obj['segments'];
+                $totalDistance = $response_obj['summary']['distance'];
+                $totalDuration = $response_obj['summary']['duration'];
+            }
+            else
+            {
+                return false;
+            }
+
+            foreach ($legs as $index=>$leg) {
+                $partialDistances[$index] = number_format(($leg['distance'] / 1000), 2);
+                $partialDurations[$index] = number_format(($leg['duration'] / 60), 2);
+            }
+
+            return array(
+                "total_distance"    =>  $totalDistance,
+                "total_duration"    =>  $totalDuration,
+                "partial_distances" =>  $partialDistances,
+                "partial_durations" =>  $partialDurations
+            );
         }
 
     }
