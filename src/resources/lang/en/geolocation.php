@@ -27,4 +27,5 @@ return [
     "api_maps" => "Map Provider",
     "api_maps_provider" => "Service provider",
     "api_maps_key" => "Authentication key",
+    "unnamed_road"                    => "Rota sem nome",    
 ];

@@ -27,4 +27,6 @@ return [
     "api_maps"                    => "Provedor de Mapas",
     "api_maps_provider"                    => "Provedor de serviço",
     "api_maps_key"                    => "Chave de autenticação",
+
+    "unnamed_road"                    => "Rota sem nome",    
 ];

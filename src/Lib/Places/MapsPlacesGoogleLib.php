@@ -180,11 +180,21 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 count($prediction[0]->address_components) > 0
             )
             {
-                $processed['address']       =   $prediction[0]->formatted_address;
+                
+                $validatedAddress = $this->validateAddressComponent($prediction[0]->address_components);
+
+                $formatted_address = $prediction[0]->formatted_address;
+                if (preg_match('/\bUnnamed Road\b/', $formatted_address)) {
+                    $formatted_address = $this->fillUnnamedRoad($formatted_address);
+                }
+               
+                $processed['address']       =   $formatted_address;
                 $processed['place_id']      =   $prediction[0]->place_id;
-                $processed['street_name']   =   $prediction[0]->address_components[1]->long_name;
-                $processed['street_number'] =   $prediction[0]->address_components[0]->long_name;
-                $processed['postal_code']   =   isset($prediction[0]->address_components[6]) ? $prediction[0]->address_components[6]->long_name : null;
+
+                $processed['street_name']   =   $validatedAddress['street_name'];
+                $processed['street_number']   =   $validatedAddress['street_number'];
+                $processed['postal_code']   =   $validatedAddress['postal_code'];
+
                 $processed['latitude']      =   $prediction[0]->geometry->location->lat;
                 $processed['longitude']     =   $prediction[0]->geometry->location->lng;
             }
@@ -195,6 +205,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
             return $processed;
         }
+        
 
         /**
          * A request with details about specific Google place_id.
@@ -390,6 +401,48 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
             $return = array("success" => $success, "data" => $processed);
 
             return count($error) ? array_merge($return, $error) : $return;
+        }
+
+        private function fillUnnamedRoad($string){
+            $lang = $this->lang;
+            $text = "";
+            switch($lang)
+            {
+                case 'pt-br':
+                    $text = "Rota sem nome";
+                case 'en':
+                    $text = "Unnamed route";
+                case 'es':
+                    $text = "Ruta sin nombre";
+                default:
+                    $text = "Rota sem nome";
+            }
+
+            $string = str_replace("Unnamed Road", $text, $string);
+
+            return $string;
+        }
+
+        private function validateAddressComponent($addressComponents)
+        {
+            $street_name = isset($addressComponents[0]->long_name) ? $addressComponents[0]->long_name : "";
+            $street_number = isset($addressComponents[1]->long_name) ? $addressComponents[1]->long_name : "";
+            $postal_code = isset($addressComponents->address_components[6]) ? $addressComponents[0]->address_components[6]->long_name : null;
+
+            $processed = array();
+            
+            if (preg_match('/\bUnnamed Road\b/', $street_name)) {
+                $street_name = $this->fillUnnamedRoad($street_name);
+            }
+            if (preg_match('/\bUnnamed Road\b/', $street_number)) {
+                $street_number = $this->fillUnnamedRoad($street_number);
+            }
+
+            $processed['street_name']   =   $street_name;
+            $processed['street_number'] =   $street_number;
+            $processed['postal_code']   =   $postal_code;
+
+            return $processed;
         }
 
         /**
