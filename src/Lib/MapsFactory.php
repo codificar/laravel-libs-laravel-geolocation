@@ -96,8 +96,13 @@ use Codificar\Geolocation\Lib\Places\MapsPlacesOpenRoute;
             else if ($this->type == self::REDUNDANCY_PLACES)
             {
                 $placesRedundancyKey = GeolocationSettings::getPlacesRedundancyKey();
+               
                 switch(GeolocationSettings::getPlacesRedundancyProvider())
                 {
+                    case self::MAPS_HERE:
+                        return(new MapsPlacesHereLib(
+                            $placesRedundancyKey
+                        ));
                     case self::MAPS_PELIAS:
                         return(new MapsPlacesPeliasLib(
                             GeolocationSettings::getPlacesRedundancyUrl(),
