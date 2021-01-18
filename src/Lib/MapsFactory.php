@@ -129,6 +129,10 @@ use Codificar\Geolocation\Lib\Places\MapsPlacesOpenRoute;
                 $directionsRedundancyKey = GeolocationSettings::getDirectionsRedundancyKey();
                 switch(GeolocationSettings::getDirectionsRedundancyProvider())
                 {
+                    case self::MAPS_HERE:
+                        return(new MapsDirectionsHere(
+                            $directionsRedundancyKey
+                        ));
                     case self::MAPS_BING:
                         return(new MapsDirectionsBingLib(
                             $directionsRedundancyKey
