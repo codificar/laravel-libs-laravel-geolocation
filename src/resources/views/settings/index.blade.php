@@ -27,6 +27,16 @@
 @stop
 
 @section('javascripts')
+<script>
+
+function clearRowClass() {
+  var element = document.getElementById("layout-row-id");
+  element.classList.remove("row");
+}
+clearRowClass()
+
+</script>
+
 <script src="/libs/geolocation/lang.trans/geolocation"></script>
 <script src="{{ elixir('vendor/codificar/geolocation/geolocation.vue.js') }}"> </script> 
 @stop
