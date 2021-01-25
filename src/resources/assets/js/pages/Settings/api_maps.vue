@@ -16,7 +16,8 @@ export default {
       },
       mapsDataModel: {
         maps_provider: "",
-        maps_key: ""
+        maps_key: "",
+        required_key: false
       },  
       
       mapsDataErrors: {
@@ -65,10 +66,9 @@ export default {
         maps_key: ""
       } 
     },
-    validate(data){
-    
+    validate(data){    
       let isValid = true
-      if(this.mapsDataModel.maps_key.value == null || this.mapsDataModel.maps_key.value.trim() == ""){
+      if(this.mapsDataModel.maps_key.value == null || this.mapsDataModel.maps_key.value.trim() == "" && this.mapsProviderRule.required_key){
         isValid = false
         this.mapsDataErrors.maps_key = "Preencha este campo"
       } 
@@ -111,7 +111,7 @@ export default {
           <div class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.api_maps_key") }}*
+                {{ trans("geolocation.api_maps_key") }} {{this.mapsProviderRule.required_key ? '*' : ''}}
               </label>
               <input v-model=mapsDataModel.maps_key.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{mapsDataErrors.maps_key}}</div>	
