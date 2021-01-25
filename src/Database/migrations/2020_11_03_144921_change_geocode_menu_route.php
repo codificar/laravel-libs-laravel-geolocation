@@ -13,8 +13,14 @@ class ChangeGeocodeMenuRoute extends Migration
      */
     public function up()
     {
-        $permission = Permission::where('name', 'Geolocation')->where('url', '/admin/settings/geolocation')
-        ->update(['url' => '/admin/libs/geolocation/settings']);
+        $permission = Permission::updateOrCreate([
+			'name' => 'Geolocation',
+			'parent_id' => 2319,
+			'order' => 913,
+			'is_menu' => 1,
+			'url' => '/admin/libs/geolocation/settings',
+			'icon' => 'fa fa-globe'
+		]);
     }
 
     /**
@@ -24,7 +30,6 @@ class ChangeGeocodeMenuRoute extends Migration
      */
     public function down()
     {
-        $permission = Permission::where('name', 'Geolocation')->where('url', '/admin/libs/geolocation/settings')
-        ->update(['url' => '/admin/settings/geolocation']);
+        
     }
 }
