@@ -13,14 +13,17 @@ class ChangeGeocodeMenuRoute extends Migration
      */
     public function up()
     {
-        $permission = Permission::updateOrCreate([
+        $permission = Permission::updateOrCreate(
+            ['name' => 'Geolocation'],
+            [
 			'name' => 'Geolocation',
 			'parent_id' => 2319,
 			'order' => 913,
 			'is_menu' => 1,
 			'url' => '/admin/libs/geolocation/settings',
 			'icon' => 'fa fa-globe'
-		]);
+            ]
+        );
     }
 
     /**
