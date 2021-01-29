@@ -316,16 +316,18 @@ use GeometryLibrary\PolyUtil;
             {
                 return array('success' => false);
             }
-        
+            
+            $lay_key = array_key_last($ways);
             $origin = $ways[0][0].",".$ways[0][1];
-            $destination = $ways[1][0].",".$ways[1][1];
+            $destination = $ways[$lay_key][0].",".$ways[$lay_key][1];
            
             $via = false;
             foreach ($ways as $key => $value) {
-                if($key > 1){
+                if($key != 0 && $key != $lay_key){
                     $via .= "&via=".$value[0].",".$value[1];
                 }                
-            }          
+            }  
+            
             $params         =   array(
                 "apiKey"    =>  "$this->directions_key_api",
                 "transportMode"  =>  "car",
@@ -336,7 +338,7 @@ use GeometryLibrary\PolyUtil;
            
             $curl_string = $this->url_api . "routes?" . http_build_query($params);
             $via ? $curl_string = $curl_string.$via : null;         
-           
+            
             return self::polylineProcessWithPoints($curl_string);
         }
 
@@ -353,7 +355,6 @@ use GeometryLibrary\PolyUtil;
         {
             $php_obj = self::curlCall($curl_string);
             $response_obj = json_decode($php_obj);
-           
             if(isset($response_obj->routes[0])) {             
                                              
                 return self::formatDistanceTimeTextWithPoints($response_obj);
