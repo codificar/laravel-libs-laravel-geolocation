@@ -111,7 +111,7 @@ use Codificar\Geolocation\Lib\Places\MapsPlacesOpenRoute;
                     case self::MAPS_OPENROUTE:
                         return(new MapsPlacesOpenRoute(
                             $placesRedundancyKey,
-                            GeolocationSettings::getPlacesRedundancyUrl(),
+                            GeolocationSettings::getPlacesRedundancyUrl()
                         ));
                     case self::MAPS_ALGOLIA:
                         return(new MapsPlacesAlgoliaLib(
