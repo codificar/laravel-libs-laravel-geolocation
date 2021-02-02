@@ -22,7 +22,7 @@ use GeometryLibrary\PolyUtil;
         /**
          * @var String  $url_api URL to access API
          */
-        private $connect_timeout = 5;
+        private $connect_timeout = 10;
 
         /**
          * @var String  $url_api URL to access API
@@ -197,7 +197,7 @@ use GeometryLibrary\PolyUtil;
          *
          * @return Object      $msg_chk             Response on curl request
          */
-        private static function curlCall($curl_string, $connect_timeout = 5)
+        private static function curlCall($curl_string, $connect_timeout = 10)
         {
             $session = curl_init($curl_string);
             curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
