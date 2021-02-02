@@ -119,10 +119,11 @@ export default {
         this.placesDataErrors.places_provider = "Preencha este campo"
       } 
 
-      if((this.placesDataModel.places_url.value == null || this.placesDataModel.places_url.value.trim() == "") && this.placesProviderRule.redundancy_url){
-        isValid = false
-        this.placesDataErrors.places_url = "Preencha este campo"
-      }
+      // if((this.placesDataModel.places_url.value == null || this.placesDataModel.places_url.value.trim() == "") && this.placesProviderRule.redundancy_url){
+      //   isValid = false
+      //   this.placesDataErrors.places_url = "Preencha este campo"
+      // }
+
       if((this.placesDataModel.places_application_id.value == null || this.placesDataModel.places_application_id.value.trim() == "") && this.placesProviderRule.redundancy_id){
         isValid = false
         this.placesDataErrors.places_application_id = "Preencha este campo"
@@ -138,10 +139,11 @@ export default {
           this.placesDataErrors.places_provider_redundancy = "Preencha este campo"
         } 
 
-        if((this.placesDataModel.places_url_redundancy.value == null || this.placesDataModel.places_url_redundancy.value.trim() == "") && this.placesProviderRedundancyRule.redundancy_url){
-          isValid = false
-          this.placesDataErrors.places_url_redundancy = "Preencha este campo"
-        }
+        // if((this.placesDataModel.places_url_redundancy.value == null || this.placesDataModel.places_url_redundancy.value.trim() == "") && this.placesProviderRedundancyRule.redundancy_url){
+        //   isValid = false
+        //   this.placesDataErrors.places_url_redundancy = "Preencha este campo"
+        // }
+        
         if((this.placesDataModel.places_application_id_redundancy.value == null || this.placesDataModel.places_application_id_redundancy.value.trim() == "") && this.placesProviderRedundancyRule.redundancy_id){
           isValid = false
           this.placesDataErrors.places_application_id_redundancy = "Preencha este campo"
@@ -198,7 +200,7 @@ export default {
           <div v-show=placesProviderRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.api_places_url") }}*
+                {{ trans("geolocation.api_places_url") }}
               </label>           
               <input v-model=placesDataModel.places_url.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{placesDataErrors.places_url}}</div>	
@@ -255,7 +257,7 @@ export default {
           <div v-show=placesProviderRedundancyRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.red_api_places_url") }}*
+                {{ trans("geolocation.red_api_places_url") }}
               </label>           
               <input v-model=placesDataModel.places_url_redundancy.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{placesDataErrors.places_url_redundancy}}</div>	

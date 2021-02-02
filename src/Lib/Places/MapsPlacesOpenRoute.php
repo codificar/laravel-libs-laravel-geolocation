@@ -39,14 +39,18 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
         /**
          * Defined properties
          */
-        public function __construct($placesKey = null)
+        public function __construct($placesKey = null, $url = null)
         {
-            if($placesKey)
-                $this->places_key_api = $placesKey;
-            else
-                $this->places_key_api = GeolocationSettings::getPlacesKey();
-
+            $this->places_key_api = GeolocationSettings::getPlacesKey();
+            $defaultUrl = GeolocationSettings::getPlacesUrl();
+            if($defaultUrl) $this->url_api = $defaultUrl;
+            
             $this->sysLang = GeolocationSettings::getLocale();
+            
+            //Redundancy
+            if($placesKey) $this->places_key_api = $placesKey;
+            if($url) $this->url_api = $url;  
+                         
         }
 
         /**
@@ -98,7 +102,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $curl_string    =   $this->url_api . "autocomplete?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
                 $response_obj   =   json_decode($php_obj);
-              
+                
                 if(
                     isset($response_obj->features) && 
                     count($response_obj->features) > 0)
@@ -112,10 +116,12 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                         if($limitCount >= 5) break;
                     }
                     $success    =   true;
+                }else if(isset($response_obj->error)){
+                    $error = array("error_message" => $response_obj->error);
                 }
                 else if(isset($response_obj->status) == 400 && $response_obj->message != "Successful")
                 {
-                    $error      =   array("error_message" => $response_obj->message);
+                    $error =   array("error_message" => $response_obj->message);
                 }
                 else if(isset($response_obj->data) && count($response_obj->data) == 0)
                 {
