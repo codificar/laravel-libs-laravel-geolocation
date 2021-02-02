@@ -119,10 +119,11 @@ export default {
         this.directionsDataErrors.directions_provider = "Preencha este campo"
       } 
 
-      if((this.directionsDataModel.directions_url.value == null || this.directionsDataModel.directions_url.value.trim() == "") && this.directionsProviderRule.redundancy_url){
-        isValid = false
-        this.directionsDataErrors.directions_url = "Preencha este campo"
-      }
+      // if((this.directionsDataModel.directions_url.value == null || this.directionsDataModel.directions_url.value.trim() == "") && this.directionsProviderRule.redundancy_url){
+      //   isValid = false
+      //   this.directionsDataErrors.directions_url = "Preencha este campo"
+      // }
+
       if((this.directionsDataModel.places_application_id.value == null || this.directionsDataModel.places_application_id.value.trim() == "") && this.directionsProviderRule.redundancy_id){
         isValid = false
         this.directionsDataErrors.places_application_id = "Preencha este campo"
@@ -138,10 +139,11 @@ export default {
           this.directionsDataErrors.directions_provider_redundancy = "Preencha este campo"
         } 
 
-        if((this.directionsDataModel.directions_url_redundancy.value == null || this.directionsDataModel.directions_url_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_url){
-          isValid = false
-          this.directionsDataErrors.directions_url_redundancy = "Preencha este campo"
-        }
+        // if((this.directionsDataModel.directions_url_redundancy.value == null || this.directionsDataModel.directions_url_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_url){
+        //   isValid = false
+        //   this.directionsDataErrors.directions_url_redundancy = "Preencha este campo"
+        // },
+        
         if((this.directionsDataModel.places_application_id_redundancy.value == null || this.directionsDataModel.places_application_id_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_id){
           isValid = false
           this.directionsDataErrors.places_application_id_redundancy = "Preencha este campo"
@@ -199,7 +201,7 @@ export default {
           <div v-show=directionsProviderRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.api_places_url") }}*
+                {{ trans("geolocation.api_places_url") }}
               </label>           
               <input v-model=directionsDataModel.directions_url.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url}}</div>	
@@ -256,7 +258,7 @@ export default {
           <div v-show=directionsProviderRedundancyRule.redundancy_url class="col-lg-6">
             <div class="form-group">
               <label>
-                {{ trans("geolocation.api_places_url") }}*
+                {{ trans("geolocation.api_places_url") }}
               </label>           
               <input v-model=directionsDataModel.directions_url_redundancy.value type="text" class="form-control" />
               <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url_redundancy}}</div>	

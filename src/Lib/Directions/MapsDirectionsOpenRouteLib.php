@@ -8,6 +8,8 @@ use Codificar\Geolocation\Helper;
 
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\RequestOptions as GuzzleConvert;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 
 //External Uses
 use GeometryLibrary\PolyUtil;
@@ -17,6 +19,10 @@ use GeometryLibrary\PolyUtil;
      */
     class MapsDirectionsOpenRouteLib implements IMapsDirections
     {
+        /**
+         * @var String  $url_api URL to access API
+         */
+        private $connect_timeout = 5;
 
         /**
          * @var String  $url_api URL to access API
@@ -46,17 +52,25 @@ use GeometryLibrary\PolyUtil;
         /**
          * Defined properties
          */
-        public function __construct($apiKey = null, $apiUrl = null)
+        public function __construct($apiKey = null, $url = null)
         {
-            $this->directions_key_api = $apiKey ? $apiKey : GeolocationSettings::getDirectionsKey();
-
+            $this->directions_key_api = GeolocationSettings::getDirectionsKey();
+            $defaultUrl = GeolocationSettings::getDirectionsUrl();
+            if($defaultUrl) $this->url_api = $defaultUrl;
+                           
+            //Redundancy
+            if($apiKey) $this->directions_key_api = $apiKey;
+            if($url) $this->url_api = $url;  
+            
             $this->client = new Guzzle([
                 'base_uri' => $this->url_api,
-                'headers' => ['Authorization' => $this->directions_key_api]
+                'headers' => ['Authorization' => $this->directions_key_api],
+                'connect_timeout' => $this->connect_timeout,
+                'exceptions' => false
             ]);
 
             self::$settings_dist = GeolocationSettings::getDefaultDistanceUnit();
-            self::$unit_text = self::$settings_dist==1 ? trans('api.mile') : trans('api.km');
+            self::$unit_text = self::$settings_dist==1 ? trans('api.mile') : trans('api.km');           
         }
 
         /**
@@ -78,6 +92,7 @@ use GeometryLibrary\PolyUtil;
             
             $curl_string = $this->url_api . "/directions/driving-car?api_key=" . $this->directions_key_api . "&start=" . $source_long . "," . $source_lat . "&end=" . $dest_long . "," . $dest_lat . "";
             $php_obj = self::curlCall($curl_string);
+            if(!$php_obj) return array('success' => false, 'message' => 'Curl Call Error');
             $response_obj = json_decode($php_obj);
 
             if(isset($response_obj->features[0]->properties->segments[0]->distance))
@@ -104,6 +119,7 @@ use GeometryLibrary\PolyUtil;
          */
         public function getDistanceAndTimeByDirections($source_lat, $source_long, $dest_lat, $dest_long)
         {
+          
             if (!$this->directions_key_api)
             {
                 return array('success' => false);
@@ -111,6 +127,7 @@ use GeometryLibrary\PolyUtil;
 
             $curl_string = $this->url_api . "/directions/driving-car?api_key=" . $this->directions_key_api . "&start=" . $source_long . "," . $source_lat . "&end=" . $dest_long . "," . $dest_lat . "";
             $php_obj = self::curlCall($curl_string);
+            if(!$php_obj) return array('success' => false, 'message' => 'Curl Call Error');
             $response_obj = json_decode($php_obj);
 
             if(isset($response_obj->features[0]->properties->segments[0]->distance) && isset($response_obj->features[0]->properties->segments[0]->duration))
@@ -180,14 +197,17 @@ use GeometryLibrary\PolyUtil;
          *
          * @return Object      $msg_chk             Response on curl request
          */
-        private static function curlCall($curl_string)
+        private static function curlCall($curl_string, $connect_timeout = 5)
         {
             $session = curl_init($curl_string);
             curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 0); 
+            curl_setopt($session, CURLOPT_TIMEOUT, $connect_timeout); //timeout in seconds
+          
             $msg_chk = curl_exec($session);
-
-            return $msg_chk;
+           
+            return $msg_chk;            
         }
 
         /**
@@ -228,6 +248,7 @@ use GeometryLibrary\PolyUtil;
         {
             try {
                 $php_obj = self::curlCall($curl_string);
+                if(!$php_obj) return array('success' => false, 'message' => 'Curl Call Error');
                 $response_obj = json_decode($php_obj, true);
                 $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
                 if(isset($response_obj['features']) && count($response_obj['features'][0]['geometry']['coordinates']))
@@ -246,18 +267,18 @@ use GeometryLibrary\PolyUtil;
                         $polyline['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['features'][0]['properties']['segments'][0]['distance']);
                         $polyline['duration_value'] = convert_to_minutes($duration);
                     }else {
-                        return false;
+                        return array('success' => false);
                     }                  
                 }
                 else
                 {
-                    return false;
+                    return array('success' => false);
                 }
 
                 return $polyline;
             } catch (Exception $e) {
                 \Log::error($e->getMessage());
-                return false;
+                return array('success' => false);
             }
             
         }
@@ -289,9 +310,13 @@ use GeometryLibrary\PolyUtil;
             )];
             $requestUrl = $this->url_api . "/directions/driving-car";
 
-            $response = $this->client->request(
-                'POST', $requestUrl, $requestBody
-            )->getBody();   
+            try {
+                $response = $this->client->request(
+                    'POST', $requestUrl, $requestBody
+                )->getBody();  
+            } catch (RequestException $e) {
+                return false;
+            }            
             
             return $this->polylineProcessWithPoints($response);
         }

@@ -169,6 +169,21 @@ class GeolocationSettings extends Settings {
 	}
 
 	/**
+	 * GET URL API places url
+	 *
+	 * @return string
+	*/
+	public static function getPlacesUrl()
+	{
+        $settings = self::where('key', 'places_url')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
+			return false;
+	}
+
+	/**
 	 * GET URL API places redundancy
 	 *
 	 * @return string
@@ -209,6 +224,21 @@ class GeolocationSettings extends Settings {
 		if($settings && $settings->value)
 			return $settings->value;
 		else
+			return false;
+	}
+
+	/**
+	 * GET URL API directions
+	 *
+	 * @return string
+	 */
+	public static function getDirectionsUrl()
+	{
+        $settings = self::where('key', 'directions_url')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
 			return false;
 	}
 
