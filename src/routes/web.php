@@ -11,6 +11,7 @@ require 'app/user.php';
 require 'app/provider.php';
 
 // Painel
+require 'painel/public.php';
 require 'painel/admin.php';
 require 'painel/corp.php';
 require 'painel/user.php';
