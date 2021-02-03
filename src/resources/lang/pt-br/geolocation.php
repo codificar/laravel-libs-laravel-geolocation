@@ -28,5 +28,8 @@ return [
     "api_maps_provider"                    => "Provedor de serviço",
     "api_maps_key"                    => "Chave de autenticação",
 
-    "unnamed_road"                    => "Rota sem nome",    
+    "unnamed_road"                    => "Rota sem nome",   
+    
+    "invalid_url"                    => "Este campo deve ser uma url válida",    
+    "invalid_require"                    => "Preencha este campo",        
 ];

@@ -112,41 +112,55 @@ export default {
       let isValid = true
       if(this.directionsDataModel.directions_key.value == null || this.directionsDataModel.directions_key.value.trim() == ""){
         isValid = false
-        this.directionsDataErrors.directions_key = "Preencha este campo"
+        this.directionsDataErrors.directions_key = this.trans("geolocation.invalid_require")
       } 
       if(this.directionsDataModel.directions_provider.value == null || this.directionsDataModel.directions_provider.value.trim() == ""){
         isValid = false
-        this.directionsDataErrors.directions_provider = "Preencha este campo"
+        this.directionsDataErrors.directions_provider = this.trans("geolocation.invalid_require")
       } 
-
-      // if((this.directionsDataModel.directions_url.value == null || this.directionsDataModel.directions_url.value.trim() == "") && this.directionsProviderRule.redundancy_url){
-      //   isValid = false
-      //   this.directionsDataErrors.directions_url = "Preencha este campo"
-      // }
+      
+      if(this.directionsDataModel.directions_url.value.trim() != "" && this.directionsProviderRule.redundancy_url){
+        this.directionsDataModel.directions_url.value = this.directionsDataModel.directions_url.value.trim()
+        const validate = /^(ftp|http|https):\/\/[^ "]+$/.test(this.directionsDataModel.directions_url.value);
+      
+        if(!validate){
+          isValid = false
+          this.directionsDataErrors.directions_url = this.trans("geolocation.invalid_url")
+        }else{
+          this.directionsDataErrors.directions_url = ""
+        }        
+      }
 
       if((this.directionsDataModel.places_application_id.value == null || this.directionsDataModel.places_application_id.value.trim() == "") && this.directionsProviderRule.redundancy_id){
         isValid = false
-        this.directionsDataErrors.places_application_id = "Preencha este campo"
+        this.directionsDataErrors.places_application_id = this.trans("geolocation.invalid_require")
       } 
      
       if(this.directionsDataModel.directions_redundancy_rule.value == 1){
         if(this.directionsDataModel.directions_key_redundancy.value == null || this.directionsDataModel.directions_key_redundancy.value.trim() == ""){
           isValid = false
-          this.directionsDataErrors.directions_key_redundancy = "Preencha este campo"
+          this.directionsDataErrors.directions_key_redundancy = this.trans("geolocation.invalid_require")
         } 
         if(this.directionsDataModel.directions_provider_redundancy.value == null || this.directionsDataModel.directions_provider_redundancy.value.trim() == ""){
           isValid = false
-          this.directionsDataErrors.directions_provider_redundancy = "Preencha este campo"
+          this.directionsDataErrors.directions_provider_redundancy = this.trans("geolocation.invalid_require")
         } 
 
-        // if((this.directionsDataModel.directions_url_redundancy.value == null || this.directionsDataModel.directions_url_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_url){
-        //   isValid = false
-        //   this.directionsDataErrors.directions_url_redundancy = "Preencha este campo"
-        // },
+        if(this.directionsDataModel.directions_url_redundancy.value.trim() != "" && this.directionsProviderRedundancyRule.redundancy_url){
+          this.directionsDataModel.directions_url_redundancy.value = this.directionsDataModel.directions_url_redundancy.value.trim()
+          const validate = /^(ftp|http|https):\/\/[^ "]+$/.test(this.directionsDataModel.directions_url_redundancy.value);
+
+          if(!validate){
+            isValid = false
+            this.directionsDataErrors.directions_url_redundancy = this.trans("geolocation.invalid_url")
+          }else{
+            this.directionsDataErrors.directions_url_redundancy = ""
+          } 
+        }
         
         if((this.directionsDataModel.places_application_id_redundancy.value == null || this.directionsDataModel.places_application_id_redundancy.value.trim() == "") && this.directionsProviderRedundancyRule.redundancy_id){
           isValid = false
-          this.directionsDataErrors.places_application_id_redundancy = "Preencha este campo"
+          this.directionsDataErrors.places_application_id_redundancy = this.trans("geolocation.invalid_require")
         } 
       }
       

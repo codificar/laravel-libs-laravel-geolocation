@@ -112,41 +112,41 @@ export default {
       let isValid = true
       if(this.placesDataModel.places_key.value == null || this.placesDataModel.places_key.value.trim() == ""){
         isValid = false
-        this.placesDataErrors.places_key = "Preencha este campo"
+        this.placesDataErrors.places_key = this.trans("geolocation.invalid_require")
       } 
       if(this.placesDataModel.places_provider.value == null || this.placesDataModel.places_provider.value.trim() == ""){
         isValid = false
-        this.placesDataErrors.places_provider = "Preencha este campo"
+        this.placesDataErrors.places_provider = this.trans("geolocation.invalid_require")
       } 
 
       // if((this.placesDataModel.places_url.value == null || this.placesDataModel.places_url.value.trim() == "") && this.placesProviderRule.redundancy_url){
       //   isValid = false
-      //   this.placesDataErrors.places_url = "Preencha este campo"
+      //   this.placesDataErrors.places_url = this.trans("geolocation.invalid_require")
       // }
 
       if((this.placesDataModel.places_application_id.value == null || this.placesDataModel.places_application_id.value.trim() == "") && this.placesProviderRule.redundancy_id){
         isValid = false
-        this.placesDataErrors.places_application_id = "Preencha este campo"
+        this.placesDataErrors.places_application_id = this.trans("geolocation.invalid_require")
       } 
      
       if(this.placesDataModel.places_redundancy_rule.value == 1){
         if(this.placesDataModel.places_key_redundancy.value == null || this.placesDataModel.places_key_redundancy.value.trim() == ""){
           isValid = false
-          this.placesDataErrors.places_key_redundancy = "Preencha este campo"
+          this.placesDataErrors.places_key_redundancy = this.trans("geolocation.invalid_require")
         } 
         if(this.placesDataModel.places_provider_redundancy.value == null || this.placesDataModel.places_provider_redundancy.value.trim() == ""){
           isValid = false
-          this.placesDataErrors.places_provider_redundancy = "Preencha este campo"
+          this.placesDataErrors.places_provider_redundancy = this.trans("geolocation.invalid_require")
         } 
 
         // if((this.placesDataModel.places_url_redundancy.value == null || this.placesDataModel.places_url_redundancy.value.trim() == "") && this.placesProviderRedundancyRule.redundancy_url){
         //   isValid = false
-        //   this.placesDataErrors.places_url_redundancy = "Preencha este campo"
+        //   this.placesDataErrors.places_url_redundancy = this.trans("geolocation.invalid_require")
         // }
         
         if((this.placesDataModel.places_application_id_redundancy.value == null || this.placesDataModel.places_application_id_redundancy.value.trim() == "") && this.placesProviderRedundancyRule.redundancy_id){
           isValid = false
-          this.placesDataErrors.places_application_id_redundancy = "Preencha este campo"
+          this.placesDataErrors.places_application_id_redundancy = this.trans("geolocation.invalid_require")
         } 
       }
       
