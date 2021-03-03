@@ -214,6 +214,21 @@ class GeolocationSettings extends Settings {
 	}
 
 	/**
+	 * GET ID places
+	 *
+	 * @return string
+	*/
+	public static function getPlacesApplicationId()
+	{
+        $settings = self::where('key', 'places_application_id')->first();
+
+        if ($settings)
+            return $settings->value;            
+        else
+			return false;		
+	}
+
+	/**
 	 * GET ID Directions redundancy
 	 *
 	 * @return string
