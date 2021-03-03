@@ -74,6 +74,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
          */
         public function getAddressByTextWithLatLng($text, $requester_lat, $requester_lng)
         {             
+          
             $processed      =   [];
             $success        =   false;
             $error          =   [];
@@ -87,7 +88,8 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $lang = isset($lang) ? $lang : $this->sysLang;
                 $this->setCountryLang($lang);
 
-                $params         =   array(                 
+                $params         =   array(      
+                    "culture" =>  $lang,           
                     "query"     =>  $text,
                     "userLocation"     =>  $requester_lat.",".$requester_lng,
                     "key"       =>  $this->places_key_api
@@ -280,9 +282,10 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $lang = isset($lang) ? $lang : $this->sysLang;
                 $this->setCountryLang($lang);
 
-                $params         =   array(                 
+                $params         =   array(     
+                    "culture" =>  $lang,                
                     "query"     =>  $address,
-                    "   "     =>  $latitude.",".$longitude,
+                    "userLocation"     =>  $latitude.",".$longitude,
                     "key"       =>  $this->places_key_api
                 );
                 
@@ -351,6 +354,8 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $this->setCountryLang($lang);
 
                 $params         =   array(
+                    "culture" =>  $lang,
+                    "userLocation"     =>  $latitude.",".$longitude,
                     "key"       =>  $this->places_key_api
                 );
                
