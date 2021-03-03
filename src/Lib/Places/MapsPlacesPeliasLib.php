@@ -14,7 +14,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
         /**
          * @var String  $url_api URL to access API
          */
-        private $url_api;
+        private $url_api = "https://api.geocode.earth/v1";
 
         /**
          * @var String  $places_key_api Key of API authentication
@@ -41,11 +41,13 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
          */
         public function __construct($urlApi = null, $placesKey = null)
         {
-            if($urlApi)
+            if($urlApi){
                 $this->url_api = $urlApi;
-            else
+            }                
+            else if(GeolocationSettings::getPlacesUrl()){
                 $this->url_api = GeolocationSettings::getPlacesUrl();
-
+            }
+            
             if($placesKey)
                 $this->places_key_api = $placesKey;
             else
