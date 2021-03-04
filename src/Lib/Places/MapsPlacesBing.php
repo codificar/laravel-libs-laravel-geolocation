@@ -91,7 +91,6 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $params         =   array(      
                     "culture" =>  $lang,           
                     "query"     =>  $text,
-                    "userLocation"     =>  $requester_lat.",".$requester_lng,
                     "key"       =>  $this->places_key_api
                 );
                 
@@ -285,7 +284,6 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $params         =   array(     
                     "culture" =>  $lang,                
                     "query"     =>  $address,
-                    "userLocation"     =>  $latitude.",".$longitude,
                     "key"       =>  $this->places_key_api
                 );
                 
@@ -355,7 +353,6 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
                 $params         =   array(
                     "culture" =>  $lang,
-                    "userLocation"     =>  $latitude.",".$longitude,
                     "key"       =>  $this->places_key_api
                 );
                
@@ -364,7 +361,6 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $php_obj        =   self::curlCall($curl_string);
                 $json_data      = json_decode($php_obj);
                 $response_obj   =   $json_data;
-                      
             }
           
             if(
