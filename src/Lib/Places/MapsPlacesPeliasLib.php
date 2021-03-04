@@ -93,17 +93,15 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     "layers"                =>  "address,venue,neighbourhood,locality,borough,localadmin,county,macrocounty,region,macroregion,country,coarse,postalcode",
                     "api_key"               =>  $this->places_key_api,
                     "focus.point.lat"       =>  $requester_lat,
-                    "focus.point.lon"       =>  $requester_lng,
-                    "boundary.circle.lat"   =>  $requester_lat,
-                    "boundary.circle.lon"   =>  $requester_lng,
-                    "boundary.circle.radius"=>  800,
+                    "focus.point.lon"       =>  $requester_lng, 
+                    "boundary.country"  =>  $this->country,
                     "text"                  =>  $text
                 );
 
-                $curl_string    =   $this->url_api . "/autocomplete?" . http_build_query($params);
+                $curl_string    =   $this->url_api . "/search?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
                 $response_obj   =   json_decode($php_obj);
-
+              
                 if(isset($response_obj->features) && count($response_obj->features) > 0){
                     $processed  =   self::processPlacesResponse($response_obj->features);
                     $success    =   true;
