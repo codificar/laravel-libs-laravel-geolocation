@@ -20,6 +20,9 @@ Route::group(['prefix' => '/api/v1/provider', 'namespace' => 'Codificar\Geolocat
 //Direction       
     Route::get('/geolocation/get_polyline', 'DirectionsController@getAddressByString'); 
 
+    //PLACES   
+    Route::get('/get_address_string', 'GeolocationController@getAddressByString');
+    
     //Get Geocode By PlaceId
     Route::post('/get_place_details', 'GeolocationController@geocodeByPlaceId');
     //Get Geocode Reverse
