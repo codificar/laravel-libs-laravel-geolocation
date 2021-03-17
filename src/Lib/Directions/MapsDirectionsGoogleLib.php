@@ -41,8 +41,8 @@ use GeometryLibrary\PolyUtil;
         public function __construct($apiKey = null)
         {
             $this->directions_key_api = $apiKey ? $apiKey : GeolocationSettings::getDirectionsKey();
-            self::$settings_dist = GeolocationSettings::getDefaultDistanceUnit();
-            self::$unit_text = self::$settings_dist==1 ? trans('api.mile') : trans('api.km');
+            self::$settings_dist = 0;
+            self::$unit_text = trans('api.km');
         }
 
         /**
@@ -69,7 +69,7 @@ use GeometryLibrary\PolyUtil;
 
             if($response_obj->status && $response_obj->status == 'OK')
             {
-                $dist = convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value);
+                $dist = convert_distance_format(0, $response_obj->routes[0]->legs[0]->distance->value);
 
                 return array('success' => true, 'data' => [ 'distance' => $dist ]);
             }
@@ -102,10 +102,10 @@ use GeometryLibrary\PolyUtil;
 
             if($response_obj->status && $response_obj->status == 'OK')
             {
-                $dist = convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value);
+                $dist = convert_distance_format(0, $response_obj->routes[0]->legs[0]->distance->value);
                 $time_in_minutes = convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value);
 
-                $distance_text = number_format(convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance->value),1) . " " . self::$unit_text;
+                $distance_text = number_format(convert_distance_format(0, $response_obj->routes[0]->legs[0]->distance->value),1) . " " . self::$unit_text;
                 $duration_text = ceil(convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value)) . " " . trans("api.minutes");
 
                 return array('success' => true, 'data' => [ 'distance' => $dist, 'time_in_minutes' => $time_in_minutes, 'distance_text' => $distance_text, 'duration_text' => $duration_text ]);
@@ -241,9 +241,9 @@ use GeometryLibrary\PolyUtil;
                     array_set($array_resp, $key, $val);
                 }
 
-                $array_resp['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['legs'][0]['distance']['value']),1) . ' ' . self::$unit_text;
+                $array_resp['distance_text'] = number_format(convert_distance_format(0, $response_obj['routes'][0]['legs'][0]['distance']['value']),1) . ' ' . self::$unit_text;
                 $array_resp['duration_text'] = self::formatTime($response_obj['routes'][0]['legs'][0]['duration']['value']);
-                $array_resp['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['routes'][0]['legs'][0]['distance']['value']);
+                $array_resp['distance_value'] = convert_distance_format(0, $response_obj['routes'][0]['legs'][0]['distance']['value']);
                 $array_resp['duration_value'] = convert_to_minutes($response_obj['routes'][0]['legs'][0]['duration']['value']);
             }
             else
@@ -352,9 +352,9 @@ use GeometryLibrary\PolyUtil;
                     $totalDuration += $leg['duration']['value'];
                 }
 
-                $array_resp['distance_text'] = number_format(convert_distance_format(self::$settings_dist, $totalDistance),1) . self::$unit_text;
+                $array_resp['distance_text'] = number_format(convert_distance_format(0, $totalDistance),2) . self::$unit_text;
                 $array_resp['duration_text'] = self::formatTime($totalDuration);
-                $array_resp['distance_value'] = convert_distance_format(self::$settings_dist, $totalDistance);
+                $array_resp['distance_value'] = convert_distance_format(0, $totalDistance);
                 $array_resp['duration_value'] = convert_to_minutes($totalDuration);
                 $array_resp['partial_distances'] = $partialDistances;
                 $array_resp['partial_durations'] = $partialDurations;

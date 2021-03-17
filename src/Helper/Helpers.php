@@ -3,11 +3,7 @@ namespace Codificar\Geocode\Helper;
 
 function convert_distance_format($unit_dist, $response_dist){
 	if (isset($response_dist)) {
-		if ($unit_dist == 1) {
-			$dist = ($response_dist / 1000) * 0.621371;
-		} else {
-			$dist = ($response_dist / 1000);
-		}
+		$dist = ($response_dist / 1000);
 	} else {
 		$dist = 0;
 	}
