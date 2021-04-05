@@ -355,8 +355,13 @@ use GeometryLibrary\PolyUtil;
                 $array_resp['duration_value'] = convert_to_minutes($totalDuration);
                 $array_resp['partial_distances'] = $partialDistances;
                 $array_resp['partial_durations'] = $partialDurations;
-                $array_resp['waypoint_order'] = $waypoint_order;
-                $array_resp['waypoint_order'] = [];
+
+                if(isset($waypoint_order) && $waypoint_order) {
+                    $array_resp['waypoint_order'] = $waypoint_order;
+                } else {
+                    $array_resp['waypoint_order'] = [];
+                }
+                
             }
             else
             {
