@@ -163,6 +163,11 @@ export default {
           this.directionsDataErrors.places_application_id_redundancy = this.trans("geolocation.invalid_require")
         } 
       }
+
+      //If directions is not google maps, so set optimize 0 (disable)
+      if(this.directionsProviderRule.value != 'google_maps' && this.directionsDataModel.directions_google_optimize_route) {
+        this.directionsDataModel.directions_google_optimize_route.value = '0';
+      }
       
       return isValid        
     }
@@ -234,6 +239,15 @@ export default {
         </div>
 
         <div class="row">
+          <!-- Option google maps optimize route -->
+          <div v-if="directionsProviderRule && directionsProviderRule.value == 'google_maps'" class="col-lg-12">
+            <div class="form-check">            
+              <label class="form-check-label pl-0"><h3 style="color: #54667a;">{{ trans("geolocation.optimize_route") }}</h3> </label>
+              <label class="pl-1"><input type="radio" name="radioOptimize" value="1" v-model="directionsDataModel.directions_google_optimize_route.value">{{ trans("geolocation.yes") }}</label>
+              <label class="pl-1"><input type="radio" name="radioOptimize" value="0" v-model="directionsDataModel.directions_google_optimize_route.value">{{ trans("geolocation.no") }}</label>
+            </div>
+          </div>
+
           <div class="col-lg-12">
             <div class="form-check">            
               <label class="form-check-label pl-0"><h3 style="color: #54667a;">{{ trans("geolocation.enable_red") }}</h3> </label>

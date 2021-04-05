@@ -34,4 +34,6 @@ return [
 
     "invalid_url" => "This field must be a valid url",
     "invalid_require" => "Fill in this field",
+
+    "optimize_route"    => "Habilitar la optimización de rutas?"
 ];
