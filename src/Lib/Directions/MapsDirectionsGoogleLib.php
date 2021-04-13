@@ -289,12 +289,9 @@ use GeometryLibrary\PolyUtil;
             }else if($waysLen < 2){
                 return false;
             }
-            //Se tem otimizacao, usa a chave especifica pra otimizacao, senao, utiliza a chave normalmente
-            if($optimize == 1) {
-                $google_key = GeolocationSettings::getDirectionsGoogleOptimizeRoute();
-            } else {
-                $google_key = $this->directions_key_api;
-            }
+
+            $google_key = $this->directions_key_api;
+            
             $curl_string = $this->url_api . "/directions/json?key=" . $google_key . "&origin=" . urlencode($ways[0][0].",".$ways[0][1]) . "&destination=" . urlencode($ways[$waysLen-1][0].",".$ways[$waysLen-1][1]) . $waysFormatted;
            
             return self::polylineProcessWithPoints($curl_string);
@@ -358,8 +355,13 @@ use GeometryLibrary\PolyUtil;
                 $array_resp['duration_value'] = convert_to_minutes($totalDuration);
                 $array_resp['partial_distances'] = $partialDistances;
                 $array_resp['partial_durations'] = $partialDurations;
-                $array_resp['waypoint_order'] = $waypoint_order;
-                $array_resp['waypoint_order'] = [];
+
+                if(isset($waypoint_order) && $waypoint_order) {
+                    $array_resp['waypoint_order'] = $waypoint_order;
+                } else {
+                    $array_resp['waypoint_order'] = [];
+                }
+                
             }
             else
             {
