@@ -295,7 +295,13 @@ class DirectionsController extends Controller {
 			$durationValue = $response['duration_value'];
 			$partialDistances = $response['partial_distances'];
 			$partialDurations = $response['partial_durations'];
-			$waypointOrder = $response['waypoint_order'];
+
+            //if has waypoint ordering
+            if(isset($response['waypoint_order']) && $response['waypoint_order']) {
+                $waypointOrder = $response['waypoint_order'];
+            } else {
+                $waypointOrder = [];
+            }
 		}
 		else
 		{
