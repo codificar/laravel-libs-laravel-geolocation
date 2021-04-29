@@ -33,7 +33,7 @@ class GeolocationControllerV1 extends Controller {
             $data = $this->clicker->getGeocodeWithAddress($request->address, $request->placeID, $request->lang);
         }
         else {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
       
         $response['clicker'] = "primary";
@@ -55,7 +55,7 @@ class GeolocationControllerV1 extends Controller {
             $response['latitude'] = $data['data']['latitude'];
             $response['longitude'] = $data['data']['longitude'];
         }else {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
        
 
@@ -73,7 +73,7 @@ class GeolocationControllerV1 extends Controller {
         }
         else
         {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
 
         $response['clicker'] = "primary";
@@ -94,7 +94,7 @@ class GeolocationControllerV1 extends Controller {
             $response['latitude'] = $data['data']['latitude'];
             $response['longitude'] = $data['data']['longitude'];
         }else {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
 
         return $response;
@@ -135,7 +135,7 @@ class GeolocationControllerV1 extends Controller {
             $response['distance_float'] = $requestTimeDistance['data']['distance'];
             $response['time_float'] = $requestTimeDistance['data']['time_in_minutes'];
         }else {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
 
 
@@ -151,7 +151,7 @@ class GeolocationControllerV1 extends Controller {
             $response = $this->clicker->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, $request->latitude, $request->longitude);
         }
         else {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
         
         $response['clicker'] = "primary";
@@ -178,7 +178,7 @@ class GeolocationControllerV1 extends Controller {
             $this->clicker = $this->factory->createMaps();
             $response = $this->clicker->getAddressByTextWithLatLng($request->place,$request->latitude,$request->longitude);
         }else{
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
 
         $response['clicker'] = "primary";

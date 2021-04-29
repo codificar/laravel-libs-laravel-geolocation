@@ -41,7 +41,7 @@ class GeolocationSettingsController extends Controller
 		);
 
 		// Get Page Title
-		$title = ucwords(trans('customize.Settings'));
+		$title = ucwords(trans('geolocationTrans::geolocation.settings_title'));
 
 		// Get Places Value
 		$placesProvider = GeolocationSettings::getPlacesProvider();

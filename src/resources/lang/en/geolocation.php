@@ -32,5 +32,24 @@ return [
     "invalid_url" => "This field must be a valid url",
     "invalid_require" => "Fill in this field",
 
-    "optimize_route"    => "Enable route optimization?"
+    "optimize_route"    => "Enable route optimization?",
+
+    "no_data_found"         => "No data found for this search.",
+    "place_is_required" => "Tracho do local é obrigatório",
+    "place_id_required" => "O Place ID é obrigatório",
+    "token_required" => "Preencha or Token",
+    "token_invalid" => "Invalid token",
+    "token_string" => "Token must be a text",
+    "id_required" => "Preset or ID",
+    "id_integer" => "ID must be a number",
+    "address_required" => "Preset or Straighten",
+    'waypoints_required' => 'You are broken if necessary',
+    "latitude_and_longitude_equals_zero" => "A latitude and a longitude are equal to zero!",
+    'incorrect_object_format' => 'Incorrect or incomplete broken points',
+
+    'minutes' => "Minute (s)",
+    "km" => "Km (s)",
+    'mile' => "Milha (s)",
+
+    "settings_title" => "Configurações",
 ];

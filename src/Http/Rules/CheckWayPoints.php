@@ -55,7 +55,7 @@ class CheckWayPoints implements Rule {
      */
     public function message() {
 
-        return trans('googleMapsController.incorrect_object_format');
+        return trans('geolocationTrans::geolocation.incorrect_object_format');
     }
 
 }

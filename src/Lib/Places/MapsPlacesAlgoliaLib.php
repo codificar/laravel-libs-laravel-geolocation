@@ -97,7 +97,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 !$requester_lng
             )
             {
-                $error  =  array("error_message" => trans('maps_lib.incomplete_parameters'));
+                $error  =  array("error_message" => trans('geolocationTrans::geolocation.incomplete_parameters'));
             }
             else
             {
@@ -127,7 +127,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 }
                 else if(isset($response_obj->hits) && count($response_obj->hits) == 0)
                 {
-                    $error      =   array("error_message" => trans('maps_lib.no_data_found'));
+                    $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
                 }
 
             }
@@ -170,7 +170,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 !$address
             )
             {
-                $error  =  array("error_message" => trans('maps_lib.incomplete_parameters'));
+                $error  =  array("error_message" => trans('geolocationTrans::geolocation.incomplete_parameters'));
             }
             else
             {
@@ -200,7 +200,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 }
                 else
                 {
-                    $error      =   array("error_message" => trans('maps_lib.no_data_found'));
+                    $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
                 }
 
             }
@@ -244,7 +244,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 !$longitude
             )
             {
-                $error  =   array("error_message" => trans('maps_lib.incomplete_parameters'));
+                $error  =   array("error_message" => trans('geolocationTrans::geolocation.incomplete_parameters'));
             }
             else
             {
@@ -274,7 +274,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
             }
             else
             {
-                $error      =   array("error_message" => trans('maps_lib.no_data_found'));
+                $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
             }
 
             $return = array("success" => $success, "data" => $processed);

@@ -85,7 +85,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
             if (!$this->url_api ||!$this->places_key_api || !$text || !$requester_lat || !$requester_lng)
             {
-                $error      =   array("error_message" => trans('maps_lib.incomplete_parameters'));
+                $error      =   array("error_message" => trans('geolocationTrans::geolocation.incomplete_parameters'));
             }
             else
             {
@@ -106,7 +106,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     $processed  =   self::processPlacesResponse($response_obj->features);
                     $success    =   true;
                 }else if(isset($response_obj->features) && count($response_obj->features) == 0){
-                    $error      =   array("error_message" => trans('maps_lib.no_data_found'));
+                    $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
                 }
 
             }
@@ -144,7 +144,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
             if(!$this->url_api ||!$this->places_key_api || !$address)
             {
-                $error      =   array("error_message" => trans('maps_lib.incomplete_parameters'));
+                $error      =   array("error_message" => trans('geolocationTrans::geolocation.incomplete_parameters'));
             }
             else
             {
@@ -176,7 +176,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
             if(!count($processed) || !$processed)
             {
                 $success    =   false;
-                $error      =   array("error_message" => trans('maps_lib.no_data_found'));
+                $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
             }
 
             $return = array("success" => $success, "data" => $processed);
@@ -212,7 +212,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
 
             if(!$this->url_api ||!$this->places_key_api || !$latitude || !$longitude)
             {
-                $error      =   array("error_message" => trans('maps_lib.incomplete_parameters'));
+                $error      =   array("error_message" => trans('geolocationTrans::geolocation.incomplete_parameters'));
             }
             else
             {
@@ -245,7 +245,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
             if(!count($processed) || !$processed)
             {
                 $success    =   false;
-                $error      =   array("error_message" => trans('maps_lib.no_data_found'));
+                $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
             }
 
             $return = array("success" => $success, "data" => $processed);

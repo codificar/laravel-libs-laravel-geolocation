@@ -42,7 +42,7 @@ use GeometryLibrary\PolyUtil;
         {
             $this->directions_key_api = $apiKey ? $apiKey : GeolocationSettings::getDirectionsKey();
             self::$settings_dist = 0;
-            self::$unit_text = trans('api.km');
+            self::$unit_text = trans('geolocationTrans::geolocation.km') ;
         }
 
         /**
@@ -106,7 +106,7 @@ use GeometryLibrary\PolyUtil;
                 $time_in_minutes = convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value);
 
                 $distance_text = number_format(convert_distance_format(0, $response_obj->routes[0]->legs[0]->distance->value),1) . " " . self::$unit_text;
-                $duration_text = ceil(convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value)) . " " . trans("api.minutes");
+                $duration_text = ceil(convert_to_minutes($response_obj->routes[0]->legs[0]->duration->value)) . " " . trans('geolocationTrans::geolocation.minutes');
 
                 return array('success' => true, 'data' => [ 'distance' => $dist, 'time_in_minutes' => $time_in_minutes, 'distance_text' => $distance_text, 'duration_text' => $duration_text ]);
             }
@@ -203,7 +203,7 @@ use GeometryLibrary\PolyUtil;
                 $duration_format = $duration;
             }
 
-            return $duration_format . ' ' . trans("api.minutes");
+            return $duration_format . ' ' . trans('geolocationTrans::geolocation.minutes');
         }
 
         /**

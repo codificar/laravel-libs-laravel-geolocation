@@ -38,7 +38,7 @@ use Codificar\Geolocation\Helper;
         {
             $this->directions_key_api = $apiKey ? $apiKey : GeolocationSettings::getDirectionsKey();
             $this->settings_dist = GeolocationSettings::getDefaultDistanceUnit();
-            self::$unit_text = $this->settings_dist==1 ? trans('api.mile') : trans('api.km');
+            self::$unit_text = $this->settings_dist==1 ? trans('geolocationTrans::geolocation.mile') : trans('geolocationTrans::geolocation.km') ;
         }
 
         /**
@@ -102,7 +102,7 @@ use Codificar\Geolocation\Helper;
                 $time_in_minutes = convert_to_minutes($response_obj->resourceSets[0]->resources[0]->travelDurationTraffic);
 
                 $distance_text = number_format($response_obj->resourceSets[0]->resources[0]->travelDistance,1) . " " . self::$unit_text;
-                $duration_text = number_format(ceil(convert_to_minutes($response_obj->resourceSets[0]->resources[0]->travelDurationTraffic)),0) . " " . trans("api.minutes");
+                $duration_text = number_format(ceil(convert_to_minutes($response_obj->resourceSets[0]->resources[0]->travelDurationTraffic)),0) . " " . trans('geolocationTrans::geolocation.minutes');
 
                 return array('success' => true, 'data' => [ 'distance' => $dist, 'time_in_minutes' => $time_in_minutes, 'distance_text' => $distance_text, 'duration_text' => $duration_text ]);
             }
@@ -199,7 +199,7 @@ use Codificar\Geolocation\Helper;
                 $duration_format = $duration;
             }
 
-            return $duration_format . trans("api.minutes");
+            return $duration_format . trans('geolocationTrans::geolocation.minutes');
         }
 
         /**

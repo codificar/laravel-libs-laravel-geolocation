@@ -82,3 +82,9 @@ php artisan migrate
 ```
 URL POSTMAN
 ```
+## Langs
+-pt-br
+- pt
+- es
+- en
+- ao

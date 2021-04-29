@@ -35,7 +35,7 @@ class CheckUserToken implements Rule {
      * @return string
      */
     public function message() {
-        return trans('userController.token_not_valid');
+        return trans('geolocationTrans::geolocation.token_invalid');
     }
 
 }

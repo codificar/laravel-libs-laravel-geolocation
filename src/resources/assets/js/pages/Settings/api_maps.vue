@@ -93,7 +93,7 @@ export default {
 </script>
 <template>
   <Card>
-    <h4 slot="card-title" class="m-b-0 text-white">{{ trans("geolocation.api_maps") }}</h4>
+    <h4 slot="card-title" class="text-white m-b-0">{{ trans("geolocation.api_maps") }}</h4>
 
     <h3 slot="card-content-title" class="box-title"></h3>
       <div slot="card-content">

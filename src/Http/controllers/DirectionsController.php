@@ -314,7 +314,7 @@ class DirectionsController extends Controller {
 			$partialDistances = [];
 			$partialDurations = [];
 			$waypointOrder = [];
-			$error = trans('googleMapsController.no_result_found');
+			$error = trans('geolocationTrans::geolocation.no_data_found');
 		}
 
 		$response_array = array(
