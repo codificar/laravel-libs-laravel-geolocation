@@ -22,6 +22,11 @@ use GeometryLibrary\PolyUtil;
         private $url_api = "https://router.hereapi.com/v8/";
 
         /**
+         * @var String  $matrix_url_api         URL to access Matrix API
+         */
+        private $matrix_url_api = "https://matrix.router.hereapi.com/v8/";
+
+        /**
          * @var String  $directions_key_api Key of API authentication
          */
         private $directions_key_api;
@@ -408,6 +413,85 @@ use GeometryLibrary\PolyUtil;
 
         private function decodePolylineToObject($points){
             return FlexiblePolyline::decodeToObject($points)['polyline'];
+        }
+
+        private static function curlCallJson($curl_string, $payload)
+        {
+            $session = curl_init($curl_string);
+            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($session, CURLOPT_POST, true);
+            curl_setopt($session, CURLOPT_POSTFIELDS, $payload);
+            $msg_chk = curl_exec($session);
+
+            return $msg_chk;
+        }
+
+        /**
+         * Gets and calculate distance and duration on Here Map
+         *
+         * @param Decimal       $source_lat         Decimal that represents the starting latitude of the request.
+         * @param Decimal       $source_long        Decimal that represents the starting longitude of the request.
+         * @param Decimal       $dest_lat           Decimal that represents the destination latitude of the request.
+         * @param Decimal       $dest_long          Decimal that represents the destination longitude of the request.
+         *
+         * @return Array        ['success', 'data' => ['distance','time_in_minutes','distance_text','duration_text']]
+         */
+        public function getMatrixDistance($providers, $sourceLat, $sourceLong)
+        {
+            try {
+                if (!$this->directions_key_api) {
+                    return array('success' => false);
+                }
+    
+                $destinations = $this->mountDestination($providers);
+                $params         =   array(
+                    "origins"  =>  [["lat" => $sourceLat, "lng" => $sourceLong]],
+                    "destinations"  => $destinations,
+                    "regionDefinition"  => ["type" => "world"],
+                    "matrixAttributes" => ["travelTimes", "distances"]
+                );
+    
+                $payload = json_encode($params);
+                
+                $curl_string    = $this->matrix_url_api . "matrix?async=false&apiKey=$this->directions_key_api";
+                $php_obj        = self::curlCallJson($curl_string, $payload);
+                $response       = json_decode($php_obj);
+    
+                $return = array('success' => false);
+                
+                if (is_object($response)) {
+                    $return['success'] = true;
+                    $return['distance'] = $response->matrix->distances;
+                }
+
+                return $return;
+            } catch (\Throwable $th) {
+                \Log::error($th->getMessage());
+                return array('success' => false);
+            }
+            
+        }
+
+        /**
+         * Mount destinations string for matrix
+         * 
+         * @param array $providers
+         * @return array
+         */
+        public function mountDestination($providers)
+        {
+            try {
+                $destinations = [];
+
+                foreach ($providers as $item) {
+                    array_push($destinations, ["lat" => $item->latitude, "lng" => $item->longitude]);
+                }
+
+                return $destinations;
+            } catch (\Throwable $th) {
+                return [];
+            }
         }
 
     }
