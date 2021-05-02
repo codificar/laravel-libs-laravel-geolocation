@@ -350,4 +350,96 @@ use Codificar\Geolocation\Helper;
             return $polyline;
         }
 
+        private static function curlCallJson($curl_string, $payload)
+        {
+            $session = curl_init($curl_string);
+            curl_setopt($session, CURLOPT_HTTPHEADER, array(                                                                          
+                'Content-Type: application/json'                                                                    
+            ));
+            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($session, CURLOPT_POST, true);
+            curl_setopt($session, CURLOPT_POSTFIELDS, $payload);
+            $msg_chk = curl_exec($session);
+
+            return $msg_chk;
+        }
+
+        /**
+         * Get the matrix distance in providers list
+         * 
+         * @param Array        $providers             Array of providers.
+         * @param Decimal      $sourceLat             Decimal that represents the starting latitude of the request.
+         * @param Decimal      $sourceLong            Decimal that represents the starting longitude of the request.
+         * 
+         * @return Array 
+         */
+        public function getMatrixDistance($providers, $sourceLat, $sourceLong)
+        {
+            try {
+                if (!$this->directions_key_api)
+                    return false;
+                
+                $destinations = $this->mountMatrixString($providers, $sourceLat, $sourceLong);
+                $curlString = $this->url_api . "/directions/v2/routematrix?key=" . $this->directions_key_api;
+                
+                $callApi = self::curlCallJson($curlString, json_encode($destinations));
+                $response = json_decode($callApi, true);
+                
+                $return = array('success' => false);
+
+                if (is_array($response) && array_key_exists('distance', $response)) {
+                    $data = $response['distance'];
+                    $return['success'] = true;
+                    $return['distance'] = [];
+
+                    array_shift($data);
+                    foreach ($data as $item) {
+                        array_push($return['distance'], $item);
+                    }
+                }
+                
+                return $return;
+            } catch (\Throwable $th) {
+                \Log::error($th->getMessage());
+                return array('success' => false);
+            }
+        }
+
+        /**
+         * Mount destinations string for matrix
+         * 
+         * @param array $providers
+         * @return array
+         */
+        public function mountMatrixString($providers, $sourceLat, $sourceLong)
+        {
+            try {
+                $data = [
+                    "locations" => [[
+                        "latLng" => [
+                            "lat" => $sourceLat,
+                            "lng" => $sourceLong
+                        ]
+                    ]]
+                ];
+                
+                for ($i=0; $i < count($providers); $i++) {
+                    $location = [
+                        "latLng" => [
+                            "lat" => $providers[$i]->latitude,
+                            "lng" => $providers[$i]->longitude
+                        ]
+                    ];
+
+                    array_push($data["locations"], $location);
+                }
+
+                return $data;
+            } catch (\Throwable $th) {
+                \Log::error($th->getMessage());
+                return ["locations" => []];
+            }
+        }
+
     }
