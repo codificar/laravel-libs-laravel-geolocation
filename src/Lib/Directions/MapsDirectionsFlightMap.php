@@ -407,4 +407,67 @@ use GeometryLibrary\PolyUtil;
             return $array_resp;
         }
 
+        /**
+         * Get the matrix distance in providers list
+         * 
+         * @param Array        $providers             Array of providers.
+         * @param Decimal      $sourceLat             Decimal that represents the starting latitude of the request.
+         * @param Decimal      $sourceLong            Decimal that represents the starting longitude of the request.
+         * 
+         * @return Array 
+         */
+        public function getMatrixDistance($providers, $sourceLat, $sourceLong)
+        {
+            try {
+                $destinations = $this->mountMatrixString($providers);
+                $curlString = $this->url_api . "matrix?fm_token=$this->directions_key_api" .
+                    "&start=$sourceLat,$sourceLong" . 
+                    "&end=$destinations";
+                
+                $callApi = self::curlCall($curlString);
+                $response = json_decode($callApi, true);
+                
+                $return = array('success' => false);
+
+                if (is_array($response) && array_key_exists('routes', $response)) {
+                    $data = $response['routes'];
+                    $return['success'] = true;
+                    $return['distance'] = [];
+
+                    foreach ($data as $item) {
+                        array_push($return['distance'], $item['elements'][0]['distance']);
+                    }
+                }
+                
+                return $return;
+            } catch (\Throwable $th) {
+                \Log::error($th->getMessage());
+                return array('success' => false);
+            }
+        }
+
+        /**
+         * Mount destinations string for matrix
+         * 
+         * @param array $providers
+         * @return string
+         */
+        public function mountMatrixString($providers)
+        {
+            try {
+                $matrixString = "";
+
+                foreach ($providers as $item) {
+                    $matrixString .= "$item->latitude,$item->longitude;";
+                }
+
+                if (strlen($matrixString))
+                    $matrixString = substr($matrixString, 0, -1);
+
+                return $matrixString;
+            } catch (\Throwable $th) {
+                return "";
+            }
+        }
+
     }
