@@ -34,7 +34,10 @@ export default {
         directions_provider_redundancy: "",       
         directions_key_redundancy: "",
         directions_url_redundancy: "",
-        places_application_id_redundancy: ""
+        places_application_id_redundancy: "",
+
+        directions_matrix_distance: "",
+        directions_matrix_distance_redundancy: ""
       },  
       
       directionsDataErrors: {
@@ -239,6 +242,14 @@ export default {
         </div>
 
         <div class="row">
+          <div class="col-lg-12">
+            <div class="form-check">            
+              <label class="form-check-label pl-0"><h3 style="color: #54667a;">{{ trans("geolocation.matrix_distance") }}</h3> </label>
+              <label class="pl-1"><input type="radio" name="radioMatrix" value="1" v-model="directionsDataModel.directions_matrix_distance.value">{{ trans("geolocation.yes") }}</label>
+              <label class="pl-1"><input type="radio" name="radioMatrix" value="0" v-model="directionsDataModel.directions_matrix_distance.value">{{ trans("geolocation.no") }}</label>
+            </div>
+          </div>
+
           <!-- Option google maps optimize route -->
           <div v-if="directionsProviderRule && directionsProviderRule.value == 'google_maps'" class="col-lg-12">
             <div class="form-check">            
@@ -283,15 +294,25 @@ export default {
           </div>
 
           <div class="row">
-          <div v-show=directionsProviderRedundancyRule.redundancy_url class="col-lg-6">
-            <div class="form-group">
-              <label>
-                {{ trans("geolocation.api_places_url") }}
-              </label>           
-              <input v-model=directionsDataModel.directions_url_redundancy.value type="text" class="form-control" />
+            <div v-show=directionsProviderRedundancyRule.redundancy_url class="col-lg-6">
+              <div class="form-group">
+                <label>
+                  {{ trans("geolocation.api_places_url") }}
+                </label>            
+                <input v-model=directionsDataModel.directions_url_redundancy.value type="text" class="form-control" />
+                <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url_redundancy}}</div>	
               <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url_redundancy}}</div>	
+                <div class="help-block with-errors" style="color: red;">{{directionsDataErrors.directions_url_redundancy}}</div>	
+              </div>
             </div>
-          </div>
+
+            <div class="col-lg-12">
+              <div class="form-check">            
+                <label class="form-check-label pl-0"><h3 style="color: #54667a;"> {{ trans("geolocation.matrix_distance_redundancy") }}</h3> </label>
+                <label class="pl-1"><input type="radio" name="radioMatrixRedundancy" value="1" v-model="directionsDataModel.directions_matrix_distance_redundancy.value">{{ trans("geolocation.yes") }}</label>
+                <label class="pl-1"><input type="radio" name="radioMatrixRedundancy" value="0" v-model="directionsDataModel.directions_matrix_distance_redundancy.value">{{ trans("geolocation.no") }}</label>
+              </div>
+            </div>
 
         </div>
         </div>

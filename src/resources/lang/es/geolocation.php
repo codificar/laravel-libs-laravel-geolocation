@@ -35,5 +35,8 @@ return [
     "invalid_url" => "This field must be a valid url",
     "invalid_require" => "Fill in this field",
 
-    "optimize_route"    => "Habilitar la optimización de rutas?"
+    "optimize_route"    => "Habilitar la optimización de rutas?",
+
+    "matrix_distance"               => "Enable search via api matrix distance",
+    "matrix_distance_redundancy"    => "Enable search via api matrix distance for redundancy"
 ];

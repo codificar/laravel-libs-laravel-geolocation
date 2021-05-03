@@ -337,12 +337,27 @@ class GeolocationSettings extends Settings {
 	 */
 	public static function getIsMatrixDistanceEnabled()
 	{
-		$settings = self::where('key', 'is_matrix_distance_enabled')->first();
+		$settings = self::where('key', 'directions_matrix_distance')->first();
 
 		if ($settings)
 			return (boolean) $settings->value;
 
-		return true;
+		return false;
+	}
+
+	/**
+	 * Get if is matrix distance enabled
+	 * 
+	 * @return boolean
+	 */
+	public static function getIsMatrixDistanceRedundancyEnabled()
+	{
+		$settings = self::where('key', 'directions_matrix_distance_redundancy')->first();
+
+		if ($settings)
+			return (boolean) $settings->value;
+
+		return false;
 	}
 
 }

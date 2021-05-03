@@ -33,5 +33,8 @@ return [
     "invalid_url"                    => "Este campo deve ser uma url válida",    
     "invalid_require"                    => "Preencha este campo",        
 
-    "optimize_route"                => "Habilitar otimização de rotas?"
+    "optimize_route"                => "Habilitar otimização de rotas?",
+
+    "matrix_distance"               => "Habilitar pesquisa via api matrix distance",
+    "matrix_distance_redundancy"    => "Habilitar pesquisa via api matrix distance para redundância"
 ];
