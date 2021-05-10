@@ -25,51 +25,51 @@ use Codificar\Geolocation\Models\GeolocationSettings;
 class PlacesServiceController extends Controller {  
     public function places($place, $latitude, $longitude, $clicker = 'primary')  {
         $placesClicker = $clicker == "redundancy" ? "redundancy_places" : "places";
-        $this->factory = new MapsFactory($placesClicker);
+        $factory = new MapsFactory($placesClicker);
         
-        if($this->factory) {
-            $this->clicker = $this->factory->createMaps();
-            $response = $this->clicker->getAddressByTextWithLatLng($place,$latitude,$longitude);
+        if($factory) {
+            $clicker = $factory->createMaps();
+            $response = $clicker->getAddressByTextWithLatLng($place,$latitude,$longitude);
         }else{
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
 
         $response['clicker'] = "primary";
 
-        if((!$this->factory || $response['success'] == false) && GeolocationSettings::getPlacesRedundancyRule()) {
-            $this->factoryRedundancy = new MapsFactory('redundancy_places');
+        if((!$factory || $response['success'] == false) && GeolocationSettings::getPlacesRedundancyRule()) {
+            $factoryRedundancy = new MapsFactory('redundancy_places');
 
-            if($this->factoryRedundancy){
-                $this->clickerRedundancy = $this->factoryRedundancy->createMaps();
-                $response = $this->clickerRedundancy->getAddressByTextWithLatLng($place,$latitude,$longitude);
+            if($factoryRedundancy){
+                $clickerRedundancy = $factoryRedundancy->createMaps();
+                $response = $clickerRedundancy->getAddressByTextWithLatLng($place,$latitude,$longitude);
             }
 
             $response['clicker'] = "redundancy";
         }
 
-        return new PlacesResource(["response" => $response]);
+        return $response;
     }
 
     public function geocode($address, $place_id = null, $clicker = 'primary') {
         $placesClicker = $clicker == "redundancy" ? "redundancy_places" : "places";
-        $this->factory = new MapsFactory($placesClicker);
+        $factory = new MapsFactory($placesClicker);
         
-        if($this->factory) {
-            $this->clicker = $this->factory->createMaps();
-            $response = $this->clicker->getGeocodeWithAddress($address, $place_id, null, null, null);
+        if($factory) {
+            $clicker = $factory->createMaps();
+            $response = $clicker->getGeocodeWithAddress($address, $place_id, null, null, null);
         }
         else {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
         
         $response['clicker'] = "primary";
 
-        if((!$this->factory || $response['success'] == false) && GeolocationSettings::getPlacesRedundancyRule()) {
-            $this->factoryRedundancy = new MapsFactory('redundancy_places');
+        if((!$factory || $response['success'] == false) && GeolocationSettings::getPlacesRedundancyRule()) {
+            $factoryRedundancy = new MapsFactory('redundancy_places');
 
-            if($this->factoryRedundancy){
-                $this->clickerRedundancy = $this->factoryRedundancy->createMaps();
-                $response = $this->clickerRedundancy->getGeocodeWithAddress($address, $place_id, null, null, null);
+            if($factoryRedundancy){
+                $clickerRedundancy = $factoryRedundancy->createMaps();
+                $response = $clickerRedundancy->getGeocodeWithAddress($address, $place_id, null, null, null);
             }
 
             $response['clicker'] = "redundancy";
@@ -77,53 +77,53 @@ class PlacesServiceController extends Controller {
 
         if($response['success']) $response['data']['address'] = $address;
 
-        return new GeocodeResource(["response" => $response]);
+        return $response;
     }
 
     public function geocodeReverse($latitude, $longitude, $clicker = 'primary') {
         $placesClicker = $clicker == "redundancy" ? "redundancy_places" : "places";
-        $this->factory = new MapsFactory($placesClicker);
+        $factory = new MapsFactory($placesClicker);
 
-        if($this->factory)
+        if($factory)
         {
-            $this->clicker = $this->factory->createMaps();
-            $response = $this->clicker->getGeocodeByLatLng($latitude, $longitude);
+            $clicker = $factory->createMaps();
+            $response = $clicker->getGeocodeByLatLng($latitude, $longitude);
         }
         else
         {
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
 
         $response['clicker'] = "primary";
-        if((!$this->factory || $response['success'] == false) && GeolocationSettings::getPlacesRedundancyRule()) {
-            $this->factoryRedundancy = new MapsFactory('redundancy_places');
+        if((!$factory || $response['success'] == false) && GeolocationSettings::getPlacesRedundancyRule()) {
+            $factoryRedundancy = new MapsFactory('redundancy_places');
 
-            if($this->factoryRedundancy){
-                $this->clickerRedundancy = $this->factoryRedundancy->createMaps();
-                $response = $this->clickerRedundancy->getGeocodeByLatLng($latitude, $longitude);
+            if($factoryRedundancy){
+                $clickerRedundancy = $factoryRedundancy->createMaps();
+                $response = $clickerRedundancy->getGeocodeByLatLng($latitude, $longitude);
             }
 
             $response['clicker'] = "redundancy";
         }
 
-        return new GeocodeResource(["response" => $response]);
+        return $response;
     }
     
     public function findByPlaceId($place_id) {
         if(GeolocationSettings::getPlacesProvider() == "google_maps"){
-            $this->factory = new MapsFactory('places');
+            $factory = new MapsFactory('places');
 
-            if($this->factory){
-                $this->clicker = $this->factory->createMaps();
-                $response = $this->clicker->getDetailsById($place_id);
+            if($factory){
+                $clicker = $factory->createMaps();
+                $response = $clicker->getDetailsById($place_id);
             }else{
-                $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_data_found'));
+                $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
             }
         }else{
-            $response = array("success" => false, "data" => [], "error_message" => trans('maps_lib.no_google_lib'));
+            $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_lib_google'));
         }
 		
-        return new PlaceDetailsResource(["response" => $response]);
+        return $response;
     }
     
 }

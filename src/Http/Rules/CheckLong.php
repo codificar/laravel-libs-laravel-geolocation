@@ -38,8 +38,7 @@ class CheckLong implements Rule {
      * @return string
      */
     public function message() {
-
-        return trans('providerController.latitude_and_longitude_equals_zero');
+        return trans('geolocationTrans::geolocation.latitude_and_longitude_equals_zero');
     }
 
 }

@@ -35,9 +35,6 @@ return [
 
     "optimize_route"                => "Habilitar otimização de rotas?",
 
-    "matrix_distance"               => "Habilitar pesquisa via api matrix distance",
-    "matrix_distance_redundancy"    => "Habilitar pesquisa via api matrix distance para redundância",
-    
     "no_data_found"         => "Não há dados para esta pesquisa",
     "no_lib_google"         => "A biblioteca não é o Google",
 

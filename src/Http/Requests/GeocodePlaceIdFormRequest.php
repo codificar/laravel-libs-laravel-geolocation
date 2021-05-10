@@ -47,11 +47,11 @@ class GeocodePlaceIdFormRequest extends FormRequest
     public function messages() 
     {
         return [
-            'token.required'    =>  trans('userController.token_missing'),
-            'id.required'       =>  trans('userController.unique_id_missing'),
-            'id.integer'        =>  trans('validation.integer', ['attribute' => trans('user.id')]),
-            'token.string'      =>  trans('validation.string', ['attribute' => 'token']),
-            'address.required'  =>  trans('maps_lib.address_required')
+            'token.required'    =>  trans('geolocationTrans::geolocation.token_required'),
+            'id.required'       =>  trans('geolocationTrans::geolocation.id_required'),
+            'id.integer'        =>  trans('geolocationTrans::geolocation.id_integer'),
+            'token.string'      =>  trans('geolocationTrans::geolocation.token_string'),
+            'address.required'  =>  trans('geolocationTrans::geolocation.address_required')
         ];
     }
 

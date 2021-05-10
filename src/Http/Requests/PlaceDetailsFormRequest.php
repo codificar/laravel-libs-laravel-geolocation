@@ -44,11 +44,11 @@ class PlaceDetailsFormRequest extends FormRequest
     public function messages() 
     {
         return [
-            'token.required'    =>  trans('userController.token_missing'),
-            'id.required'       =>  trans('userController.unique_id_missing'),
-            'id.integer'        =>  trans('validation.integer', ['attribute' => trans('user.id')]),
-            'token.string'      =>  trans('validation.string', ['attribute' => 'token']),
-            'place_id.required' =>  trans('maps_lib.place_id_required'),
+            'token.required'    =>  trans('geolocationTrans::geolocation.token_required'),
+            'id.required'       =>  trans('geolocationTrans::geolocation.id_required'),
+            'id.integer'        =>  trans('geolocationTrans::geolocation.id_integer'),
+            'token.string'      =>  trans('geolocationTrans::geolocation.token_string'),
+            'place_id.required' =>  trans('geolocationTrans::geolocation.place_id_required'),
         ];
     }
 

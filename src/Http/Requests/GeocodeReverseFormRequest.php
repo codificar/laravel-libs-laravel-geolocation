@@ -48,10 +48,10 @@ class GeocodeReverseFormRequest extends FormRequest
     public function messages() 
     {
         return [
-            'token.required'    =>  trans('userController.token_missing'),
-            'id.required'       =>  trans('userController.unique_id_missing'),
-            'id.integer'        =>  trans('validation.integer', ['attribute' => trans('user.id')]),
-            'token.string'      =>  trans('validation.string', ['attribute' => 'token'])
+            'token.required'    =>  trans('geolocationTrans::geolocation.token_required'),
+            'id.required'       =>  trans('geolocationTrans::geolocation.id_required'),
+            'id.integer'        =>  trans('geolocationTrans::geolocation.id_integer'),
+            'token.string'      =>  trans('geolocationTrans::geolocation.token_string')
         ];
     }
 

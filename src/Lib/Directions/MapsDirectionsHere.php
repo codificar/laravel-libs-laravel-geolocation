@@ -48,7 +48,7 @@ use GeometryLibrary\PolyUtil;
         {
             $this->directions_key_api = $apiKey ? $apiKey : GeolocationSettings::getDirectionsKey();
             self::$settings_dist = GeolocationSettings::getDefaultDistanceUnit();
-            self::$unit_text = self::$settings_dist==1 ? trans('api.mile') : trans('api.km');
+            self::$unit_text = self::$settings_dist==1 ? trans('geolocationTrans::geolocation.mile') : trans('geolocationTrans::geolocation.km') ;
         }
 
         /**
@@ -230,7 +230,7 @@ use GeometryLibrary\PolyUtil;
                 $duration_format = $duration;
             }
 
-            return $duration_format . ' ' . trans("api.minutes");
+            return $duration_format . ' ' . trans('geolocationTrans::geolocation.minutes');
         }
 
         /**
@@ -275,7 +275,7 @@ use GeometryLibrary\PolyUtil;
             $responseArray['convertTime'] = $responseArray['originalTime'];
             
             $responseArray['distance_text'] = number_format($responseArray['convertDist'], 1) . " " . self::$unit_text;
-            $responseArray['duration_text'] = ceil($responseArray['convertTime']) . " " . trans("api.minutes");
+            $responseArray['duration_text'] = ceil($responseArray['convertTime']) . " " . trans('geolocationTrans::geolocation.minutes');
 
             return $responseArray;
         }
@@ -402,7 +402,7 @@ use GeometryLibrary\PolyUtil;
             $responseArray['duration_value'] = $totalDuration;
 
             $responseArray['distance_text'] = number_format($totalDistance, 1) . " " . self::$unit_text;
-            $responseArray['duration_text'] = ceil($totalDuration) . " " . trans("api.minutes");
+            $responseArray['duration_text'] = ceil($totalDuration) . " " . trans('geolocationTrans::geolocation.minutes');
           
             return $responseArray;
         }

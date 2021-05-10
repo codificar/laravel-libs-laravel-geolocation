@@ -36,7 +36,7 @@ class CheckUserId implements Rule {
      */
     public function message() {
 
-        return trans('userController.unique_id_missing');
+        return trans('geolocationTrans::geolocation.id_required');
     }
 
 }

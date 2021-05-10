@@ -49,9 +49,9 @@ class PlacesFormRequest extends FormRequest
     public function messages() 
     {
         return [
-            'token.required'        =>  trans('userController.token_missing'),
-            'id.required'           =>  trans('userController.unique_id_missing'),
-            'place.required'        =>  trans('maps_lib.place_is_required'),
+            'token.required'        =>  trans('geolocationTrans::geolocation.token_required'),
+            'id.required'           =>  trans('geolocationTrans::geolocation.id_required'),
+            'place.required'        =>  trans('geolocationTrans::geolocation.place_is_required'),
         ];
     }
 

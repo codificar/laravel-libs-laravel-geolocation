@@ -38,5 +38,25 @@ return [
     "optimize_route"    => "Habilitar la optimización de rutas?",
 
     "matrix_distance"               => "Enable search via api matrix distance",
-    "matrix_distance_redundancy"    => "Enable search via api matrix distance for redundancy"
+    "matrix_distance_redundancy"    => "Enable search via api matrix distance for redundancy",
+    
+    "no_data_found"         => "No hay datos para esta búsqueda.",
+
+    "place_is_required" => "El fragmento de sitio es obligatorio",
+    "place_id_required" => "Se requiere la identificación del lugar",
+    "token_required" => "Complete el Token",
+    "token_invalid" => "Token no válido",
+    "token_string" => "El token debe ser texto",
+    "id_required" => "Complete el ID",
+    "id_integer" => "El ID debe ser un número",
+    "address_required" => "Complete la dirección",
+    'waypoints_required' => 'Los waypoints son obligatorios',
+    "latitude_and_longitude_equals_zero" => "¡La latitud y la longitud son iguales a cero!",
+    'wrong_object_format' => 'Puntos de ruta incorrectos o incompletos',
+
+    'minutes' => "Minuto (s)",
+    "km" => "Km (s)",
+    'mile' => "Milla (s)",
+
+    "settings_title" => "Configuración",
 ];
