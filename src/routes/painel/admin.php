@@ -6,7 +6,8 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
     Route::get('/admin/geocode', ['as' => 'adminGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
     
     Route::get('/admin/geocode_reverse', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocodeReverse']);
-    Route::get('/admin/get_place_details', 'GeolocationController@getDetailsById');
+
+    Route::get('/admin/get_place_details', ['as' => 'adminGeocodeGetPlaceDetail', 'uses' => 'GeolocationController@getDetailsById']);
 
     //Directions API
     Route::get('/admin/geocode/get_estimate', 'DirectionsController@getDirectionsDistanceAndTimeApi');
