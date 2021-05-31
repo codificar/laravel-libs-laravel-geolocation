@@ -394,9 +394,8 @@ use GeometryLibrary\PolyUtil;
          * @return Array/False                  Array with partials and totals of distances and durations.
          */
         private function getPartialsAndTotals($response_obj)
-        {
-            if(!isset($response_obj))
-                return false;
+        {           
+            if(!isset($response_obj)) return false;
 
             if(isset($response_obj['properties']))
             {
@@ -414,8 +413,9 @@ use GeometryLibrary\PolyUtil;
             {
                 return false;
             }
-
-            foreach ($legs as $index=>$leg) {
+          
+            foreach ($legs as $index => $leg) {
+                if(empty($leg['distance']) && empty($leg['duration'])) return false;
                 $partialDistances[$index] = number_format(($leg['distance'] / 1000), 2);
                 $partialDurations[$index] = number_format(($leg['duration'] / 60), 2);
             }
