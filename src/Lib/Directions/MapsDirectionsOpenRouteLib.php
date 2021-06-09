@@ -267,18 +267,18 @@ use GeometryLibrary\PolyUtil;
                         $polyline['distance_value'] = convert_distance_format(self::$settings_dist, $response_obj['features'][0]['properties']['segments'][0]['distance']);
                         $polyline['duration_value'] = convert_to_minutes($duration);
                     }else {
-                        return array('success' => false);
+                        return false;
                     }                  
                 }
                 else
                 {
-                    return array('success' => false);
+                    return false;
                 }
 
                 return $polyline;
             } catch (Exception $e) {
                 \Log::error($e->getMessage());
-                return array('success' => false);
+                return false;
             }
             
         }
