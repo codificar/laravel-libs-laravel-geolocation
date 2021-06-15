@@ -241,7 +241,10 @@ use GeometryLibrary\PolyUtil;
             $response_obj = json_decode($php_obj);
             
             if($response_obj->status == 200 && $response_obj->message == 'Successful')
-            {                            
+            {   
+                if (!isset($response_obj->data->paths[0]->points)) {
+                    return false;
+                }                        
                 $originalPoints = $response_obj->data->paths[0]->points;
                 $polyline['points'] = $originalPoints;
 

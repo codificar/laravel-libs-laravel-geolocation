@@ -159,14 +159,14 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $addressArray = explode(",",$prediction->address);
               
                 $contetSize = sizeof($addressArray);
-                $estate = $addressArray[$contetSize-1];
-
+                $estate = isset($addressArray[$contetSize-1]) ? $addressArray[$contetSize-1] : "";
+                $addressText = isset($addressArray[0]) ? $addressArray[0] : "";
                 isset($addressArray[2]) ? $secondaryContet = $addressArray[2] : $secondaryContet = "";
-               
+                $addressText2 = isset($addressArray[1]) ? $addressArray[1] : "";
 
-                $address = $addressArray[0]." -".$addressArray[1].",".$secondaryContet." -".$estate.",".end($addressArray);
+                $address = $addressText . " -". $addressText2 .",".$secondaryContet." -".$estate.",".end($addressArray);
              
-                $main_text = $addressArray[0]." -".$addressArray[1];
+                $main_text = $addressText . " -". $addressText2;
                 $secondary_text = $secondaryContet." -".$estate.",".end($addressArray);
 
                 $processed['address']        =   $address;
