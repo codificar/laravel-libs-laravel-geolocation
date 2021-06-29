@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 
 //Internal Uses
 use Codificar\Geolocation\Models\GeolocationSettings;
+use ConfigController;
+
 
 use Codificar\Geolocation\Enums\DirectionsEnum;
 use Codificar\Geolocation\Enums\PlacesEnum;
