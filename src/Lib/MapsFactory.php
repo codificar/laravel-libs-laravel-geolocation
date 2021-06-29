@@ -18,7 +18,15 @@ use Codificar\Geolocation\Lib\Places\{
     MapsPlacesOpenRoute,
     MapsPlacesPeliasLib
 };
-
+use Codificar\Geolocation\Lib\Directions\{ 
+    MapsDirectionsFlightMap,
+    MapsDirectionsHere,
+    MapsDirectionsMapQuestLib,
+    MapsDirectionsBingLib,
+    MapsDirectionsGoogleLib,
+    MapsDirectionsMapBoxLib, 
+    MapsDirectionsOpenRouteLib,
+};
     /**
      * This class define the requisition type of geolocation
      * and provider used

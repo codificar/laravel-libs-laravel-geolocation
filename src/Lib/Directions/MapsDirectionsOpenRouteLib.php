@@ -1,6 +1,6 @@
 <?php
 
-namespace Codificar\Geolocation\Lib;
+namespace Codificar\Geolocation\Lib\Directions;
 
 //Internal Uses
 use Codificar\Geolocation\Models\GeolocationSettings;
