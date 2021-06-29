@@ -1,4 +1,5 @@
 <?php
+
 namespace Codificar\Geolocation\Http\Controllers;
 
 use App\Models\Institution;
@@ -6,6 +7,11 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Routing\Controller;
 use stdClass;
+
+use Codificar\Geolocation\Models\{
+	ModelObjectSettings,
+	ApplicationSettingsViewModel
+};
 
 class ConfigController extends Controller {
 
@@ -1351,34 +1357,8 @@ class ConfigController extends Controller {
 	}
 }
 
-class ApplicationSettingsViewModel extends stdClass{
-	public $id;
-	public $key;
-	public $value;
-	public $tool_tip;
-	public $page;
-	public $category;
-	public $sub_category;
 
-	// constructor
-	function __construct() {  }
 
-}
-
-class ModelObjectSettings extends stdClass {
-
-	// constructor
-	public function __construct() {  }
-
-	public function __get($attribute){
-		try {
-			return $this->$attribute ;
-		}
-		catch (Exception $ex) {
-			return new ApplicationSettingsViewModel() ;
-		}
-	}
-}
 
 
 

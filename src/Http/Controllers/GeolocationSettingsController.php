@@ -11,8 +11,11 @@ use URL;
 use Illuminate\Http\Request;
 
 //Internal Uses
-use Codificar\Geolocation\Models\GeolocationSettings;
-use ConfigController;
+use Codificar\Geolocation\Models\{
+	ModelObjectSettings,
+	ApplicationSettingsViewModel,
+	GeolocationSettings
+};
 
 
 use Codificar\Geolocation\Enums\DirectionsEnum;
