@@ -27,7 +27,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *                  @OA\Property(property="place_id", format="string", type="string", description=""),
  *                  @OA\Property(property="street_name", format="string", type="string", description=""),
  *                  @OA\Property(property="street_number", format="number", type="number", description=""),
- *                  @OA\Property(property="postal_code", format="string", type="string", description=""),
+ *                  @OA\Property(property="postal_code", format="string", type="string", nullable=true, description=""),
  *                  @OA\Property(property="latitude", format="double", type="number", description=""),
  *                  @OA\Property(property="longitude", format="double", type="number", description="")
  *              ),

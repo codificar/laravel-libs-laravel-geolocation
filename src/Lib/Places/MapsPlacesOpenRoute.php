@@ -172,7 +172,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 //   },
 
               
-                $city = $prediction->properties->locality;
+                // $city = $prediction->properties->locality;
                 $estate = $prediction->properties->region_a;
                 $country = $prediction->properties->country;
                 $secondary_text = $prediction->properties->name." -".$estate.",".$country;
@@ -206,7 +206,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $processed['place_id']      =    null;
                 $processed['street_name']   =    $prediction->properties->name;
                 $processed['street_number'] =    $prediction->properties->housenumber;
-                $processed['postal_code']   =    $prediction->properties->postalcode;
+                $processed['postal_code']   =    $prediction->properties->postalcode ?? null;
                 $processed['latitude']      =    $prediction->geometry->coordinates[1];
                 $processed['longitude']     =    $prediction->geometry->coordinates[0];
             }
