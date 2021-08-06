@@ -379,7 +379,7 @@ use GeometryLibrary\PolyUtil;
             $points = [];
           
             foreach ($routes as $key => $value) {
-                $points = $this->decodePolylineToObject($value->polyline);
+                $points += $this->decodePolylineToObject($value->polyline);
                 $originalTime = number_format(($value->summary->duration/60));
                 $originalDistance = $value->summary->length;                  
 
