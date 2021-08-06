@@ -371,41 +371,49 @@ use GeometryLibrary\PolyUtil;
         }
 
         private function formatDistanceTimeTextWithPoints($response_obj){
-            $routes = $response_obj->routes[0]->sections;
-            $responseArray = array();
-            $totalDistance = 0;
-            $totalDuration = 0;
-
-            $points = [];
-          
-            foreach ($routes as $key => $value) {
-                $points += $this->decodePolylineToObject($value->polyline);
-                $originalTime = number_format(($value->summary->duration/60));
-                $originalDistance = $value->summary->length;                  
-
-                $convertDist = self::convert_meters(self::$settings_dist, $originalDistance);
-                $convertTime = $originalTime;
-
-                $partialDistances[$key] = (string) $convertDist;
-                $partialDurations[$key] = (string) $convertTime;
-
-                $totalDistance += $convertDist;
-                $totalDuration += $convertTime;                            
-            }
-           
-            $responseArray['waypoint_order'] = [];
-            $responseArray['points'] = $points;
-            $responseArray['partial_distances'] = $partialDistances;
-            $responseArray['partial_durations'] = $partialDurations;
-
-            $responseArray['distance_value'] = $totalDistance;
-            $responseArray['duration_value'] = $totalDuration;
-
-            $responseArray['distance_text'] = number_format($totalDistance, 1) . " " . self::$unit_text;
-            $responseArray['duration_text'] = ceil($totalDuration) . " " . trans('geolocationTrans::geolocation.minutes');
-          
-            return $responseArray;
-        }
+			$routes = $response_obj->routes[0]->sections;
+			$responseArray = array();
+			$totalDistance = 0;
+			$totalDuration = 0;
+	
+			$points = [];
+			
+			foreach ($routes as $key => $value) {
+				$points[$key] = $this->decodePolylineToObject($value->polyline);
+				$originalTime = number_format(($value->summary->duration / 60));
+				$originalDistance = $value->summary->length;
+	
+				$convertDist = self::convert_meters(self::$settings_dist, $originalDistance);
+				$convertTime = $originalTime;
+	
+				$partialDistances[$key] = (string) $convertDist;
+				$partialDurations[$key] = (string) $convertTime;
+	
+				$totalDistance += $convertDist;
+				$totalDuration += $convertTime;
+			}
+			
+			$pointsArray = [];
+	
+			foreach($points as $point) {
+				foreach($point as $p) {
+					array_push($pointsArray, $p);
+				}
+			}
+	
+			$responseArray['waypoint_order'] = [];
+			$responseArray['points'] = $pointsArray;
+			$responseArray['partial_distances'] = $partialDistances;
+			$responseArray['partial_durations'] = $partialDurations;
+	
+			$responseArray['distance_value'] = $totalDistance;
+			$responseArray['duration_value'] = $totalDuration;
+	
+			$responseArray['distance_text'] = number_format($totalDistance, 1) . " " . self::$unit_text;
+			$responseArray['duration_text'] = ceil($totalDuration) . " " . trans('geolocationTrans::geolocation.minutes');
+	
+			return $responseArray;
+		}
 
         private function decodePolyline($points){
             return FlexiblePolyline::decode($points)['polyline'];
