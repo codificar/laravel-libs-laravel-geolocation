@@ -268,7 +268,7 @@ use GeometryLibrary\PolyUtil;
             $sumarry = $response_obj->routes[0]->sections[0]->summary;
 
             $responseArray = array();
-            $responseArray['originalTime'] = number_format(($sumarry->duration/60));
+            $responseArray['originalTime'] = $sumarry->duration / 60;
             $responseArray['originalDistance'] = $sumarry->length;    
 
             $responseArray['convertDist'] = self::convert_meters(self::$settings_dist, $responseArray['originalDistance']);

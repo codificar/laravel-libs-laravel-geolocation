@@ -81,7 +81,7 @@ class DirectionsController extends Controller {
             );
         }
         
-        if((!isset($requestTimeDistance['success']) || !$requestTimeDistance['success']) && GeolocationSettings::getDirectionsRedundancyRule()){
+        if((!is_array($requestTimeDistance) || !$requestTimeDistance) && GeolocationSettings::getDirectionsRedundancyRule()){
             $factoryRedundancy = new MapsFactory('redundancy_directions');
 
             if($factoryRedundancy){
@@ -120,7 +120,7 @@ class DirectionsController extends Controller {
             );
         }
         
-        if((!isset($requestTimeDistance['success']) || !$requestTimeDistance['success']) && GeolocationSettings::getDirectionsRedundancyRule()){
+        if((!is_array($requestTimeDistance) || !$requestTimeDistance) && GeolocationSettings::getDirectionsRedundancyRule()){
             $factoryRedundancy = new MapsFactory('redundancy_directions');
 
             if($factoryRedundancy){
@@ -212,7 +212,7 @@ class DirectionsController extends Controller {
             );
         }
         
-        if((!isset($requestTimeDistance['success']) || !$requestTimeDistance['success']) && GeolocationSettings::getDirectionsRedundancyRule()){
+        if((!is_array($requestTimeDistance) || !$requestTimeDistance) && GeolocationSettings::getDirectionsRedundancyRule()){
             $factoryRedundancy = new MapsFactory('redundancy_directions');
 
             if($factoryRedundancy){
@@ -245,7 +245,7 @@ class DirectionsController extends Controller {
             );
         }
         
-        if((!isset($requestTimeDistance['success']) || !$requestTimeDistance['success']) && GeolocationSettings::getDirectionsRedundancyRule()){
+        if((!is_array($requestTimeDistance) || !$requestTimeDistance) && GeolocationSettings::getDirectionsRedundancyRule()){
             $factoryRedundancy = new MapsFactory('redundancy_directions');
 
             if($factoryRedundancy){
