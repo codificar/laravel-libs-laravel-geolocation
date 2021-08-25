@@ -415,10 +415,15 @@ use GeometryLibrary\PolyUtil;
             }
           
             foreach ($legs as $index => $leg) {
-                if( !is_array($leg) || !(array_key_exists('distance', $leg) && array_key_exists('duration', $leg)) )
+                if ( !is_array($leg) )
                     return false;
                 
-                if(empty($leg['distance']) && empty($leg['duration'])) return false;
+                if ( !(array_key_exists('distance', $leg) && array_key_exists('duration', $leg)) )
+                {
+                    $leg['distance'] = 0;
+                    $leg['duration'] = 0;
+                }
+
                 $partialDistances[$index] = number_format(($leg['distance'] / 1000), 2);
                 $partialDurations[$index] = number_format(($leg['duration'] / 60), 2);
             }
