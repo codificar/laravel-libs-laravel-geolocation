@@ -331,17 +331,30 @@ use GeometryLibrary\PolyUtil;
         {           
             $arrayPoints = json_decode($wayPoints);
             $waysFormatted = [];
+			$wayPointsFormatted = [];
+			
             foreach ($arrayPoints as $key => $value) {
-                $jsonPoints = (object) array(
-                    "lat" => strval($value[0]),
-                    "lng" => strval($value[1])
-                );
-                array_push($waysFormatted, $jsonPoints);
+				if ($key == 0 || count($arrayPoints) - 1 == $key) {
+					$jsonPoints = (object) array(
+						"lat" => strval($value[0]),
+						"lng" => strval($value[1])
+					);
+					
+					array_push($waysFormatted, $jsonPoints);
+				} else {
+					$jsonPoints = (object) array(
+						"lat" => strval($value[0]),
+						"lng" => strval($value[1])
+					);
+					
+					array_push($wayPointsFormatted, $jsonPoints);
+				}
             }
             $params         =   array(
                 "fm_token"       =>  $this->directions_key_api,
                 "points"         =>  json_encode($waysFormatted),
-                "driving_mode"   =>  'car'
+                "driving_mode"   =>  'car',
+				"waypoints"		 =>  json_encode($wayPointsFormatted)
             );
 
             $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
