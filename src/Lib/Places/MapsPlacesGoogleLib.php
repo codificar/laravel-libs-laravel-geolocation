@@ -74,7 +74,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
          *                      'error_message'
          *                     ]
          */
-        public function getAddressByTextWithLatLng($text, $requester_lat, $requester_lng)
+        public function getAddressByTextWithLatLng($text, $requester_lat, $requester_lng, $sessionToken = null)
         {
             $processed      =   [];
             $success        =   false;
@@ -91,9 +91,11 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     "location"  =>  $requester_lat . "," . $requester_lng,
                     "radius"    =>  5000,
                     "input"     =>  $text,
-                    "language"  =>  $this->lang
+                    "language"  =>  $this->lang,
+                    "fields"    =>  "address_component,adr_address,formatted_address,geometry,name,place_id"
                 );
-               
+
+                $params         =   $this->validateSession($params, $sessionToken);
                 $curl_string    =   $this->url_api . "place/autocomplete/json?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
                 $response_obj   =   json_decode($php_obj);
@@ -223,7 +225,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
          *                      'error_message'
          *                     }
          */
-        public function getDetailsById($placeId)
+        public function getDetailsById($placeId, $sessionToken = null)
         {
             $error  =   [];
 
@@ -240,6 +242,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     "language"  =>  $this->lang
                 );
 
+                $params         =   $this->validateSession($params, $sessionToken);
                 $curl_string    =   $this->url_api . "place/details/json?" . http_build_query($params);
                 $php_obj        =   self::curlCall($curl_string);
                 $response_obj   =   json_decode($php_obj);
@@ -500,6 +503,26 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                     $this->country  = 'usa';
                     return true;
             }
+        }
+
+        /**
+         * Verifys version UUID4 and add session param in request.
+         *
+         * @param Array         $params         A array contents default params to google autocomplete request.
+         * @param String        $sessionToken   Expecteds that string contains a hash UUID version 4.
+         *
+         * @return Array                        Params to google request probably containing session token
+         */
+        private function validateSession($params, $sessionToken)
+        {
+            $sessionToken = '20f5484b-88ae-49b0-8af0-3a389b4917dd';
+	        $patternUuid4 = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
+	        \Log::error("print preg: ".print_r(preg_match($patternUuid4, $sessionToken),1));
+            if($sessionToken && preg_match($patternUuid4, $sessionToken) == true)
+                $params = array_merge($params, ["sessiontoken" => $sessionToken]);
+
+            \Log::error("print params: ".print_r($params,1));
+            return $params;
         }
     }
 
