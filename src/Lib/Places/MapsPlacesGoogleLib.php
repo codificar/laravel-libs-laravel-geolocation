@@ -515,13 +515,10 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
          */
         private function validateSession($params, $sessionToken)
         {
-            $sessionToken = '20f5484b-88ae-49b0-8af0-3a389b4917dd';
 	        $patternUuid4 = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
-	        \Log::error("print preg: ".print_r(preg_match($patternUuid4, $sessionToken),1));
             if($sessionToken && preg_match($patternUuid4, $sessionToken) == true)
                 $params = array_merge($params, ["sessiontoken" => $sessionToken]);
 
-            \Log::error("print params: ".print_r($params,1));
             return $params;
         }
     }
