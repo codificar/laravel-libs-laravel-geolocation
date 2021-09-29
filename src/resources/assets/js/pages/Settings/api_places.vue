@@ -174,6 +174,7 @@ export default {
 
     //Set Selected Refresh Option
     const selectedRefreshOption = this.refreshOptions.filter(objectData => objectData.value == this.placesDataModel.refresh_session_deflate_search.value);
+    console.log('teste_oto',selectedRefreshOption);
     if(selectedRefreshOption.length > 0) this.selectRefreshOption(selectedRefreshOption[0]) 
 
     //Set Selected Place Provider
@@ -193,7 +194,7 @@ export default {
     <h3 slot="card-content-title" class="box-title"></h3>
       <div slot="card-content">
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-6">
             <div class="form-group">
               <label>
                 {{ trans("geolocation.refresh_session_deflate") }}*
