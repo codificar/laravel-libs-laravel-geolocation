@@ -168,7 +168,7 @@ export default {
   },
   async mounted() {   
     const optionsList = JSON.parse(this.enumData)
-    console.log('teste_oto',optionsList);
+    console.log('teste_oto',JSON.stringify(optionsList));
     this.placesDataModel = JSON.parse(this.model)   
     this.placesOptions = optionsList.places_provider
     this.refreshOptions = optionsList.refresh_session_deflate_search
