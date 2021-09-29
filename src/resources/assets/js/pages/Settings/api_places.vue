@@ -9,6 +9,7 @@ export default {
   data() {
     return {     
       placesOptions: [],
+      refreshOptions: [],
 
       placesProviderRule: {
         name: "",
@@ -34,7 +35,8 @@ export default {
         places_provider_redundancy: "",       
         places_key_redundancy: "",
         places_url_redundancy: "",
-        places_application_id_redundancy: ""
+        places_application_id_redundancy: "",
+        refresh_session_deflate_search: ""
       },  
       
       placesDataErrors: {
@@ -48,11 +50,16 @@ export default {
         places_provider_redundancy: "",       
         places_key_redundancy: "",
         places_url_redundancy: "",
-        places_application_id_redundancy: ""
+        places_application_id_redundancy: "",
+        refresh_session_deflate_search: ""
       }
     };
   },
   methods: {
+    selectRefreshOption(selectedOption){
+      this.refreshRule = selectedOption
+      this.refresh_session_deflate_search.value = selectedOption.value
+    },
     selectPlaceService(selectedData){
       this.placesProviderRule = selectedData
       this.placesDataModel.places_provider.value = selectedData.value
@@ -105,7 +112,8 @@ export default {
         places_provider_redundancy: "",       
         places_key_redundancy: "",
         places_url_redundancy: "",
-        places_application_id_redundancy: ""
+        places_application_id_redundancy: "",
+        refresh_session_deflate_search: ""
       } 
     },
     validate(data){
@@ -149,7 +157,12 @@ export default {
           this.placesDataErrors.places_application_id_redundancy = this.trans("geolocation.invalid_require")
         } 
       }
-      
+
+      if(this.placesDataModel.refresh_session_deflate_search.value == null || this.placesDataModel.refresh_session_deflate_search.value.trim() == ""){
+        isValid = false
+        this.placesDataErrors.refresh_session_deflate_search = this.trans("geolocation.invalid_require")
+      }
+
       return isValid        
     }
   },
@@ -157,6 +170,11 @@ export default {
     const optionsList = JSON.parse(this.enumData)
     this.placesDataModel = JSON.parse(this.model)   
     this.placesOptions = optionsList.places_provider
+    this.refreshOptions = optionsList.refresh_session_deflate_search
+
+    //Set Selected Refresh Option
+    const selectedRefreshOption = this.refreshOptions.filter(objectData => objectData.value == this.placesDataModel.refresh_session_deflate_search.value);
+    if(selectedRefreshOption.length > 0) this.selectRefreshOption(selectedRefreshOption[0]) 
 
     //Set Selected Place Provider
     const selectedPlaceProvider = this.placesOptions.filter(objectData => objectData.value == this.placesDataModel.places_provider.value);
@@ -174,6 +192,17 @@ export default {
 
     <h3 slot="card-content-title" class="box-title"></h3>
       <div slot="card-content">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label>
+                {{ trans("geolocation.refresh_session_deflate") }}*
+              </label>           
+              <v-select @input="selectRefreshOption" :options="refreshOptions" label="name"  v-model="refreshRule"/>
+              <div class="help-block with-errors" style="color: red;">{{placesDataErrors.refresh_session_deflate_search}}</div>	
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group">
