@@ -17,4 +17,14 @@ class PlacesEnum {
 		,array('value' => 'openroute_maps', 	'name' => 'OpenRouteService Maps', 'redundancy_url' => false)
 	);
 
+	/*
+    |--------------------------------------------------------------------------
+    | Enums of Geolocation Refresh Token
+    |--------------------------------------------------------------------------
+    */
+    const refresh_session_deflate_search = array(
+		array('value' => '1', 'name' => 'setting.yes')
+		,array('value' => '0', 'name' => 'setting.no')
+	);
+
 }

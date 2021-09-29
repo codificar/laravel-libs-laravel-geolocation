@@ -35,9 +35,10 @@ class GeolocationSettingsController extends Controller
 	
 		// Get Enum Values
 		$enums = array(
-			'directions_provider'	=>	DirectionsEnum::DirectionsProvider,
-			'places_provider'		=>	PlacesEnum::PlacesProvider,
-			'maps_provider'		    =>	MapsEnum::MapsProvider
+			'directions_provider'				=>	DirectionsEnum::DirectionsProvider,
+			'places_provider'					=>	PlacesEnum::PlacesProvider,
+			'maps_provider'						=>	MapsEnum::MapsProvider,
+			'refresh_session_deflate_search'	=>	PlacesEnum::refresh_session_deflate_search
 		);
 
 		// Get Page Title
