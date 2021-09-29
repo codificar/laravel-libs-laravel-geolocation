@@ -58,6 +58,7 @@ export default {
   methods: {
     selectRefreshOption(selectedOption){
       this.refreshRule = selectedOption
+      console.log('test_oto',JSON.stringify(selectedOption.value))
       this.refresh_session_deflate_search.value = selectedOption.value
     },
     selectPlaceService(selectedData){

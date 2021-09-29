@@ -201,7 +201,7 @@ class ConfigController extends Controller {
 					->with('enum', $enums)
 					->with('title', $title)
 					->with('page', 'settings')
-					->with('model', $model);;
+					->with('model', $model);
 	}
 
 	/**
