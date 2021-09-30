@@ -56,5 +56,5 @@ return [
 
     "settings_title" => "Configurações",
 
-    
+    "refresh_session_deflate" => "Atualizar Session token quando esvaziar pesquisa"
 ];

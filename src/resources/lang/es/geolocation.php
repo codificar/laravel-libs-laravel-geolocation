@@ -59,4 +59,6 @@ return [
     'mile' => "Milla (s)",
 
     "settings_title" => "Configuración",
+
+    "refresh_session_deflate" => "Actualizar el token de sesión en una búsqueda vacía"
 ];

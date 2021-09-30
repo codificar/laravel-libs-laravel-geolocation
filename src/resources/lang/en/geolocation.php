@@ -55,4 +55,6 @@ return [
     'mile' => "Milha (s)",
 
     "settings_title" => "Configurações",
+
+    "refresh_session_deflate" => "Update session token on empty search"
 ];

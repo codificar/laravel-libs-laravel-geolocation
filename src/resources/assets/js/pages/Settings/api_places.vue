@@ -24,6 +24,12 @@ export default {
         redundancy_url: false,
         value: ""
       },
+
+      refreshRule: {
+        name: "",
+        value: ""
+      },
+
       placesDataModel: {
         places_provider: "",
         places_key: "",
