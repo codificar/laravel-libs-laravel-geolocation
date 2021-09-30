@@ -171,6 +171,7 @@ export default {
     this.placesDataModel = JSON.parse(this.model)   
     this.placesOptions = optionsList.places_provider
     this.refreshOptions = optionsList.refresh_session_deflate_search
+    this.refreshOptions.map(option => option.name = this.trans(option.name))
 
     //Set Selected Refresh Option
     const selectedRefreshOption = this.refreshOptions.filter(objectData => objectData.value == this.placesDataModel.refresh_session_deflate_search.value);

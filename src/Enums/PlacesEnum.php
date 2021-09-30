@@ -23,8 +23,8 @@ class PlacesEnum {
     |--------------------------------------------------------------------------
     */
     const refresh_session_deflate_search = array(
-		array('value' => '1', 'name' => trans('setting.yes'))
-		,array('value' => '0', 'name' => trans('setting.no'))
+		array('value' => '1', 'name' => 'geolocation.yes')
+		,array('value' => '0', 'name' => 'geolocation.no')
 	);
 
 }
