@@ -58,8 +58,7 @@ export default {
   methods: {
     selectRefreshOption(selectedOption){
       this.refreshRule = selectedOption
-      console.log('test_oto',JSON.stringify(selectedOption.value))
-      this.refresh_session_deflate_search.value = selectedOption.value
+      this.placesDataModel.refresh_session_deflate_search.value = selectedOption.value
     },
     selectPlaceService(selectedData){
       this.placesProviderRule = selectedData
@@ -169,14 +168,12 @@ export default {
   },
   async mounted() {   
     const optionsList = JSON.parse(this.enumData)
-    console.log('teste_oto',JSON.stringify(optionsList));
     this.placesDataModel = JSON.parse(this.model)   
     this.placesOptions = optionsList.places_provider
     this.refreshOptions = optionsList.refresh_session_deflate_search
 
     //Set Selected Refresh Option
     const selectedRefreshOption = this.refreshOptions.filter(objectData => objectData.value == this.placesDataModel.refresh_session_deflate_search.value);
-    console.log('teste_oto',selectedRefreshOption);
     if(selectedRefreshOption.length > 0) this.selectRefreshOption(selectedRefreshOption[0]) 
 
     //Set Selected Place Provider
