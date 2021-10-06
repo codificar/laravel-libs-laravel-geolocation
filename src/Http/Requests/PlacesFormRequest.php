@@ -33,9 +33,10 @@ class PlacesFormRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'place'     =>  ['required', 'string'],
-			'latitude'  =>  ['required', new CheckLat($this->latitude)],
-			'longitude' =>  ['required', new CheckLong($this->longitude)]
+			'place'			=>  ['required', 'string'],
+			'latitude'		=>  ['required', new CheckLat($this->latitude)],
+			'longitude'		=>  ['required', new CheckLong($this->longitude)],
+            'sessionToken'	=>  ['nullable']
 		];
 	}
 

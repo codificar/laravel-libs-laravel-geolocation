@@ -35,7 +35,8 @@ class GeocodePlaceIdFormRequest extends FormRequest
         return [
             'address'       =>  ['required'],
             'place_id'      =>  ['required'],
-            'lang'          =>  ['']
+            'lang'          =>  [''],
+            'sessionToken'  =>  ['nullable']
 		];
     }
 

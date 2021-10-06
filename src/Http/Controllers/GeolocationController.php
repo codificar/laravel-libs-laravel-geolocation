@@ -21,6 +21,7 @@ use Codificar\Geolocation\Http\Resources\PlaceDetailsResource;
 // use MapsFactory, Settings;
 use Codificar\Geolocation\Lib\MapsFactory;
 use Codificar\Geolocation\Models\GeolocationSettings;
+use Settings;
 
 class GeolocationController extends Controller {  
     public function index(){
@@ -40,7 +41,7 @@ class GeolocationController extends Controller {
         
         if($this->factory) {
             $this->clicker = $this->factory->createMaps();
-            $response = $this->clicker->getAddressByTextWithLatLng($request->place,$request->latitude,$request->longitude);
+            $response = $this->clicker->getAddressByTextWithLatLng($request->place,$request->latitude,$request->longitude,$request->sessionToken);
         }else{
             $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
         }
@@ -67,7 +68,11 @@ class GeolocationController extends Controller {
         
         if($this->factory) {
             $this->clicker = $this->factory->createMaps();
-            $response = $this->clicker->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, null, null);
+
+            if(Settings::getPlacesProvider() == 'google_maps')
+                $response = $this->clicker->getDetailsById($request->place_id, $request->sessionToken);
+            else
+                $response = $this->clicker->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, null, null);
         }
         else {
             $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
@@ -80,7 +85,11 @@ class GeolocationController extends Controller {
 
             if($this->factoryRedundancy){
                 $this->clickerRedundancy = $this->factoryRedundancy->createMaps();
-                $response = $this->clickerRedundancy->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, null, null);
+
+                if(Settings::getPlacesProvider() == 'google_maps')
+                    $response = $this->clicker->getDetailsById($request->place_id, $request->sessionToken);
+                else
+                    $response = $this->clickerRedundancy->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, null, null);
             }
 
             $response['clicker'] = "redundancy";
