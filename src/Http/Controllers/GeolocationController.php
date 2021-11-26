@@ -69,7 +69,7 @@ class GeolocationController extends Controller {
         if($this->factory) {
             $this->clicker = $this->factory->createMaps();
 
-            if(Settings::getPlacesProvider() == 'google_maps')
+            if(Settings::getPlacesProvider() == 'google_maps' && isset($request->sessionToken) && Settings::findByKey('sessiontoken_work'))
                 $response = $this->clicker->getDetailsById($request->place_id, $request->sessionToken);
             else
                 $response = $this->clicker->getGeocodeWithAddress($request->address, $request->place_id, $request->lang, null, null);
@@ -167,7 +167,8 @@ class GeolocationController extends Controller {
 
             if($this->factory){
                 $this->clicker = $this->factory->createMaps();
-                $response = $this->clicker->getDetailsById($request->place_id);
+		        $sessionToken = isset($request->sessionToken) && Settings::findByKey('sessiontoken_work') ? $request->sessionToken : null;
+                $response = $this->clicker->getDetailsById($request->place_id, $sessionToken);
             }else{
                 $response = array("success" => false, "data" => [], "error_message" => trans('geolocationTrans::geolocation.no_data_found'));
             }
