@@ -27,4 +27,14 @@ class PlacesEnum {
 		,array('value' => '0', 'name' => 'geolocation.no')
 	);
 
+	/*
+    |--------------------------------------------------------------------------
+    | Enums of Geolocation Session Token Work
+    |--------------------------------------------------------------------------
+    */
+    const sessiontoken_work = array(
+		array('value' => '1', 'name' => 'geolocation.yes')
+		,array('value' => '0', 'name' => 'geolocation.no')
+	);
+
 }

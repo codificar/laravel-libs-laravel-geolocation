@@ -60,5 +60,7 @@ return [
 
     "settings_title" => "Configuración",
 
-    "refresh_session_deflate" => "Actualizar el token de sesión en una búsqueda vacía"
+    "refresh_session_deflate" => "Actualizar el token de sesión en una búsqueda vacía",
+
+    "sessiontoken_work" => "Session token functionality enabled?"
 ];

@@ -10,6 +10,7 @@ export default {
     return {     
       placesOptions: [],
       refreshOptions: [],
+      sessionTokenWorkOptions: [],
 
       placesProviderRule: {
         name: "",
@@ -30,6 +31,11 @@ export default {
         value: ""
       },
 
+      sessionTokenWorkRule: {
+        name: "",
+        value: ""
+      },
+
       placesDataModel: {
         places_provider: "",
         places_key: "",
@@ -42,7 +48,8 @@ export default {
         places_key_redundancy: "",
         places_url_redundancy: "",
         places_application_id_redundancy: "",
-        refresh_session_deflate_search: ""
+        refresh_session_deflate_search: "",
+        sessiontoken_work: ""
       },  
       
       placesDataErrors: {
@@ -57,7 +64,8 @@ export default {
         places_key_redundancy: "",
         places_url_redundancy: "",
         places_application_id_redundancy: "",
-        refresh_session_deflate_search: ""
+        refresh_session_deflate_search: "",
+        sessiontoken_work: ""
       }
     };
   },
@@ -65,6 +73,10 @@ export default {
     selectRefreshOption(selectedOption){
       this.refreshRule = selectedOption
       this.placesDataModel.refresh_session_deflate_search.value = selectedOption.value
+    },
+    selectSessionTokenWorkOption(selectedOption){
+      this.sessionTokenWorkRule = selectedOption
+      this.placesDataModel.sessiontoken_work.value = selectedOption.value
     },
     selectPlaceService(selectedData){
       this.placesProviderRule = selectedData
@@ -92,7 +104,7 @@ export default {
         );
       }else{
         let arrayDataModel = Object.keys(this.placesDataModel).map(key => this.placesDataModel[key]);
-        const response = await axios.post(this.placeSaveRoute, arrayDataModel)     
+        const response = await axios.post(this.placeSaveRoute, arrayDataModel)
         this.$toasted.show(
         "Salvo com sucesso", 
           { 
@@ -119,7 +131,8 @@ export default {
         places_key_redundancy: "",
         places_url_redundancy: "",
         places_application_id_redundancy: "",
-        refresh_session_deflate_search: ""
+        refresh_session_deflate_search: "",
+        sessiontoken_work: ""
       } 
     },
     validate(data){
@@ -169,6 +182,11 @@ export default {
         this.placesDataErrors.refresh_session_deflate_search = this.trans("geolocation.invalid_require")
       }
 
+      if(this.placesDataModel.sessiontoken_work.value == null || this.placesDataModel.sessiontoken_work.value.trim() == ""){
+        isValid = false
+        this.placesDataErrors.sessiontoken_work = this.trans("geolocation.invalid_require")
+      }
+
       return isValid        
     }
   },
@@ -178,14 +196,20 @@ export default {
     this.placesOptions = optionsList.places_provider
     this.refreshOptions = optionsList.refresh_session_deflate_search
     this.refreshOptions.map(option => option.name = this.trans(option.name))
+    this.sessionTokenWorkOptions = optionsList.sessiontoken_work
+    this.sessionTokenWorkOptions.map(option => option.name = this.trans(option.name))
 
     //Set Selected Refresh Option
     const selectedRefreshOption = this.refreshOptions.filter(objectData => objectData.value == this.placesDataModel.refresh_session_deflate_search.value);
-    if(selectedRefreshOption.length > 0) this.selectRefreshOption(selectedRefreshOption[0]) 
+    if(selectedRefreshOption.length > 0) this.selectRefreshOption(selectedRefreshOption[0])
+
+    //Set Selected Session Work Option
+    const selectedSessionTokenWorkOption = this.sessionTokenWorkOptions.filter(objectData => objectData.value == this.placesDataModel.sessiontoken_work.value);
+    if(selectedSessionTokenWorkOption.length > 0) this.selectSessionTokenWorkOption(selectedSessionTokenWorkOption[0]) 
 
     //Set Selected Place Provider
     const selectedPlaceProvider = this.placesOptions.filter(objectData => objectData.value == this.placesDataModel.places_provider.value);
-    if(selectedPlaceProvider.length > 0) this.selectPlaceService(selectedPlaceProvider[0]) 
+    if(selectedPlaceProvider.length > 0) this.selectPlaceService(selectedPlaceProvider[0])
 
     //Set Selected Redundancy Place Provider
     const selectedPlaceRedundancyProvider = this.placesOptions.filter(objectData => objectData.value == this.placesDataModel.places_provider_redundancy.value);
@@ -207,6 +231,16 @@ export default {
               </label>           
               <v-select @input="selectRefreshOption" :options="refreshOptions" label="name"  v-model="refreshRule"/>
               <div class="help-block with-errors" style="color: red;">{{placesDataErrors.refresh_session_deflate_search}}</div>	
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>
+                {{ trans("geolocation.sessiontoken_work") }}*
+              </label>           
+              <v-select @input="selectSessionTokenWorkOption" :options="sessionTokenWorkOptions" label="name"  v-model="sessionTokenWorkRule"/>
+              <div class="help-block with-errors" style="color: red;">{{placesDataErrors.sessiontoken_work}}</div>	
             </div>
           </div>
         </div>

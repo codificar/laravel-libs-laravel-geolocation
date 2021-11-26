@@ -263,7 +263,8 @@ class ConfigController extends Controller {
 		$enums = array(
 			'directions_provider'			=>	Config::get('enum.directions_provider'),
 			'places_provider'				=>	Config::get('enum.places_provider'),
-			'refresh_session_deflate_search'=>	Config::get('enum.refresh_session_deflate_search')
+			'refresh_session_deflate_search'=>	Config::get('enum.refresh_session_deflate_search'),
+			'sessiontoken_work'				=>	Config::get('enum.sessiontoken_work')
 		);
 
 		// Obtém o título da página

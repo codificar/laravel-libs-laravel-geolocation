@@ -38,7 +38,8 @@ class GeolocationSettingsController extends Controller
 			'directions_provider'				=>	DirectionsEnum::DirectionsProvider,
 			'places_provider'					=>	PlacesEnum::PlacesProvider,
 			'maps_provider'						=>	MapsEnum::MapsProvider,
-			'refresh_session_deflate_search'	=>	PlacesEnum::refresh_session_deflate_search
+			'refresh_session_deflate_search'	=>	PlacesEnum::refresh_session_deflate_search,
+			'sessiontoken_work'					=>	PlacesEnum::sessiontoken_work
 		);
 
 		// Get Page Title

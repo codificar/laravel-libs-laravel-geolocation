@@ -29,9 +29,9 @@ class SesstiontokenWorkConfig extends Migration
      */
     public function down()
     {
-        $refreshConfig = Settings::findObjectByKey('sessiontoken_work');
+        $sessionTokenWorkConfig = Settings::findObjectByKey('sessiontoken_work');
 
-        if($refreshConfig)
-            $refreshConfig->delete();
+        if($sessionTokenWorkConfig)
+            $sessionTokenWorkConfig->delete();
     }
 }
