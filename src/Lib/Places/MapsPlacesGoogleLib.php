@@ -520,7 +520,7 @@ use Settings;
             if($sessionToken && preg_match($patternUuid4, $sessionToken) == true && Settings::findByKey('sessiontoken_work'))
                 $params = array_merge($params, ["sessiontoken" => $sessionToken]);
 
-            return $params;
+            \Log::debug("USE SESSIONTOKEN: ".print_r($sessionToken,1));return $params;
         }
     }
 
