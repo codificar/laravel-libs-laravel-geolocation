@@ -516,11 +516,12 @@ use Settings;
          */
         private function validateSession($params, $sessionToken)
         {
-	        $patternUuid4 = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
-            if($sessionToken && preg_match($patternUuid4, $sessionToken) == true && Settings::findByKey('sessiontoken_work'))
-                $params = array_merge($params, ["sessiontoken" => $sessionToken]);
+            if($sessionToken && Settings::findByKey('sessiontoken_work'))
+                $params = array_merge(["sessiontoken" => $sessionToken], $params);
 
-            \Log::debug("USE SESSIONTOKEN: ".print_r($sessionToken,1));return $params;
+            \Log::debug("USE SESSIONTOKEN: ".print_r($params,1));
+
+            return $params;
         }
     }
 
