@@ -400,14 +400,16 @@ use GeometryLibrary\PolyUtil;
             if(isset($response_obj['properties']))
             {
                 $legs = $response_obj['properties']['segments'];
-                $totalDistance = $response_obj['properties']['summary']['distance'];
-                $totalDuration = $response_obj['properties']['summary']['duration'];
+                
+                $totalDistance = isset($response_obj['properties']['summary']['distance']) ? $response_obj['properties']['summary']['distance'] : 0;
+                $totalDuration = isset($response_obj['properties']['summary']['duration']) ? $response_obj['properties']['summary']['duration'] : 0;
             }
             else if(isset($response_obj['segments']))
             {
                 $legs = $response_obj['segments'];
-                $totalDistance = $response_obj['summary']['distance'];
-                $totalDuration = $response_obj['summary']['duration'];
+
+                $totalDistance = isset($response_obj['summary']['distance']) ? $response_obj['summary']['distance'] : 0;
+                $totalDuration = isset($response_obj['summary']['duration']) ? $response_obj['summary']['duration'] : 0;
             }
             else
             {
