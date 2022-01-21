@@ -9,7 +9,8 @@
         "test": "./vendor/bin/phpunit tests/"
     },
     "require": {
-        "guzzlehttp/guzzle": "^7.1"
+        "guzzlehttp/guzzle": "^7.1",
+        "alexpechkarev/geometry-library":"1.0.4"
     },
     "autoload": {
         "psr-4": {
