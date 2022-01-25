@@ -23,6 +23,7 @@ use Codificar\Geolocation\Lib\MapsFactory;
 use Codificar\Geolocation\Models\GeolocationSettings;
 
 class PlacesServiceController extends Controller {  
+    
     public function places($place, $latitude, $longitude, $clicker = 'primary')  {
         $placesClicker = $clicker == "redundancy" ? "redundancy_places" : "places";
         $factory = new MapsFactory($placesClicker);
