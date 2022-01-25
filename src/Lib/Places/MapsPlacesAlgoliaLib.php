@@ -1,6 +1,8 @@
 <?php
 
-namespace Codificar\Geolocation\Lib;
+// namespace Codificar\Geolocation\Lib;
+namespace Codificar\Geolocation\Lib\Places;
+
 
 //Internal Uses
 use Codificar\Geolocation\Models\GeolocationSettings;

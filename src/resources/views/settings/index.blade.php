@@ -38,5 +38,5 @@ clearRowClass()
 </script>
 
 <script src="/libs/geolocation/lang.trans/geolocation"></script>
-<script src="{{ elixir('vendor/codificar/geolocation/geolocation.vue.js') }}"> </script> 
+<script src="/vendor/codificar/geolocation/geolocation.vue.js"> </script> 
 @stop

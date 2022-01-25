@@ -1,6 +1,7 @@
 {
     "name": "codificar/geolocation",
     "description": "A generic library for laravel.",
+    "type": "package",
     "authors": [{
         "name": "Codificar",
         "email": "libs@codificar.com.br"
@@ -12,6 +13,9 @@
         "guzzlehttp/guzzle": "^7.1",
         "alexpechkarev/geometry-library":"1.0.4"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
     "autoload": {
         "psr-4": {
             "Codificar\\Geolocation\\": "src/"
@@ -20,7 +24,25 @@
             "src/"
         ]
     },
-    "require-dev": {
-        "phpunit/phpunit": "^9"
-    }
+    "repositories": [
+        {
+          "type": "package",
+          "package": {
+            "name": "codificar/laravel-geolocation",
+            "version": "master",
+            "source": {
+              "url": "https://libs:ofImhksJ@git.codificar.com.br/laravel-libs/laravel-geolocation.git",
+              "type": "git",
+              "reference": "master"
+            }
+          }
+        }
+    ],    
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev"
+
 }

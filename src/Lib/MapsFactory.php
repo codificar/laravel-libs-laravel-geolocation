@@ -4,11 +4,29 @@ namespace Codificar\Geolocation\Lib;
 //Internal Uses
 use Codificar\Geolocation\Models\GeolocationSettings;
 //Places
-use Codificar\Geolocation\Lib\Places\MapsPlacesGoogleLib;
-use Codificar\Geolocation\Lib\Places\MapsPlacesFlightMap;
-use Codificar\Geolocation\Lib\Places\MapsPlacesBing;
-use Codificar\Geolocation\Lib\Places\MapsPlacesOpenRoute;
-
+// use Codificar\Geolocation\Lib\Places\MapsPlacesGoogleLib;
+// use Codificar\Geolocation\Lib\Places\MapsPlacesFlightMap;
+// use Codificar\Geolocation\Lib\Places\MapsPlacesBing;
+// use Codificar\Geolocation\Lib\Places\MapsPlacesOpenRoute;
+// Ao usar php 7.0 pode se puxar multiplas libs assim
+use Codificar\Geolocation\Lib\Places\{ 
+    MapsPlacesAlgoliaLib, 
+    MapsPlacesBing,
+    MapsPlacesFlightMap,
+    MapsPlacesGoogleLib,
+    MapsPlacesHereLib,
+    MapsPlacesOpenRoute,
+    MapsPlacesPeliasLib
+};
+use Codificar\Geolocation\Lib\Directions\{ 
+    MapsDirectionsFlightMap,
+    MapsDirectionsHere,
+    MapsDirectionsMapQuestLib,
+    MapsDirectionsBingLib,
+    MapsDirectionsGoogleLib,
+    MapsDirectionsMapBoxLib, 
+    MapsDirectionsOpenRouteLib,
+};
     /**
      * This class define the requisition type of geolocation
      * and provider used
