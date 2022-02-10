@@ -17,73 +17,80 @@ auth.corp_api
 ```
 Settings
 
-## Instanação
-- Adicione o pacote no composer.json:
+## Instalação
 
-```
+Add in composer.json:
+
+```php
 "repositories": [
-		{
-			"type":"package",
-			"package": {
-			  "name": "codificar/laravel-geolocation",
-			  "version":"master",
-			  "source": {
-				  "url": "https://libs:ofImhksJ@git.codificar.com.br/laravel-libs/laravel-geolocation.git",
-				  "type": "git",
-				  "reference":"master"
-				}
-			}
-		}
-	],
-
-// ...
-
-"require": {
-    // ADD this
-   "codificar/laravel-geolocation": "dev-master"
-},
-
-```
-- Agora Adicione 
-```
-    "autoload": {
-        //...
-        "psr-4": {
-            // Add your Lib here
-           "Codificar\\Geolocation\\": "vendor/codificar/laravel-geolocation/src"
-            //...
-        }
-    },
-    //...
-```
-- Execute
-
-```
-composer dump-autoload -o
+    {
+        "type": "vcs",
+        "url": "https://libs:ofImhksJ@git.codificar.com.br/laravel-libs/laravel-geolocation.git"
+    }
+]
 ```
 
-- Adicione a Classe no como Provider
-
+```php
+require:{
+        "codificar/geolocation": "1.1.0",
+}
 ```
+
+```php
+"autoload": {
+    "psr-4": {
+        "Codificar\\Geolocation\\": "vendor/codificar/geolocation/src/"
+    }
+}
+```
+Update project dependencies:
+
+```shell
+$ composer update
+```
+
+Register the service provider in `config/app.php`:
+
+```php
 'providers' => [
-         ...,
-            // The new package class
-           Codificar\Geolocation\GeolocationServiceProvider::class
-        ],
-```
-- Execute as migrations
-
+  /*
+   * Package Service Providers...
+   */
+  Codificar\Geolocation\GeolocationServiceProvider::class,
+],
 ```
 
+
+Check if has the laravel publishes in composer.json with public_vuejs_libs tag:
+
+```
+    "scripts": {
+        //...
+		"post-autoload-dump": [
+			"@php artisan vendor:publish --tag=public_vuejs_libs --force"
+		]
+	},
+```
+
+Or publish by yourself
+
+
+Publish Js Libs and Tests:
+
+```shell
+$ php artisan vendor:publish --tag=public_vuejs_libs --force
+```
+
+- Migrate the database tables
+
+```shell
 php artisan migrate
 ```
-- Documentação POSTMAN
 
-```
-URL POSTMAN
-```
+
 ## Langs
--pt-br
+
+- pt-br
 - pt
 - es
 - en
