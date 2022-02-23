@@ -144,7 +144,7 @@ class DirectionsController extends Controller {
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value']
     */
    
-    public function getPolylineAndEstimateWithWayPoints($allPointsAPI){
+    public static function getPolylineAndEstimateWithWayPoints($allPointsAPI){
 		$factory = new MapsFactory('directions');
         $clicker = $factory->createMaps();
 
