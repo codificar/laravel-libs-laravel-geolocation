@@ -29,13 +29,14 @@ Route::get('/libs/geolocation/lang.trans/{file}', function () {
     foreach ($fileNames as $fileName) {
         array_push($files, __DIR__.'/../resources/lang/' . $lang . '/' . $fileName . '.php');
     }
+
     $strings = [];
     foreach ($files as $file) {
         $name = basename($file, '.php');
         $strings[$name] = require $file;
     }
 
-    return response($content)
+    return response('window.lang = ' . json_encode($strings) . ';')
             ->header('Content-Type', 'text/javascript');
             
 })->name('assets.lang');
