@@ -16,6 +16,9 @@ use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Enums\DirectionsEnum;
 use Codificar\Geolocation\Enums\PlacesEnum;
 use Codificar\Geolocation\Enums\MapsEnum;
+use Codificar\Geolocation\Models\ApplicationSettingsViewModel;
+use Codificar\Geolocation\Models\ModelObjectSettings;
+
 //External Uses
 
 class GeolocationSettingsController extends Controller
