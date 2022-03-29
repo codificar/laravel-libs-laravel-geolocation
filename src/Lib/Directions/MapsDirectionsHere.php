@@ -116,7 +116,7 @@ use GeometryLibrary\PolyUtil;
            
             if(isset($response_obj->routes[0]))
             {              
-                $values = $this->formatDistanceTimeText($response_obj);
+                $values = self::formatDistanceTimeText($response_obj);
 
                 return array('success' => true, 'data' => [ 'distance' => $values['convertDist'], 'time_in_minutes' => $values['convertTime'], 
                 'distance_text' => $values['distance_text'], 'duration_text' => $values['duration_text'] ]);
@@ -264,7 +264,7 @@ use GeometryLibrary\PolyUtil;
             return $array_resp;
         }
 
-        private function formatDistanceTimeText($response_obj){
+        private static function formatDistanceTimeText($response_obj){
             $sumarry = $response_obj->routes[0]->sections[0]->summary;
 
             $responseArray = array();
@@ -370,7 +370,7 @@ use GeometryLibrary\PolyUtil;
             }
         }
 
-        private function formatDistanceTimeTextWithPoints($response_obj){
+        private static function formatDistanceTimeTextWithPoints($response_obj){
 			$routes = $response_obj->routes[0]->sections;
 			$responseArray = array();
 			$totalDistance = 0;
@@ -379,7 +379,7 @@ use GeometryLibrary\PolyUtil;
 			$points = [];
 			
 			foreach ($routes as $key => $value) {
-				$points[$key] = $this->decodePolylineToObject($value->polyline);
+				$points[$key] = self::decodePolylineToObject($value->polyline);
 				$originalTime = number_format(($value->summary->duration / 60));
 				$originalDistance = $value->summary->length;
 	
@@ -415,11 +415,11 @@ use GeometryLibrary\PolyUtil;
 			return $responseArray;
 		}
 
-        private function decodePolyline($points){
+        private static function decodePolyline($points){
             return FlexiblePolyline::decode($points)['polyline'];
         }
 
-        private function decodePolylineToObject($points){
+        private static function decodePolylineToObject($points){
             return FlexiblePolyline::decodeToObject($points)['polyline'];
         }
 
