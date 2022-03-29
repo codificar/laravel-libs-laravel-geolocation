@@ -280,7 +280,7 @@ use GeometryLibrary\PolyUtil;
             return $responseArray;
         }
 
-        private function convert_meters($unit_dist, $response_dist){
+        private static function convert_meters($unit_dist, $response_dist){
             if (isset($response_dist)) {
                 if ($unit_dist == 1) {
                     //Miles
