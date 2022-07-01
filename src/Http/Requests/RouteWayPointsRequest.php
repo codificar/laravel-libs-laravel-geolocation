@@ -32,7 +32,7 @@ class RouteWayPointsRequest extends FormRequest
 
 	public function messages() {
 		return [            
-			'waypoints.required'=> trans('geolocationTrans::geolocation.waypoints_required')
+			'waypoints.required'=> trans('geolocation.waypoints_required')
 		];
 	}
 
