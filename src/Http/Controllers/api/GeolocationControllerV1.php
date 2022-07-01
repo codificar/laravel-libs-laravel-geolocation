@@ -3,6 +3,7 @@
 namespace Codificar\Geolocation\Http\Controllers\api;
 
 //Laravel Uses
+use Codificar\Geolocation\Http\Requests\GetLatLngByAddressFormRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use View;
@@ -99,6 +100,28 @@ class GeolocationControllerV1 extends Controller {
 
         return $response;
     }
+
+    /**
+     * @return array lat and lng corrresponding to the address.
+     * @api{get}/admin/get_lat_lang_by_address Get route between two addresses
+     * @apiDescription Function returns the route and info between two address
+     */
+    public function GetLatLangByAddress(GetLatLngByAddressFormRequest $request)
+    {
+        $factory = new MapsFactory(MapsFactory::TYPE_GEOCODING);
+        if ($factory) {
+            $clicker = $factory->createMaps();
+            $response = $clicker->getLatLangFromAddress($request['address']);
+        } else {
+            $response = [
+                "success" => false,
+                "data" => [],
+                "error_message" => trans('maps_lib.no_data_found')
+            ];
+        }
+        return $response;
+    }
+
 
     public function getDirectionsDistanceAndTime(Request $request) {  
         $startLat = $request->latitude;

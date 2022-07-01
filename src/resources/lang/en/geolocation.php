@@ -46,6 +46,7 @@ return [
     "id_required" => "Preset or ID",
     "id_integer" => "ID must be a number",
     "address_required" => "Preset or Straighten",
+    "address_string" => "Address must be a string",
     'waypoints_required' => 'You are broken if necessary',
     "latitude_and_longitude_equals_zero" => "A latitude and a longitude are equal to zero!",
     'incorrect_object_format' => 'Incorrect or incomplete broken points',

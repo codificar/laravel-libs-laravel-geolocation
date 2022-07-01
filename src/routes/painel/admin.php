@@ -4,7 +4,8 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
 
     Route::get('/admin/get_address_string', ['as' => 'adminAutocompleteUrl', 'uses' => 'GeolocationController@getAddressByString']);
     Route::get('/admin/geocode', ['as' => 'adminGeocodeUrl', 'uses' => 'GeolocationController@geocode']);
-    
+    Route::get('/admin/get_lat_lang_by_address', ['as' => 'getLatLangFromAddress', 'uses' => 'GeolocationController@GetLatLngByAddressFormRequest']);
+
     Route::get('/admin/geocode_reverse', ['as' => 'adminGeocodeUrlGeolocationLib', 'uses' => 'GeolocationController@geocodeReverse']);
 
     Route::get('/admin/get_place_details', ['as' => 'adminGeocodeGetPlaceDetail', 'uses' => 'GeolocationController@getDetailsById']);
