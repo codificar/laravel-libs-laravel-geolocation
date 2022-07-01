@@ -48,6 +48,7 @@ return [
     "token_invalid" => "Token no válido",
     "token_string" => "El token debe ser texto",
     "id_required" => "Complete el ID",
+    "address_string" => "La dirección debe ser una String",
     "id_integer" => "El ID debe ser un número",
     "address_required" => "Complete la dirección",
     'waypoints_required' => 'Los waypoints son obligatorios',

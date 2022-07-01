@@ -44,11 +44,11 @@ class PlaceDetailsFormRequest extends FormRequest
     public function messages() 
     {
         return [
-            'token.required'    =>  trans('geolocationTrans::geolocation.token_required'),
-            'id.required'       =>  trans('geolocationTrans::geolocation.id_required'),
-            'id.integer'        =>  trans('geolocationTrans::geolocation.id_integer'),
-            'token.string'      =>  trans('geolocationTrans::geolocation.token_string'),
-            'place_id.required' =>  trans('geolocationTrans::geolocation.place_id_required'),
+            'token.required'    =>  trans('geolocation.token_required'),
+            'id.required'       =>  trans('geolocation.id_required'),
+            'id.integer'        =>  trans('geolocation.id_integer'),
+            'token.string'      =>  trans('geolocation.token_string'),
+            'place_id.required' =>  trans('geolocation.place_id_required'),
         ];
     }
 

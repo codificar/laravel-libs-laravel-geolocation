@@ -49,6 +49,7 @@ return [
     "id_required" => "Preencha o ID",
     "id_integer" => "ID deve ser um número",
     "address_required" => "Preencha o Endereço",
+    "address_string" => "O Endereço deve ser uma string",
     'waypoints_required'        => 'Os pontos de rota são necessários',
     "latitude_and_longitude_equals_zero"=> "A latitude e a longitude são iguais a zero!",
     'incorrect_object_format'   => 'Pontos de rota incorretos ou incompletos',

@@ -48,9 +48,9 @@ class PlacesFormRequest extends FormRequest
 	public function messages()
 	{
 		return [
-			'token.required'        =>  trans('geolocationTrans::geolocation.token_required'),
-			'id.required'           =>  trans('geolocationTrans::geolocation.id_required'),
-			'place.required'        =>  trans('geolocationTrans::geolocation.place_is_required'),
+			'token.required'        =>  trans('geolocation.token_required'),
+			'id.required'           =>  trans('geolocation.id_required'),
+			'place.required'        =>  trans('geolocation.place_is_required'),
 		];
 	}
 

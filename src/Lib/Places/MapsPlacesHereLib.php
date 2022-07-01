@@ -77,6 +77,7 @@ class MapsPlacesHereLib implements IMapsPlaces {
      */
     public function getAddressByTextWithLatLng($text, $requester_lat, $requester_lng)
     {
+
         $processed      =   [];
         $success        =   false;
         $error          =   [];
