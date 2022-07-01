@@ -101,7 +101,6 @@ use Settings;
                 $php_obj        =   self::curlCall($curl_string);
                 $response_obj   =   json_decode($php_obj);
 
-                dd($response_obj);
                 if(
                     isset($response_obj->status) && 
                     $response_obj->status == "OK" && 
