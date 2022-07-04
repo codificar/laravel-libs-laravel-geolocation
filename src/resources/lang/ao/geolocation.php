@@ -58,5 +58,8 @@ return [
 
     "refresh_session_deflate" => "Atualizar Session token quando esvaziar pesquisa",
 
-    "sessiontoken_work" => "Habilitada a funcionalidade de session token?"
+    "sessiontoken_work" => "Habilitada a funcionalidade de session token?",
+
+    "matrix_distance"               => "Habilitar pesquisa via api matrix distance",
+    "matrix_distance_redundancy"    => "Habilitar pesquisa via api matrix distance para redundância"
 ];
