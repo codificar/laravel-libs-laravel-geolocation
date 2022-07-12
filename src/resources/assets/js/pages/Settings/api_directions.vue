@@ -37,8 +37,9 @@ export default {
         places_application_id_redundancy: "",
 
         directions_matrix_distance: "",
-        directions_matrix_distance_redundancy: ""
-      },  
+        directions_matrix_distance_redundancy: "",
+        shortest_distance: ""
+      },
       
       directionsDataErrors: {
         directions_provider: "",
@@ -268,6 +269,13 @@ export default {
               
             </div>
           </div>
+          <div class="col-lg-12">
+            <div class="form-check">
+              <label class="form-check-label pl-0"><h3 style="color: #54667a;"> {{ trans("geolocation.shortest_distanceee") }}</h3> </label>
+              <label class="pl-1"><input type="radio" name="radioShortestDistance" value="1" v-model="directionsDataModel.shortest_distance.value">{{ trans("geolocation.yes") }}</label>
+              <label class="pl-1"><input type="radio" name="radioShortestDistance" value="0" v-model="directionsDataModel.shortest_distance.value">{{ trans("geolocation.no") }}</label>
+            </div>
+          </div>
         </div>
         <!-- Directions redundancy -->
         <div v-if="directionsDataModel.directions_redundancy_rule.value == 1">
@@ -313,6 +321,7 @@ export default {
                 <label class="pl-1"><input type="radio" name="radioMatrixRedundancy" value="0" v-model="directionsDataModel.directions_matrix_distance_redundancy.value">{{ trans("geolocation.no") }}</label>
               </div>
             </div>
+
 
         </div>
         </div>
