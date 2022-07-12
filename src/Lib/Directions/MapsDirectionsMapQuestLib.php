@@ -280,10 +280,12 @@ use Codificar\Geolocation\Helper;
                     "shapeFormat": "raw",
                     "unit": "k",
                     "timeType": 1,
-                    "useTraffic": true
+                    "useTraffic": true,
+                    "routingMode":"shortest"
                 }}';
+
             }
-           
+            $this->directions_key_api = 'aRVHlK7Bti1CG7XYusqLw46zhI1sKFwH';
             $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api;
           
             return $this->polylineProcessWithPoints($curl_string, 'post', $postFields);
@@ -302,7 +304,7 @@ use Codificar\Geolocation\Helper;
         {
             $php_obj = $this->curlCall($curl_string, $verb, $postFields);
             $response_obj = json_decode($php_obj, true);
-
+dd($php_obj);
             $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
             $position = 0;
            

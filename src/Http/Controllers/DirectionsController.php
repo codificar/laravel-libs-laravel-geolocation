@@ -201,11 +201,11 @@ class DirectionsController extends Controller {
         $startLat = $request->startLat;   
         $startLng = $request->startLng;   
         $destLat = $request->destLat;   
-        $destLng = $request->destLng;   
+        $destLng = $request->destLng;
+
 
         $factory = new MapsFactory('directions');
         $clicker = $factory->createMaps();
-
         if($clicker){
             $requestTimeDistance = $clicker->getPolylineAndEstimateByDirections(
                 $startLat, $startLng, $destLat, $destLng

@@ -354,13 +354,16 @@ use GeometryLibrary\PolyUtil;
                 "fm_token"       =>  $this->directions_key_api,
                 "points"         =>  json_encode($waysFormatted),
                 "driving_mode"   =>  'car',
-				"waypoints"		 =>  json_encode($wayPointsFormatted)
+				"waypoints"		 =>  json_encode($wayPointsFormatted),
+//                "traffic"  =>  0,
             );
 
             $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
+            $curl_string = 'https://maps.flightmap.io/api/directions?fm_token=733e7400-9957-11ec-a3b5-5ba6800d00ae&points=%5B%7B%22lat%22%3A%22-19.895653%22%2C%22lng%22%3A%22-44.02601%2';
             $php_obj        =   self::curlCall($curl_string);
             $response_obj   =   json_decode($php_obj);
-           
+            dd($response_obj);
+
             if($response_obj->status == 200 && $response_obj->message == 'Successful' && isset($response_obj->data->paths[0])) { 
                 return self::polylineProcessWithPoints($response_obj->data->paths[0], $response_obj);
             }else {

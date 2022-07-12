@@ -307,6 +307,7 @@ use GeometryLibrary\PolyUtil;
             $requestBody = [
                 GuzzleConvert::JSON => array(       
                 "coordinates" => $waysFormatted,
+                "preference" => 'shortest',
             )];
             $requestUrl = $this->url_api . "/directions/driving-car";
 
@@ -316,7 +317,7 @@ use GeometryLibrary\PolyUtil;
                 )->getBody();  
             } catch (RequestException $e) {
                 return false;
-            }            
+            }
             
             return $this->polylineProcessWithPoints($response);
         }
@@ -331,7 +332,6 @@ use GeometryLibrary\PolyUtil;
         private function polylineProcessWithPoints($data)
         {
             $response_obj = json_decode($data, true);
-            
             $polyline = array('points' => array(0 => ['lat'=>'','lng'=>'']));
             if(isset($response_obj['features']) && count($response_obj['features'][0]['geometry']['coordinates']))
             {
