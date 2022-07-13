@@ -11,6 +11,7 @@ class ApplicationSettingsViewModel extends stdClass{
 	public $page;
 	public $category;
 	public $sub_category;
+    public $shortest_distance;
 
 	// constructor
 	function __construct() {  }

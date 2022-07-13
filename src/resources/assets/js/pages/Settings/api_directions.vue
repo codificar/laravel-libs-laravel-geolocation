@@ -37,8 +37,9 @@ export default {
         places_application_id_redundancy: "",
 
         directions_matrix_distance: "",
-        directions_matrix_distance_redundancy: ""
-      },  
+        directions_matrix_distance_redundancy: "",
+        directions_shortest_distance: ""
+      },
       
       directionsDataErrors: {
         directions_provider: "",
@@ -68,6 +69,10 @@ export default {
       const value = checkedValue.target.value;
       this.directionsDataModel.directions_redundancy_rule.value = value
     },
+    updateShortestDistance(checkedValue){
+      const value = checkedValue.target.value;
+      this.directionsDataModel.directions_shortest_distance.value = value
+    },
     async savePlaces(){
       //Format Data in Array
       if(!this.validate(this.directionsDataModel)){
@@ -82,7 +87,7 @@ export default {
         );
       }else{
         let arrayDataModel = Object.keys(this.directionsDataModel).map(key => this.directionsDataModel[key]);
-        const response = await axios.post(this.placeSaveRoute, arrayDataModel)     
+        const response = await axios.post(this.placeSaveRoute, arrayDataModel)
         this.$toasted.show(
         "Salvo com sucesso", 
           { 
@@ -180,7 +185,7 @@ export default {
    
     this.directionsDataModel = JSON.parse(this.model)   
     this.directionsOptions = optionsList.directions_provider
-    
+    console.log('options:',  this.directionsDataModel.directions_shortest_distance);
     //Set Selected Directions Provider
     const selectedDirectionProvider = this.directionsOptions.filter(objectData => objectData.value == this.directionsDataModel.directions_provider.value);
     if(selectedDirectionProvider.length > 0) this.selectDirectionService(selectedDirectionProvider[0]) 
@@ -268,6 +273,28 @@ export default {
               
             </div>
           </div>
+          <div class="col-lg-12">
+            <div class="form-check">
+              <label class="form-check-label pl-0"><h3 style="color: #54667a;"> {{ trans("geolocation.shortest_distance") }}</h3> </label>
+              <label class="pl-1"><input
+                  type="radio"
+                  name="radioShortestDistance"
+                  value="1"
+                  v-model="directionsDataModel.directions_shortest_distance.value"
+                  @change=updateShortestDistance
+              >
+                {{ trans("geolocation.yes") }}
+              </label>
+              <label class="pl-1"><input
+                  type="radio"
+                  name="radioShortestDistance"
+                  value="0"
+                  v-model="directionsDataModel.directions_shortest_distance.value"
+                  @change=updateShortestDistance
+              >
+                {{ trans("geolocation.no") }}</label>
+            </div>
+          </div>
         </div>
         <!-- Directions redundancy -->
         <div v-if="directionsDataModel.directions_redundancy_rule.value == 1">
@@ -307,7 +334,7 @@ export default {
             </div>
 
             <div class="col-lg-12">
-              <div class="form-check">            
+              <div class="form-check">
                 <label class="form-check-label pl-0"><h3 style="color: #54667a;"> {{ trans("geolocation.matrix_distance_redundancy") }}</h3> </label>
                 <label class="pl-1"><input type="radio" name="radioMatrixRedundancy" value="1" v-model="directionsDataModel.directions_matrix_distance_redundancy.value">{{ trans("geolocation.yes") }}</label>
                 <label class="pl-1"><input type="radio" name="radioMatrixRedundancy" value="0" v-model="directionsDataModel.directions_matrix_distance_redundancy.value">{{ trans("geolocation.no") }}</label>

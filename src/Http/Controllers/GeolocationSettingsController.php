@@ -37,7 +37,7 @@ class GeolocationSettingsController extends Controller
 
 		// Format Data
 		$model = $this->getViewModel($list);
-	
+
 		// Get Enum Values
 		$enums = array(
 			'directions_provider'				=>	DirectionsEnum::DirectionsProvider,
@@ -85,7 +85,8 @@ class GeolocationSettingsController extends Controller
 				$settings->page = $value['page'];
 				$settings->category = $value['category'];
 				$settings->sub_category = $value['sub_category'];
-			}		
+				$settings->shortest_distance = $value['shortest_distance'];
+			}
 
 			$settings->save();
 		}
@@ -112,6 +113,7 @@ class GeolocationSettingsController extends Controller
 			$modelApplication->page = $item['page'];
 			$modelApplication->category = $item['category'];
 			$modelApplication->sub_category = $item['sub_category'];
+			$modelApplication->shortest_distance = $item['shortest_distance'];
 
 			$model->{$item['key']} = $modelApplication;			
 		}

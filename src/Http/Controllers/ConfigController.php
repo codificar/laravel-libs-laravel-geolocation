@@ -802,6 +802,7 @@ class ConfigController extends Controller {
 			$modelApplication->page = $item['page'];
 			$modelApplication->category = $item['category'];
 			$modelApplication->sub_category = $item['sub_category'];
+            $modelApplication->shortest_distance = $item['shortest_distance'];
 
 			$model->{$item['key']} = $modelApplication;
 		}
