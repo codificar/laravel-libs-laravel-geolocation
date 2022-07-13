@@ -140,17 +140,19 @@ class DirectionsController extends Controller {
          * Gets polyline and estimate route by adresses in directions API.
          *
          * @param String        $waypoints: "[[lat, lng]['lat','lng']...]"
-         * 
+         * @param boolean        $shortestDistance"
+         *
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value']
     */
    
-    public static function getPolylineAndEstimateWithWayPoints($allPointsAPI){
+    public static function getPolylineAndEstimateWithWayPoints($allPointsAPI, $shortestDistance=null){
 		$factory = new MapsFactory('directions');
         $clicker = $factory->createMaps();
 
         if ($clicker)
             $response = $clicker->getPolylineAndEstimateWithWayPoints(
-                $allPointsAPI
+                $allPointsAPI,
+                shortestDistance: $shortestDistance
             );
 
         if ((!is_array($response) || !$response) && GeolocationSettings::getDirectionsRedundancyRule()) {
@@ -201,11 +203,11 @@ class DirectionsController extends Controller {
         $startLat = $request->startLat;   
         $startLng = $request->startLng;   
         $destLat = $request->destLat;   
-        $destLng = $request->destLng;   
+        $destLng = $request->destLng;
+
 
         $factory = new MapsFactory('directions');
         $clicker = $factory->createMaps();
-
         if($clicker){
             $requestTimeDistance = $clicker->getPolylineAndEstimateByDirections(
                 $startLat, $startLng, $destLat, $destLng
@@ -268,10 +270,12 @@ class DirectionsController extends Controller {
 		$response = false;
 		$error = '';
 		$optimizeRoute = (isset($request->optimize_route) && $request->optimize_route == 1) ? 1 : 0;
+        $shortestDistance = \Settings::findByKey('directions_shortest_distance');
 		if ($clicker) {
 			$response = $clicker->getPolylineAndEstimateWithWayPoints(
 				$request->waypoints,
-				$optimizeRoute
+				$optimizeRoute,
+                shortestDistance:$shortestDistance
 			);
 		}
 		if((!is_array($response) || !$response) && GeolocationSettings::getDirectionsRedundancyRule()){
