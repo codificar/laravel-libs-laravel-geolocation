@@ -3259,7 +3259,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         places_application_id_redundancy: "",
         directions_matrix_distance: "",
         directions_matrix_distance_redundancy: "",
-        shortest_distance: ""
+        directions_shortest_distance: ""
       },
       directionsDataErrors: {
         directions_provider: "",
@@ -3286,6 +3286,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     updateDirectionRedundancy: function updateDirectionRedundancy(checkedValue) {
       var value = checkedValue.target.value;
       this.directionsDataModel.directions_redundancy_rule.value = value;
+    },
+    updateShortestDistance: function updateShortestDistance(checkedValue) {
+      var value = checkedValue.target.value;
+      this.directionsDataModel.directions_shortest_distance.value = value;
     },
     savePlaces: function savePlaces() {
       var _this = this;
@@ -3432,7 +3436,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 0:
               optionsList = JSON.parse(_this2.enumData);
               _this2.directionsDataModel = JSON.parse(_this2.model);
-              _this2.directionsOptions = optionsList.directions_provider; //Set Selected Directions Provider
+              _this2.directionsOptions = optionsList.directions_provider;
+              console.log('options:', _this2.directionsDataModel.directions_shortest_distance); //Set Selected Directions Provider
 
               selectedDirectionProvider = _this2.directionsOptions.filter(function (objectData) {
                 return objectData.value == _this2.directionsDataModel.directions_provider.value;
@@ -3444,7 +3449,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               });
               if (selectedDirectionRedundancyProvider.length > 0) _this2.selectDirectionRedundancyService(selectedDirectionRedundancyProvider[0]);
 
-            case 7:
+            case 8:
             case "end":
               return _context2.stop();
           }
@@ -23036,8 +23041,11 @@ var render = function () {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.directionsDataModel.shortest_distance.value,
-                    expression: "directionsDataModel.shortest_distance.value",
+                    value:
+                      _vm.directionsDataModel.directions_shortest_distance
+                        .value,
+                    expression:
+                      "directionsDataModel.directions_shortest_distance.value",
                   },
                 ],
                 attrs: {
@@ -23047,21 +23055,28 @@ var render = function () {
                 },
                 domProps: {
                   checked: _vm._q(
-                    _vm.directionsDataModel.shortest_distance.value,
+                    _vm.directionsDataModel.directions_shortest_distance.value,
                     "1"
                   ),
                 },
                 on: {
-                  change: function ($event) {
-                    return _vm.$set(
-                      _vm.directionsDataModel.shortest_distance,
-                      "value",
-                      "1"
-                    )
-                  },
+                  change: [
+                    function ($event) {
+                      return _vm.$set(
+                        _vm.directionsDataModel.directions_shortest_distance,
+                        "value",
+                        "1"
+                      )
+                    },
+                    _vm.updateShortestDistance,
+                  ],
                 },
               }),
-              _vm._v(_vm._s(_vm.trans("geolocation.yes"))),
+              _vm._v(
+                "\n              " +
+                  _vm._s(_vm.trans("geolocation.yes")) +
+                  "\n            "
+              ),
             ]),
             _vm._v(" "),
             _c("label", { staticClass: "pl-1" }, [
@@ -23070,8 +23085,11 @@ var render = function () {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.directionsDataModel.shortest_distance.value,
-                    expression: "directionsDataModel.shortest_distance.value",
+                    value:
+                      _vm.directionsDataModel.directions_shortest_distance
+                        .value,
+                    expression:
+                      "directionsDataModel.directions_shortest_distance.value",
                   },
                 ],
                 attrs: {
@@ -23081,21 +23099,24 @@ var render = function () {
                 },
                 domProps: {
                   checked: _vm._q(
-                    _vm.directionsDataModel.shortest_distance.value,
+                    _vm.directionsDataModel.directions_shortest_distance.value,
                     "0"
                   ),
                 },
                 on: {
-                  change: function ($event) {
-                    return _vm.$set(
-                      _vm.directionsDataModel.shortest_distance,
-                      "value",
-                      "0"
-                    )
-                  },
+                  change: [
+                    function ($event) {
+                      return _vm.$set(
+                        _vm.directionsDataModel.directions_shortest_distance,
+                        "value",
+                        "0"
+                      )
+                    },
+                    _vm.updateShortestDistance,
+                  ],
                 },
               }),
-              _vm._v(_vm._s(_vm.trans("geolocation.no"))),
+              _vm._v("\n              " + _vm._s(_vm.trans("geolocation.no"))),
             ]),
           ]),
         ]),
