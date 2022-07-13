@@ -3,13 +3,15 @@
 namespace Codificar\Geolocation\Lib\Directions;
 
 //Internal Uses
+use App\Models\Badge;
 use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Helper;
 
 //External Uses
 use GeometryLibrary\PolyUtil;
+use phpDocumentor\Reflection\Types\Boolean;
 
-    /**
+/**
      * Geolocation requests o Flight Map API
      */
     class MapsDirectionsFlightMap implements IMapsDirections
@@ -324,10 +326,10 @@ use GeometryLibrary\PolyUtil;
          * Returns intermediaries points in the route between multiple locations using OpenRoute Maps
          *
          * @param String        $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
-         *
+         * @param Boolean $shortestDistance
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
          */
-        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0, $shortestDistance=null)
         {           
             $arrayPoints = json_decode($wayPoints);
             $waysFormatted = [];
@@ -362,7 +364,6 @@ use GeometryLibrary\PolyUtil;
             $curl_string = 'https://maps.flightmap.io/api/directions?fm_token=733e7400-9957-11ec-a3b5-5ba6800d00ae&points=%5B%7B%22lat%22%3A%22-19.895653%22%2C%22lng%22%3A%22-44.02601%2';
             $php_obj        =   self::curlCall($curl_string);
             $response_obj   =   json_decode($php_obj);
-            dd($response_obj);
 
             if($response_obj->status == 200 && $response_obj->message == 'Successful' && isset($response_obj->data->paths[0])) { 
                 return self::polylineProcessWithPoints($response_obj->data->paths[0], $response_obj);

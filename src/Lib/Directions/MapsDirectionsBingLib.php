@@ -231,10 +231,10 @@ class MapsDirectionsBingLib implements IMapsDirections
      * Returns intermediaries points in the route between multiple locations using Bing Maps
      *
      * @param String $wayPoints Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
-     *
+     * @param Boolean $shortestDistance
      * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
      */
-    public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+    public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0, $shortestDistance = null)
     {
         $waysFormatted = '';
         if (!$this->directions_key_api || (!is_string($wayPoints) || !is_array(json_decode($wayPoints, true)))) {
@@ -253,13 +253,13 @@ class MapsDirectionsBingLib implements IMapsDirections
         }
 
         $curl_string = $this->url_api .
-            "/Routes/driving?key=" .
-            $this->directions_key_api .
-            "&o=json&c=en-US&fi=true" .
-            $waysFormatted .
-            "&routePathOutput=Points";
+        "/Routes/driving?key=" .
+        $this->directions_key_api .
+        "&o=json&c=en-US&fi=true" .
+        $waysFormatted .
+        "&routePathOutput=Points";
 
-        dd($curl_string);
+        if($shortestDistance ) $curl_string = $curl_string . "&optimize=distance" ;
 
         return self::polylineProcessWithPoints($curl_string);
     }

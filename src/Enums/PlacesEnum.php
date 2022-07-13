@@ -1,7 +1,7 @@
 <?php
 namespace Codificar\Geolocation\Enums;
 
-class   PlacesEnum {
+class PlacesEnum {
 	/*
 		|--------------------------------------------------------------------------
 		| Enums of Geolocation Places

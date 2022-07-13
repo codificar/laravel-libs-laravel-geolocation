@@ -287,10 +287,10 @@ use GeometryLibrary\PolyUtil;
          * Returns intermediaries points in the route between multiple locations using OpenRoute Maps
          *
          * @param String        $wayPoints         Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
-         *
+         * @param Boolean $shortestDistance
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
          */
-        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+        public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0, $shortestDistance=null)
         {
             $waysFormatted = [];
             if (!$this->directions_key_api || (!is_string($wayPoints) || !is_array(json_decode($wayPoints, true))))
@@ -307,8 +307,10 @@ use GeometryLibrary\PolyUtil;
             $requestBody = [
                 GuzzleConvert::JSON => array(       
                 "coordinates" => $waysFormatted,
-                "preference" => 'shortest',
             )];
+
+            if($shortestDistance)$requestBody[ "preference"] = "shortest";
+
             $requestUrl = $this->url_api . "/directions/driving-car";
 
             try {

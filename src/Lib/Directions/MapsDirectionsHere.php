@@ -297,10 +297,10 @@ class MapsDirectionsHere implements IMapsDirections
      * Returns intermediaries points in the route between multiple locations using OpenRoute Maps
      *
      * @param String $wayPoints Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
-     *
+     * @param $shortestDistance
      * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
      */
-    public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+    public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0, $shortestDistance = null)
     {
         $ways = json_decode($wayPoints, true);
         $waysLen = count($ways);
@@ -325,8 +325,8 @@ class MapsDirectionsHere implements IMapsDirections
             "return" => "polyline,summary",
             "origin" => $origin,
             "destination" => $destination,
-            "routingMode" => 'short'
         );
+        if ($shortestDistance) $params["routingMode"] = "short";
 
         $curl_string = $this->url_api . "routes?" . http_build_query($params);
         $via ? $curl_string = $curl_string . $via : null;

@@ -8,6 +8,7 @@ use Codificar\Geolocation\Helper;
 
 //External Uses
 use GeometryLibrary\PolyUtil;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * Geolocation requests on Google Maps API
@@ -241,10 +242,10 @@ class MapsDirectionsGoogleLib implements IMapsDirections
      * Returns intermediaries points in the route between multiple locations using Google Maps
      *
      * @param String $wayPoints Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
-     *
+     * @param Boolean $shortestDistance
      * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
      */
-    public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0)
+    public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0, $shortestDistance = null)
     {
 
         $waysFormatted = '';
@@ -276,10 +277,10 @@ class MapsDirectionsGoogleLib implements IMapsDirections
 
         $curl_string = $this->url_api . "/directions/json?key=" . $google_key .
             "&origin=" . urlencode($ways[0][0] . "," . $ways[0][1]) .
-            "&destination=" . urlencode($ways[$waysLen - 1][0] . "," . $ways[$waysLen - 1][1]) . $waysFormatted
-        . '&alternatives=true';
-//        .'&traffic_model=optimistic';//consider that traffic will be better when request is created needs departure_time
-        //TODO ask thiago is should make departure_time at midnight aka without traffic, but may be bad considering eventual blocks
+            "&destination="
+            . urlencode($ways[$waysLen - 1][0] . "," . $ways[$waysLen - 1][1])
+            . $waysFormatted;
+        if($shortestDistance) $curl_string = $curl_string .'&alternatives=true';
 
         return self::polylineProcessWithPoints($curl_string);
     }
@@ -299,15 +300,12 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             $polyline['points'] = $response_obj['routes'][0]['overview_polyline']['points'];
 
             $shortestRoute = $response_obj['routes'][0];
-            $distances = [ $response_obj['routes'][0]['legs'][0]['distance']['value']];
             for ($i = 1; $i < sizeof($response_obj['routes']); $i++) {
-                $distances[] = $response_obj['routes'][$i]['legs'][0]['distance']['value'];
                 if ($response_obj['routes'][$i]['legs'][0]['distance']['value'] < $shortestRoute['legs'][0]['distance']['value'])
                     $shortestRoute = $response_obj['routes'][$i];
 
             }
 
-//            dd($distances);
 
             // Get the waypoint order, (needs if has optimize route)
             $waypoint_order = $shortestRoute['waypoint_order'];
