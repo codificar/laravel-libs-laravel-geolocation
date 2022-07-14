@@ -119,12 +119,12 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 }
                 else if(isset($response_obj->data) && count($response_obj->data) == 0)
                 {
-                    \Log::error(__FUNCTION__.":: response_obj = ".print_r($response_obj,1));
+                    \Log::info(__FUNCTION__.":: response_obj = ".print_r($response_obj,1));
                     $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
                 }else {
-                    \Log::error(__FUNCTION__.":: curl_string = ".print_r($curl_string,1));
+                    \Log::info(__FUNCTION__.":: curl_string = ".print_r($curl_string,1));
 
-                    \Log::error(__FUNCTION__.":: response_obj = ".print_r($response_obj,1));
+                    \Log::info(__FUNCTION__.":: response_obj = ".print_r($response_obj,1));
                 }
             }
 
