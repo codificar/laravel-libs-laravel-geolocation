@@ -59,5 +59,6 @@ return [
 
     "refresh_session_deflate" => "Atualizar Session token quando esvaziar pesquisa",
 
-    "sessiontoken_work" => "Habilitada a funcionalidade de session token?"
+    "sessiontoken_work" => "Habilitada a funcionalidade de session token?",
+
 ];
