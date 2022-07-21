@@ -75,8 +75,7 @@ class MapsFactory
     {
         if ($this->type == self::TYPE_DIRECTIONS)
         {
-//            switch(GeolocationSettings::getDirectionsProvider())
-            switch(self::MAPS_GOOGLE)
+            switch(GeolocationSettings::getDirectionsProvider())
             {
                 case self::MAPS_BING:
                     return(new MapsDirectionsBingLib());
