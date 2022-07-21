@@ -372,4 +372,15 @@ class MapsDirectionsBingLib implements IMapsDirections
         }
     }
 
+    /**
+     * Gets static map containing the route especified by paht parameter;
+     *
+     * @param array $wayPoints a path array containing the route points, and map's with and height
+     *
+     * @return String    url
+     */
+    public function getStaticMapByPath(array $params)
+    {
+
+    }
 }

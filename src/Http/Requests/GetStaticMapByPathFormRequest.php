@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class GetStaticMapFormRequest extends FormRequest
+class GetStaticMapByPathFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +27,9 @@ class GetStaticMapFormRequest extends FormRequest
     {
 
         return [
-            'scale' => ['integer'],
             'width' => ['required', 'integer'],
             'height' => ['required', 'integer'],
-            'markers' => ['array'],
-            'path' => ['array'],
-            'center' => ['required_without_all:markers,path'],
-            'zoom' => ['integer']
+            'points' => ['array'],
         ];
     }
 
@@ -47,15 +43,12 @@ class GetStaticMapFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'scale.integer' => trans('geolocation.scale_validation_integer'),
             'width.required' => trans('geolocation.width_validation_required'),
             'width.integer' => trans('geolocation.width_validation_integer'),
             'height.required' => trans('geolocation.height_validation_required'),
             'height.integer' => trans('geolocation.height_validation_integer'),
-            'markers.array' => trans('geolgeolocation.markers_validation_array'),
             'path.array' => trans('geolgeolocation.path_validation_array'),
-            'center.required_without_all' => trans('geolocation.center_validation_required_without'),
-            'zoom.integer' => trans('geolocation.zoom_validation_integer'),
+
         ];
     }
 

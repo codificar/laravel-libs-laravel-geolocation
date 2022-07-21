@@ -446,8 +446,8 @@ class MapsDirectionsGoogleLib implements IMapsDirections
         }
 
         if (array_key_exists('path', $params)) {
-            foreach ($params['path'] as $point) {
-                $url .= "&path=" . $point;
+            foreach ($params['path'] as $path) {
+                $url .= "&path=" . $path;
             }
         }
 
@@ -463,6 +463,33 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             $url .= '&zoom=' . self::DEFAULT_ZOOM;//zoom is required only if markers neither path is provided
 
         return $url;
+    }
+
+    /**
+     * Gets static map containing the route especified by paht parameter;
+     *
+     * @param array  $points points in the request's route
+     * @param int  $with map width size
+     * @param int  $height map height size
+     *
+     * @return String    url
+     */
+    public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+    {
+        $path = "color:0xff0000ff|weight:5";
+
+        foreach ($points as $point) $path .= "|" . $point;
+        $markers = [
+            "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-start@2x.png|" . $points[0],
+            "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-finish@2x.png|" . $points[count($points) - 1],
+        ];
+
+        return self::getStaticMap([
+            'path' => [$path],
+            'width' => $width,
+            'height' => $height,
+            "markers" => $markers
+        ]);
     }
 
 }

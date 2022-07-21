@@ -3,27 +3,19 @@
 namespace Codificar\Geolocation\Http\Controllers;
 
 //Laravel Uses
-use Codificar\Geolocation\Http\Requests\GetStaticMapFormRequest;
-use Codificar\Geolocation\Http\Resources\GetStaticMapResource;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Codificar\Geolocation\Http\Requests\GetStaticMapByPathFormRequest;
+use Codificar\Geolocation\Http\Requests\RouteWayPointsRequest;
+use Codificar\Geolocation\Http\Resources\GetStaticMapResource;
+use Codificar\Geolocation\Http\Resources\PolylineResource;
+use Codificar\Geolocation\Lib\MapsFactory;
+use Codificar\Geolocation\Models\GeolocationSettings;
+use Illuminate\Http\Request;
 use View;
 
 //Internal Uses
-use Codificar\Geolocation\Http\Requests\PlacesFormRequest;
-use Codificar\Geolocation\Http\Requests\GeocodeFormRequest;
-use Codificar\Geolocation\Http\Requests\GeocodeReverseFormRequest;
-use Codificar\Geolocation\Http\Requests\PlaceDetailsFormRequest;
-use Codificar\Geolocation\Http\Requests\RouteWayPointsRequest;
-
-use Codificar\Geolocation\Http\Resources\PlacesResource;
-use Codificar\Geolocation\Http\Resources\GeocodeResource;
-use Codificar\Geolocation\Http\Resources\PlaceDetailsResource;
-use Codificar\Geolocation\Http\Resources\PolylineResource;
 
 // use MapsFactory, Settings;
-use Codificar\Geolocation\Lib\MapsFactory;
-use Codificar\Geolocation\Models\GeolocationSettings;
 
 class DirectionsController extends Controller
 {
@@ -346,11 +338,12 @@ class DirectionsController extends Controller
         return new PolylineResource(['data' => $response_array]);
     }
 
-    public function getStaticMap(GetStaticMapFormRequest $request)
+    public function getStaticMap(GetStaticMapByPathFormRequest $request)
     {
         $factory = new MapsFactory('directions');
         $clicker = $factory->createMaps();
         if ($clicker) {
+            dd($clicker->getStaticMapByPath($request->get('points'), $request->get('width'), $request->get('height')));
             return new GetStaticMapResource(
                 [
                     'data' => $clicker->getStaticMap($request->all()),
@@ -365,6 +358,15 @@ class DirectionsController extends Controller
 
                 ]);
            }
+    }
+
+    public function getStaticMapByPath(array $points, int $with = 520, int $height=520)
+    {
+        $factory = new MapsFactory('directions');
+        $clicker = $factory->createMaps();
+        if ($clicker) {
+            return  $clicker->getStaticMapByPath($points, $with, $height);
+        }
     }
 
 }

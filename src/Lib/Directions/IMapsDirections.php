@@ -62,4 +62,15 @@ namespace Codificar\Geolocation\Lib\Directions;
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
          */
         public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0);
+
+        /**
+         * Gets static map containing the route especified by paht parameter;
+         *
+         * @param array  $points points in the request's route
+         * @param int  $with map width size
+         * @param int  $height map height size
+         *
+         * @return String    url
+         */
+        public function getStaticMapByPath(array $points, int $width = 520, int $height = 520);
     }
