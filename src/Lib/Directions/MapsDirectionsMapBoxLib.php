@@ -3,14 +3,17 @@
 namespace Codificar\Geolocation\Lib\Directions;
 
 //Internal Uses
-use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Helper;
+use Codificar\Geolocation\Models\GeolocationSettings;
+use Codificar\Geolocation\Utils\Polyline\EncodableTrait;
+use Codificar\Geolocation\Utils\Polyline\FlexiblePolyline;
 
 /**
  * Geolocation requests on MapBox Maps API
  */
 class MapsDirectionsMapBoxLib implements IMapsDirections
 {
+    use encodableTrait;
 
     /**
      * @var String $url_api URL to access API
@@ -256,9 +259,9 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
         }
 
         $curl_string = $this->url_api . "/mapbox/";
-        if(!$shortestDistance )
+        if (!$shortestDistance)
             $curl_string = $curl_string . "driving-traffic/";//if shortest distance ignores traffic
-        $curl_string = $curl_string   . $waysFormatted .
+        $curl_string = $curl_string . $waysFormatted .
             "?&access_token=" .
             $this->directions_key_api .
             "&steps=true";
@@ -387,4 +390,32 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
         }
     }
 
+    /**
+     * Gets static map containing the route especified by paht parameter;
+     *
+     * @param array $points points in the request's route
+     * @param int $with map width size
+     * @param int $height map height size
+     *
+     * @return String    url
+     */
+    public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+    {
+        $formatedPoints = [];
+        foreach ($points as $point) $formatedPoints[] = explode(',', $point);
+        $encoded = FlexiblePolyline::encode($formatedPoints);
+
+        $this->directions_key_api = "pk.eyJ1IjoiY29kaWZpY2FyIiwiYSI6ImNsMDg0ZDhlYTJvNjkzZHFobmV3bzVtYTEifQ.Kxyy1rsOZ815XXNebcUSrg";
+
+        $url = "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/"
+//            . "pin-s-a+9ed4bd(" . $points[0] . "),"
+//            . "pin-s-b+000(" . $points[count($points) - 1] . "),"
+            . "path-5+f44-0.5(%" . $encoded . ")"
+            . "/auto/" . $width . 'x' . $height
+            . "?access_token=" . $this->directions_key_api;
+        //TODO official encode/decode polyline lib https://github.com/mapbox/polyline
+
+        dd($url);
+
+    }
 }

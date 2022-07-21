@@ -16,7 +16,7 @@ trait EncodableTrait
     public static function encode(
         array $coordinates,
         int $precision = null,
-        int $thirdDim = null,
+        int $thirdDim = 0,
         int $thirdDimPrecision = 0
     ): string {
         if (is_null($precision)) {
