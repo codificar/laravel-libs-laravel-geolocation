@@ -343,30 +343,39 @@ class DirectionsController extends Controller
         $factory = new MapsFactory('directions');
         $clicker = $factory->createMaps();
         if ($clicker) {
-            dd($clicker->getStaticMapByPath($request->get('points'), $request->get('width'), $request->get('height')));
             return new GetStaticMapResource(
                 [
                     'data' => $clicker->getStaticMap($request->all()),
                     'sucess' => true
 
                 ]);
-        }else{
+        } else {
             return new GetStaticMapResource(
                 [
                     'error' => trans('geolocationTrans::geolocation.no_data_found'),
                     'sucess' => false
 
                 ]);
-           }
+        }
     }
 
-    public function getStaticMapByPath(array $points, int $with = 520, int $height=520)
+    public static function getStaticMapByPath(array $points, int $with = 259, int $height = 259)
     {
-        $factory = new MapsFactory('directions');
-        $clicker = $factory->createMaps();
-        if ($clicker) {
-            return  $clicker->getStaticMapByPath($points, $with, $height);
+        try {
+            $factory = new MapsFactory('directions');
+            $clicker = $factory->createMaps();
+            if ($clicker) {
+                $url = $clicker->getStaticMapByPath($points, $with, $height);
+                if ($url) return $url;
+                $factory = new MapsFactory('redundancy_directions');
+                $clicker = $factory->createMaps();
+                return $clicker->getStaticMapByPath($points, $with, $height);
+            }
+        } catch (\Exception $e) {
+            \Log::error(__CLASS__ . "::" . __FUNCTION__ . $e);
+            return false;
         }
+
     }
 
 }

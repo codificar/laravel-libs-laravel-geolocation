@@ -463,6 +463,7 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             $url .= '&zoom=' . self::DEFAULT_ZOOM;//zoom is required only if markers neither path is provided
 
         return $url;
+
     }
 
     /**
@@ -474,7 +475,7 @@ class MapsDirectionsGoogleLib implements IMapsDirections
      *
      * @return String    url
      */
-    public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
     {
         $path = "color:0xff0000ff|weight:5";
 
@@ -483,7 +484,6 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-start@2x.png|" . $points[0],
             "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-finish@2x.png|" . $points[count($points) - 1],
         ];
-
         return self::getStaticMap([
             'path' => [$path],
             'width' => $width,

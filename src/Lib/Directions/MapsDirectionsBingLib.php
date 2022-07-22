@@ -382,22 +382,20 @@ class MapsDirectionsBingLib implements IMapsDirections
      *
      * @return String    url
      */
-    public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
     {
-        $this->url_api =
         $url = $this->url_api .
-            "Imagery/Map/Streetside?key=" . $this->directions_key_api .
+            "/Imagery/Map/Streetside?key=" . $this->directions_key_api .
             "&mapSize=" . $width . "," . $height .
-            "&dc=l,ff0000ff,5,";
+            "&dc=l,ff0000ff,5";
 
         foreach ($points as $point) {
             $cordinates = explode(",", $point);
             $url .= "," . $cordinates[0] . "_" . $cordinates[1];
         }
 
-       return $url;
-        //TODO ask for credentials this lib doesn't have in wiki https://redmine.codificar.com.br/projects/desenvolvimento/wiki/Mapas_da_Codifica
-
+        return false;
 
     }
+
 }

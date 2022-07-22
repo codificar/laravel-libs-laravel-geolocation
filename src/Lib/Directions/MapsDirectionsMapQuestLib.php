@@ -423,9 +423,8 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
      *
      * @return String    url
      */
-    public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
     {
-        $this->directions_key_api = "aRVHlK7Bti1CG7XYusqLw46zhI1sKFwH";
         $url = $this->url_api
             . "/staticmap/v5/map?key=" . $this->directions_key_api
             . "&size=" . $width . ',' . $height

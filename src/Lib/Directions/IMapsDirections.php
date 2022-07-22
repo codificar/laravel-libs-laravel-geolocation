@@ -72,5 +72,5 @@ namespace Codificar\Geolocation\Lib\Directions;
          *
          * @return String    url
          */
-        public function getStaticMapByPath(array $points, int $width = 520, int $height = 520);
+        public function getStaticMapByPath(array $points, int $width = 249, int $height = 246);
     }

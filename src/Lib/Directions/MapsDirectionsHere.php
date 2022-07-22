@@ -499,7 +499,7 @@ class MapsDirectionsHere implements IMapsDirections
      *
      * @return String    url
      */
-    public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
     {
         $this->directions_key_api = "ug7Vhp_6fapXqkurR9hs6zjCo3EgqV77ZlKqWmpRy0Q";
         $url = "https://image.maps.ls.hereapi.com/mia/1.6/route" .
@@ -517,7 +517,7 @@ class MapsDirectionsHere implements IMapsDirections
 
         foreach ($points as $point) $url .= $point . ',';
 
-        dd($url);
+        return $url;
 
 
     }

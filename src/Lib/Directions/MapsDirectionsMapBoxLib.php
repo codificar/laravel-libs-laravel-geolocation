@@ -399,7 +399,7 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
      *
      * @return String    url
      */
-    public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
     {
         $formatedPoints = [];
         foreach ($points as $point) $formatedPoints[] = explode(',', $point);
@@ -408,14 +408,12 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
         $this->directions_key_api = "pk.eyJ1IjoiY29kaWZpY2FyIiwiYSI6ImNsMDg0ZDhlYTJvNjkzZHFobmV3bzVtYTEifQ.Kxyy1rsOZ815XXNebcUSrg";
 
         $url = "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/"
-//            . "pin-s-a+9ed4bd(" . $points[0] . "),"
-//            . "pin-s-b+000(" . $points[count($points) - 1] . "),"
             . "path-5+f44-0.5(%" . $encoded . ")"
             . "/auto/" . $width . 'x' . $height
             . "?access_token=" . $this->directions_key_api;
-        //TODO official encode/decode polyline lib https://github.com/mapbox/polyline
 
-        dd($url);
+        return false;
+        return $url;
 
     }
 }

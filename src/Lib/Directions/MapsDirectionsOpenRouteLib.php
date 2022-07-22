@@ -549,8 +549,8 @@ use GeometryLibrary\PolyUtil;
          *
          * @return String    url
          */
-        public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+        public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
         {
-            // TODO: Implement getStaticMapByPath() method.
+           return false;
         }
     }

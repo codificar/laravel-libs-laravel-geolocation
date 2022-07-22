@@ -499,19 +499,17 @@ use phpDocumentor\Reflection\Types\Boolean;
          *
          * @return String    url
          */
-        public function getStaticMapByPath(array $points, int $width = 520, int $height = 520)
+        public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
         {
-            $this->directions_key_api = "733e7400-9957-11ec-a3b5-5ba6800d00ae";
             $url = $this->url_api
                 . 'map_static?fm_token=' . $this->directions_key_api
                 ."&polyline=true"
                 ."&size=" . $width . 'x' . $height
                 ."&zoom=" . 11
                 ."&points=";
-            //TODO {"message":"You have exhausted your plan. Please buy a new plan","status":400,"data":{}}
 
             foreach ($points as $point) $url .= $point . ';';
 
-            dd($url);
+            return  $url;
         }
     }
