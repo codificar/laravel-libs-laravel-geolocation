@@ -490,4 +490,26 @@ use phpDocumentor\Reflection\Types\Boolean;
             }
         }
 
+        /**
+         * Gets static map containing the route especified by paht parameter;
+         *
+         * @param array $points points in the request's route
+         * @param int $with map width size
+         * @param int $height map height size
+         *
+         * @return String    url
+         */
+        public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
+        {
+            $url = $this->url_api
+                . 'map_static?fm_token=' . $this->directions_key_api
+                ."&polyline=true"
+                ."&size=" . $width . 'x' . $height
+                ."&zoom=" . 11
+                ."&points=";
+
+            foreach ($points as $point) $url .= $point . ';';
+
+            return  $url;
+        }
     }

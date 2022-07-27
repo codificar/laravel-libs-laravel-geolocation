@@ -32,12 +32,12 @@ return [
     "invalid_url" => "This field must be a valid url",
     "invalid_require" => "Fill in this field",
 
-    "optimize_route"    => "Enable route optimization?",
+    "optimize_route" => "Enable route optimization?",
 
-    "matrix_distance"               => "Habilitar la búsqueda a través de la distancia de la matriz api",
-    "matrix_distance_redundancy"    => "Habilite la búsqueda a través de la distancia de matriz api para redundancia",
-    
-    "no_data_found"         => "No data found for this search.",
+    "matrix_distance" => "Habilitar la búsqueda a través de la distancia de la matriz api",
+    "matrix_distance_redundancy" => "Habilite la búsqueda a través de la distancia de matriz api para redundancia",
+
+    "no_data_found" => "No data found for this search.",
     "place_is_required" => "Tracho do local é obrigatório",
     "place_id_required" => "O Place ID é obrigatório",
     "token_required" => "Preencha or Token",
@@ -59,5 +59,15 @@ return [
 
     "refresh_session_deflate" => "Update session token on empty search",
 
-    "sessiontoken_work" => "¿Funcionalidad de token de sesión habilitada?"
+    "sessiontoken_work" => "¿Funcionalidad de token de sesión habilitada?",
+
+    'scale_validation_integer' => "Scale must be an integer.",
+    'width_validation_required' =>"Width is required.",
+    'width_validation_integer' => "Width must be an integer.",
+    'height_validation_required' => "Height is required.",
+    'height_validation_integer' => "Height must be an integer.",
+    'markers_validation_array' => "Markers must be encapsulated inside an array.",
+    'path_validation_array' => "Path points must be encapsulated inside an array.",
+    'center_validation_required_without' => "Center is required when markers and/or path aren't present.",
+    'zoom_validation_integer' => "Center is required when markers aren't present.",
 ];

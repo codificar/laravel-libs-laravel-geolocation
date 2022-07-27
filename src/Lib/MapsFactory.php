@@ -71,7 +71,7 @@ class MapsFactory
     /**
      * @return Object       Library class defined on settings
      */
-    public function createMaps()
+    public function  createMaps()
     {
         if ($this->type == self::TYPE_DIRECTIONS)
         {

@@ -65,4 +65,6 @@ return [
     "sessiontoken_work" => "Habilitada a funcionalidade de session token?",
 
     'shortest_distance' => "Optar sempre pela rota mais curta?",
+
+
 ];
