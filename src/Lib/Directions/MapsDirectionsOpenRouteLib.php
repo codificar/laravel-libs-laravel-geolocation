@@ -538,4 +538,28 @@ use GeometryLibrary\PolyUtil;
             }
         }
 
+        /**
+         * Mount static map image
+         * 
+         * @param array $locations
+         * @return string $map
+         */
+        public function MountMapImageByLocations($locations){
+            $count 	= round(count($locations) / 50);
+            $start 	= $locations[0] ?? (object)array('latitude'=>0, 'longitude'=>0);
+            $end 	= $locations[count($locations)-1] ?? (object)array('latitude'=>0, 'longitude'=>0);
+            $map = "http://openroute01.appmobilidadeurbana.com.br:8080/ors/v2/directions/driving-car?start=$start->longitude,$start->latitude&end=$end->longitude,$end->latitude";
+    
+            /*$skip = 0;
+            foreach ($locations as $location) {
+                if ($skip == $count) {
+                    $map .= "|$location->latitude,$location->longitude";
+                    $skip = 0;
+                }
+                $skip ++;
+            }*/
+    
+            return $map;
+        }
+
     }

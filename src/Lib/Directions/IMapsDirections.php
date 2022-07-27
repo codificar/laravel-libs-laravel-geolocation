@@ -62,4 +62,13 @@ namespace Codificar\Geolocation\Lib\Directions;
          * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value','partial_distances','partial_durations']
          */
         public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0);
+
+        /**
+         * Gets locations and creates the static map image using the directions API.
+         *
+         * @param Array       $locations        Array with mutiples decimals thats represent the latitude and longitude of the points in the route.
+         *
+         * @return String     $map              String representing the url of the given static map image.
+         */
+        public function MountMapImageByLocations($locations);        
     }

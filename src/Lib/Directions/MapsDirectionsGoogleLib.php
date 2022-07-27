@@ -432,4 +432,29 @@ use GeometryLibrary\PolyUtil;
             }
         }
 
+        /**
+         * Mount static map image
+         * 
+         * @param array $locations
+         * @return string $map
+         */
+        public function MountMapImageByLocations($locations){
+            $count 	= round(count($locations) / 50);
+            $start 	= $locations[0] ?? (object)array('latitude'=>0, 'longitude'=>0);
+            $end 	= $locations[count($locations)-1] ?? (object)array('latitude'=>0, 'longitude'=>0);
+            $key	=  $this->directions_key_api;
+            $map = "https://maps-api-ssl.google.com/maps/api/staticmap?key=$key&size=249x249&style=feature:landscape|visibility:off&style=feature:poi|visibility:off&style=feature:transit|visibility:off&style=feature:road.highway|element:geometry|lightness:39&style=feature:road.local|element:geometry|gamma:1.45&style=feature:road|element:labels|gamma:1.22&style=feature:administrative|visibility:off&style=feature:administrative.locality|visibility:on&style=feature:landscape.natural|visibility:on&scale=2&markers=shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-start@2x.png|$start->latitude,$start->longitude&markers=shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-finish@2x.png|$end->latitude,$end->longitude&path=color:0x2dbae4ff|weight:4";
+    
+            $skip = 0;
+            foreach ($locations as $location) {
+                if ($skip == $count) {
+                    $map .= "|$location->latitude,$location->longitude";
+                    $skip = 0;
+                }
+                $skip ++;
+            }
+    
+            return $map ;
+        }
+
     }
