@@ -490,4 +490,35 @@ class MapsDirectionsHere implements IMapsDirections
         }
     }
 
+    /**
+     * Gets static map containing the route especified by paht parameter;
+     *
+     * @param array $points points in the request's route
+     * @param int $with map width size
+     * @param int $height map height size
+     *
+     * @return String    url
+     */
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
+    {
+        $this->directions_key_api = "ug7Vhp_6fapXqkurR9hs6zjCo3EgqV77ZlKqWmpRy0Q";
+        $url = "https://image.maps.ls.hereapi.com/mia/1.6/route" .
+            "?apiKey=" . $this->directions_key_api
+            . '&w=' . $width
+            . '&h=' . $height
+            . '&m0=' . $points[0]
+            . '&m1=' . $points[count($points) - 1]
+            . '&mfc0=00ff00'//colo initial point marker
+            . '&mfc1=ff0000'//color last point marker
+            . '&mtxc=000000'//color last point marker
+            . '&sc0=ff0000ff'// path color
+            . '&mlbl=0'// path color
+            . '&r0=';
+
+        foreach ($points as $point) $url .= $point . ',';
+
+        return $url;
+
+
+    }
 }

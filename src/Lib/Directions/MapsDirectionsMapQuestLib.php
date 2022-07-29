@@ -259,7 +259,7 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
                     "shapeFormat": "raw",
                     "unit": "k",
                     "timeType": 1' .
-            $shortestDistance ?',"routingMode":"shortest"': ' '
+            $shortestDistance ? ',"routingMode":"shortest"' : ' '
                 . '}}';
 
         }
@@ -414,4 +414,25 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
         }
     }
 
+    /**
+     * Gets static map containing the route especified by paht parameter;
+     *
+     * @param array $points points in the request's route
+     * @param int $with map width size
+     * @param int $height map height size
+     *
+     * @return String    url
+     */
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
+    {
+        $url = $this->url_api
+            . "/staticmap/v5/map?key=" . $this->directions_key_api
+            . "&size=" . $width . ',' . $height
+            . "&locations=" . $points[0] . "|marker-start"
+            . '||' . $points[count($points) - 1] . "|marker-end"
+            . "&shape=";
+        foreach ($points as $point) $url .= $point . '|';
+
+        return $url;
+    }
 }

@@ -14,7 +14,8 @@ Route::group(['prefix' => '/api/v1/libs/geolocation', 'namespace' => 'Codificar\
     Route::get('/admin/geocode/get_estimate', 'DirectionsController@getDirectionsDistanceAndTimeApi');
     Route::get('/admin/geocode/get_polyline_and_estimate', ['as' => 'adminPolylineByGeocode', 'uses' => 'DirectionsController@getPolylineAndEstimateByDirectionsApi']);
     Route::get('/admin/address/get_polyline_and_estimate', ['as' => 'adminPolylineByAddress', 'uses' => 'DirectionsController@getPolylineAndEstimateByAddressesApi']);
-    
+    Route::post('/admin/maps/get_static_map', ['as' => 'adminStaticMap', 'uses' => 'DirectionsController@getStaticMap']);
+
     //Only Motoboys
     Route::get('admin/get_polyline_waypoints', array('as' => 'adminPolylineWithPoints', 'uses' => 'DirectionsController@getPolylineAndEstimateWithWayPointsApi'));   
 });

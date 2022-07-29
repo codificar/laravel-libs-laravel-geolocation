@@ -3,6 +3,7 @@
 namespace Codificar\Geolocation\Lib\Directions;
 
 //Internal Uses
+use Codificar\Geolocation\Http\Resources\GetStaticMapResource;
 use Codificar\Geolocation\Models\GeolocationSettings;
 use Codificar\Geolocation\Helper;
 
@@ -20,6 +21,16 @@ class MapsDirectionsGoogleLib implements IMapsDirections
      * @var String $url_api URL to access API
      */
     private $url_api = "https://maps.googleapis.com/maps/api";
+
+    /**
+     * @var String $static_map_url URL to access static maps  API
+     */
+    private $static_map_url = "https://maps.googleapis.com/maps/api/staticmap";
+
+    /**
+     * @const int DEFAULT_ZOOM zoom used in static maps lib
+     */
+    const DEFAULT_ZOOM = 15;//city level
 
     /**
      * @var String $directions_key_api Key of API authentication
@@ -280,7 +291,7 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             "&destination="
             . urlencode($ways[$waysLen - 1][0] . "," . $ways[$waysLen - 1][1])
             . $waysFormatted;
-        if($shortestDistance) $curl_string = $curl_string .'&alternatives=true';
+        if ($shortestDistance) $curl_string = $curl_string . '&alternatives=true';
 
         return self::polylineProcessWithPoints($curl_string);
     }
@@ -420,6 +431,65 @@ class MapsDirectionsGoogleLib implements IMapsDirections
         } catch (\Throwable $th) {
             return "";
         }
+    }
+
+    public function getStaticMap(array $params)
+    {
+        $url = $this->static_map_url
+            . "?key=" . $this->directions_key_api
+            . '&size=' . $params['width'] . 'x' . $params['height'];
+
+        if (array_key_exists('markers', $params)) {
+            foreach ($params['markers'] as $marker) {
+                $url .= "&markers=" . $marker;
+            }
+        }
+
+        if (array_key_exists('path', $params)) {
+            foreach ($params['path'] as $path) {
+                $url .= "&path=" . $path;
+            }
+        }
+
+        if (array_key_exists('center', $params))
+            $url .= "&center=" . $params['center'];
+
+        if (array_key_exists('scale', $params))
+            $url .= "&scale=" . $params['scale'];
+
+        if (array_key_exists('zoom', $params))
+            $url .= '&zoom=' . $params['zoom'];
+        else if (!array_key_exists('path', $params) && !array_key_exists('markers', $params))
+            $url .= '&zoom=' . self::DEFAULT_ZOOM;//zoom is required only if markers neither path is provided
+
+        return $url;
+
+    }
+
+    /**
+     * Gets static map containing the route especified by paht parameter;
+     *
+     * @param array  $points points in the request's route
+     * @param int  $with map width size
+     * @param int  $height map height size
+     *
+     * @return String    url
+     */
+    public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
+    {
+        $path = "color:0xff0000ff|weight:5";
+
+        foreach ($points as $point) $path .= "|" . $point;
+        $markers = [
+            "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-start@2x.png|" . $points[0],
+            "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-finish@2x.png|" . $points[count($points) - 1],
+        ];
+        return self::getStaticMap([
+            'path' => [$path],
+            'width' => $width,
+            'height' => $height,
+            "markers" => $markers
+        ]);
     }
 
 }
