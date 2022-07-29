@@ -183,9 +183,8 @@ export default {
   async mounted() {   
     const optionsList = JSON.parse(this.enumData)
    
-    this.directionsDataModel = JSON.parse(this.model)   
+    this.directionsDataModel = JSON.parse(this.model)  
     this.directionsOptions = optionsList.directions_provider
-    console.log('options:',  this.directionsDataModel.directions_shortest_distance);
     //Set Selected Directions Provider
     const selectedDirectionProvider = this.directionsOptions.filter(objectData => objectData.value == this.directionsDataModel.directions_provider.value);
     if(selectedDirectionProvider.length > 0) this.selectDirectionService(selectedDirectionProvider[0]) 
@@ -274,7 +273,7 @@ export default {
             </div>
           </div>
           <div class="col-lg-12">
-            <div class="form-check">
+            <div v-if="directionsDataModel.directions_shortest_distance" class="form-check">
               <label class="form-check-label pl-0"><h3 style="color: #54667a;"> {{ trans("geolocation.shortest_distance") }}</h3> </label>
               <label class="pl-1"><input
                   type="radio"
