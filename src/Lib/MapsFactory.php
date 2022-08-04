@@ -50,10 +50,12 @@ class MapsFactory
     const TYPE_PLACES       = 'places';
     const TYPE_MAPS         = 'maps';
     const TYPE_GEOCODING = 'geocoding';
+    const TYPE_ESTIMATE = 'estimate';
 
     /** GETOLOCATION REDUNDANCY TYPES */
     const REDUNDANCY_PLACES     =   'redundancy_places';
     const REDUNDANCY_DIRECTIONS =   'redundancy_directions';
+
 
     /**
      * @var String          $type Requisition type geolocation
@@ -179,6 +181,24 @@ class MapsFactory
         else if ($this->type == self::TYPE_GEOCODING)
         {
             return (new GeocodingGoogleLib());
+        } else if ($this->type == self::TYPE_ESTIMATE) {
+            switch(GeolocationSettings::getEstimateDirectionsProvider())
+            {
+                case self::MAPS_BING:
+                    return(new MapsDirectionsBingLib());
+                case self::MAPS_MAPQUEST:
+                    return(new MapsDirectionsMapQuestLib());
+                case self::MAPS_MAPBOX:
+                    return(new MapsDirectionsMapBoxLib());
+                case self::MAPS_OPENROUTE:
+                    return(new MapsDirectionsOpenRouteLib());
+                case self::MAPS_FLIGHT:
+                    return(new MapsDirectionsFlightMap());
+                case self::MAPS_HERE:
+                    return(new MapsDirectionsHere());
+                default:
+                    return(new MapsDirectionsGoogleLib());
+            }
         }
         else
         {

@@ -110,6 +110,22 @@ class GeolocationSettings extends Settings {
 	}
 
 	/**
+	 * Get provider directions to estimative
+	 *
+	 * @return string
+	 */
+	public static function getEstimateDirectionsProvider()
+	{
+        $settings = self::where('key', 'directions_provider_estimate')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
+			return false;
+	}
+
+
+	/**
 	 * Get provider places 
 	 *
 	 * @return string
