@@ -63,13 +63,14 @@ class DirectionsController extends Controller
      * @param Decimal $source_long Decimal that represents the starting longitude of the request.
      * @param Decimal $dest_lat Decimal that represents the destination latitude of the request.
      * @param Decimal $dest_long Decimal that represents the destination longitude of the request.
+     * @param String  $factory maps factory type.
      *
      * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value']
      */
 
-    public function getPolylineAndEstimateByDirections($startLat, $startLng, $destLat, $destLng)
+    public function getPolylineAndEstimateByDirections($startLat, $startLng, $destLat, $destLng, $factory = 'directions')
     {
-        $factory = new MapsFactory('directions');
+        $factory = new MapsFactory($factory);
         $clicker = $factory->createMaps();
 
         if ($clicker) {
@@ -143,9 +144,9 @@ class DirectionsController extends Controller
      * @return Array        ['points' => [['lat','lng']['lat','lng']...],'distance_text','duration_text','distance_value','duration_value']
      */
 
-    public static function getPolylineAndEstimateWithWayPoints($allPointsAPI, $shortestDistance = null)
+    public static function getPolylineAndEstimateWithWayPoints($allPointsAPI, $shortestDistance = null, $factory = 'directions')
     {
-        $factory = new MapsFactory('directions');
+        $factory = new MapsFactory($factory);
         $clicker = $factory->createMaps();
 
         if ($clicker)
