@@ -376,4 +376,33 @@ class GeolocationSettings extends Settings {
 		return false;
 	}
 
+	/**
+	 * GET ID Directions redundancy
+	 *
+	 * @return string
+	*/
+	public static function getDirectionsEstimateKey(){
+		$settings = self::where('key', 'directions_key_estimate')->first();
+
+		if($settings && $settings->value)
+			return $settings->value;
+		else
+			return false;
+	}
+
+	/**
+	 * GET URL API directions redundancy
+	 *
+	 * @return string
+	 */
+	public static function getDirectionsEstimateUrl()
+	{
+        $settings = self::where('key', 'directions_url_estimate')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
+			return false;
+	}
+
 }

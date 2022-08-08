@@ -182,22 +182,24 @@ class MapsFactory
         {
             return (new GeocodingGoogleLib());
         } else if ($this->type == self::TYPE_ESTIMATE) {
+            $directionsEstimateKey = GeolocationSettings::getDirectionsEstimateKey();
+
             switch(GeolocationSettings::getEstimateDirectionsProvider())
             {
                 case self::MAPS_BING:
-                    return(new MapsDirectionsBingLib());
+                    return(new MapsDirectionsBingLib($directionsEstimateKey));
                 case self::MAPS_MAPQUEST:
-                    return(new MapsDirectionsMapQuestLib());
+                    return(new MapsDirectionsMapQuestLib($directionsEstimateKey));
                 case self::MAPS_MAPBOX:
-                    return(new MapsDirectionsMapBoxLib());
+                    return(new MapsDirectionsMapBoxLib($directionsEstimateKey));
                 case self::MAPS_OPENROUTE:
-                    return(new MapsDirectionsOpenRouteLib());
+                    return(new MapsDirectionsOpenRouteLib($directionsEstimateKey, GeolocationSettings::getDirectionsEstimateUrl()));
                 case self::MAPS_FLIGHT:
-                    return(new MapsDirectionsFlightMap());
+                    return(new MapsDirectionsFlightMap($directionsEstimateKey));
                 case self::MAPS_HERE:
-                    return(new MapsDirectionsHere());
+                    return(new MapsDirectionsHere($directionsEstimateKey));
                 default:
-                    return(new MapsDirectionsGoogleLib());
+                    return(new MapsDirectionsGoogleLib($directionsEstimateKey));
             }
         }
         else
