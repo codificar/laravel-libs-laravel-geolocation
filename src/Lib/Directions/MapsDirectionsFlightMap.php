@@ -113,7 +113,7 @@ use phpDocumentor\Reflection\Types\Boolean;
             
             if($response_obj->status == 200 && $response_obj->message == 'Successful')
             {                     
-                $values = $this->formatDistanceTimeText($response_obj);
+                $values = self::formatDistanceTimeText($response_obj);
 
                 return array('success' => true, 'data' => [ 'distance' => $values['convertDist'], 'time_in_minutes' => $values['convertTime'], 
                 'distance_text' => $values['distance_text'], 'duration_text' => $values['duration_text'] ]);
@@ -282,7 +282,7 @@ use phpDocumentor\Reflection\Types\Boolean;
             return $array_resp;
         }
 
-        private function formatDistanceTimeText($response_obj){
+        private static function formatDistanceTimeText($response_obj){
             $responseArray = array();
             $responseArray['originalTime'] = $response_obj->data->paths[0]->time;
             $responseArray['originalDistance'] = $response_obj->data->paths[0]->distance;    
@@ -296,7 +296,7 @@ use phpDocumentor\Reflection\Types\Boolean;
             return $responseArray;
         }
 
-        private function convert_meters($unit_dist, $response_dist){
+        private static function convert_meters($unit_dist, $response_dist){
             if (isset($response_dist)) {
                 if ($unit_dist == 1) {
                     //Miles
@@ -312,7 +312,7 @@ use phpDocumentor\Reflection\Types\Boolean;
             return $dist;
         }
 
-        private function convert_to_miliseconds_to_minutes($response_time){
+        private static function convert_to_miliseconds_to_minutes($response_time){
             if (isset($response_time))
                 $time_in_Minutes = ($response_time / 60000);
             else
@@ -357,11 +357,9 @@ use phpDocumentor\Reflection\Types\Boolean;
                 "points"         =>  json_encode($waysFormatted),
                 "driving_mode"   =>  'car',
 				"waypoints"		 =>  json_encode($wayPointsFormatted),
-//                "traffic"  =>  0,
             );
 
             $curl_string    =   $this->url_api . "directions?" . http_build_query($params);
-            $curl_string = 'https://maps.flightmap.io/api/directions?fm_token=733e7400-9957-11ec-a3b5-5ba6800d00ae&points=%5B%7B%22lat%22%3A%22-19.895653%22%2C%22lng%22%3A%22-44.02601%2';
             $php_obj        =   self::curlCall($curl_string);
             $response_obj   =   json_decode($php_obj);
 
@@ -369,7 +367,7 @@ use phpDocumentor\Reflection\Types\Boolean;
                 return self::polylineProcessWithPoints($response_obj->data->paths[0], $response_obj);
             }else {
                 return false;
-            }            
+            }   
         }
 
         /**
