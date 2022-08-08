@@ -110,6 +110,22 @@ class GeolocationSettings extends Settings {
 	}
 
 	/**
+	 * Get provider directions to estimative
+	 *
+	 * @return string
+	 */
+	public static function getEstimateDirectionsProvider()
+	{
+        $settings = self::where('key', 'directions_provider_estimate')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
+			return false;
+	}
+
+
+	/**
 	 * Get provider places 
 	 *
 	 * @return string
@@ -358,6 +374,35 @@ class GeolocationSettings extends Settings {
 			return (boolean) $settings->value;
 
 		return false;
+	}
+
+	/**
+	 * GET ID Directions redundancy
+	 *
+	 * @return string
+	*/
+	public static function getDirectionsEstimateKey(){
+		$settings = self::where('key', 'directions_key_estimate')->first();
+
+		if($settings && $settings->value)
+			return $settings->value;
+		else
+			return false;
+	}
+
+	/**
+	 * GET URL API directions redundancy
+	 *
+	 * @return string
+	 */
+	public static function getDirectionsEstimateUrl()
+	{
+        $settings = self::where('key', 'directions_url_estimate')->first();
+
+        if ($settings)
+            return $settings->value;
+        else
+			return false;
 	}
 
 }
