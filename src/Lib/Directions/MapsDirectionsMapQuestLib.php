@@ -263,7 +263,6 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
                 . '}}';
 
         }
-        $this->directions_key_api = 'aRVHlK7Bti1CG7XYusqLw46zhI1sKFwH';
         $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api;
 
         return $this->polylineProcessWithPoints($curl_string, 'post', $postFields);
