@@ -264,6 +264,10 @@ export default {
     },
     validateDirectionsEstimate() {
       let isValid = true;
+      if (this.directionsDataModel.directionsEstimateRule.value == false) {
+        return true;
+      }
+
       if (
         this.directionsDataModel.directions_key_estimate.value == null ||
         this.directionsDataModel.directions_key_estimate.value.trim() == ""
@@ -642,7 +646,7 @@ export default {
           <div class="form-check">
             <label class="form-check-label pl-0">
               <h3 style="color: #54667a">
-                habilitar provedor padrão para calcular estimativa durante o
+                Habilitar provedor padrão para calcular estimativa durante o
                 trajeto
               </h3>
             </label>

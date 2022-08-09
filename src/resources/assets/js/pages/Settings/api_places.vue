@@ -255,7 +255,6 @@ export default {
             </div>
           </div>
 
-          {{"ajksdhajs,dasjd"}}
           <div class="col-lg-6">
             <div class="form-group">
               <label>
