@@ -11,7 +11,6 @@ use Codificar\Geolocation\Helper;
  */
 class MapsDirectionsBingLib implements IMapsDirections
 {
-
     /**
      * @var String $url_api URL to access API
      */
@@ -57,11 +56,10 @@ class MapsDirectionsBingLib implements IMapsDirections
         if (!$this->directions_key_api) {
             return array('success' => false);
         }
-        \Log::info("before bing: " . date("d/m/Y H:i:s"));
+
         $curl_string = $this->url_api . "/Routes/driving?key=" . $this->directions_key_api . "&o=json&c=en-US&fi=true&wp.0=" . $source_lat . "," . $source_long . "&wp.1=" . $dest_lat . "," . $dest_long;
         $php_obj = self::curlCall($curl_string);
         $response_obj = json_decode($php_obj);
-        \Log::info("after bing: " . date("d/m/Y H:i:s"));
 
         if ($response_obj->statusCode && $response_obj->statusCode == 200) {
             $dist = convert_distance_format($this->settings_dist, $response_obj->resourceSets[0]->resources[0]->travelDistance * 1000);
@@ -117,7 +115,6 @@ class MapsDirectionsBingLib implements IMapsDirections
      */
     public function getPolylineAndEstimateByDirections($source_lat, $source_long, $dest_lat, $dest_long)
     {
-
         if (!$this->directions_key_api) {
             return false;
         }
@@ -248,7 +245,7 @@ class MapsDirectionsBingLib implements IMapsDirections
             foreach ($ways as $index => $way) {
                 $waysFormatted .= "&wp." . $index . "=" . $way[0] . "," . $way[1];
             }
-        } else if ($waysLen < 2) {
+        } elseif ($waysLen < 2) {
             return false;
         }
 
@@ -259,7 +256,9 @@ class MapsDirectionsBingLib implements IMapsDirections
             $waysFormatted .
             "&routePathOutput=Points";
 
-        if ($shortestDistance) $curl_string = $curl_string . "&optimize=distance";
+        if ($shortestDistance) {
+            $curl_string = $curl_string . "&optimize=distance";
+        }
 
         return self::polylineProcessWithPoints($curl_string);
     }
@@ -343,7 +342,7 @@ class MapsDirectionsBingLib implements IMapsDirections
 
             return $return;
         } catch (\Throwable $th) {
-            \Log::error($th->getMessage());
+            \Log::error($th->getMessage().$th->getTraceAsString());
             return array('success' => false);
         }
     }
@@ -363,8 +362,9 @@ class MapsDirectionsBingLib implements IMapsDirections
                 $matrixString .= "$item->latitude,$item->longitude;";
             }
 
-            if (strlen($matrixString))
+            if (strlen($matrixString)) {
                 $matrixString = substr($matrixString, 0, -1);
+            }
 
             return $matrixString;
         } catch (\Throwable $th) {
@@ -395,7 +395,5 @@ class MapsDirectionsBingLib implements IMapsDirections
         }
 
         return false;
-
     }
-
 }
