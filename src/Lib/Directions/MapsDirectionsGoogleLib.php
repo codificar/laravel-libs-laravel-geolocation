@@ -9,6 +9,7 @@ use Codificar\Geolocation\Helper;
 
 //External Uses
 use GeometryLibrary\PolyUtil;
+use Log;
 use phpDocumentor\Reflection\Types\Boolean;
 
 /**
@@ -480,12 +481,28 @@ class MapsDirectionsGoogleLib implements IMapsDirections
         $path = "color:0xff0000ff|weight:5";
 
         foreach ($points as $point) {
-            $path .= "|" . $point;
+            if(is_array($point) && 
+                array_key_exists('latitude', $point) && 
+                array_key_exists('longitude', $point)
+            ) {
+                $path .= "|" . $point['latitude'] . "," . $point['longitude'];
+            } else {
+                $path .= "|" . $point;
+            }
         }
-        $markers = [
-            "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-start@2x.png|" . $points[0],
-            "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-finish@2x.png|" . $points[count($points) - 1],
-        ];
+
+        if(array_key_exists('latitude', $points[0]) && array_key_exists('longitude', $points[0])) {
+            $markers = [
+                "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-start@2x.png|" . $points[0]['latitude'] . "," . $points[0]['longitude'],
+                "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-finish@2x.png|" . $points[count($points) - 1]['latitude'] . "," . $points[count($points) - 1]['longitude']
+            ];
+        } else {
+            $markers = [
+                "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-start@2x.png|" . $points[0],
+                "shadow:false|scale:2|icon:http://d1a3f4spazzrp4.cloudfront.net/receipt-new/marker-finish@2x.png|" . $points[count($points) - 1],
+            ];
+        }
+
         return self::getStaticMap([
             'path' => [$path],
             'width' => $width,
