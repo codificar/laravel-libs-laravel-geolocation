@@ -65,11 +65,10 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
         if (!$this->directions_key_api) {
             return array('success' => false);
         }
-        \Log::info("before box: " . date("d/m/Y H:i:s"));
+
         $curl_string = $this->url_api . "/mapbox/driving-traffic/" . $source_long . "," . $source_lat . ";" . $dest_long . "," . $dest_lat . "?access_token=" . $this->directions_key_api;
         $php_obj = self::curlCall($curl_string);
         $response_obj = json_decode($php_obj);
-        \Log::info("after box: " . date("d/m/Y H:i:s"));
 
         if (isset($response_obj->code) && $response_obj->code == 'Ok') {
             $dist = convert_distance_format(self::$settings_dist, $response_obj->routes[0]->legs[0]->distance);
@@ -254,13 +253,14 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
             }
 
             $waysFormatted = rtrim($waysFormatted, ";");
-        } else if ($waysLen < 2) {
+        } elseif ($waysLen < 2) {
             return false;
         }
 
         $curl_string = $this->url_api . "/mapbox/";
-        if (!$shortestDistance)
-            $curl_string = $curl_string . "driving-traffic/";//if shortest distance ignores traffic
+        if (!$shortestDistance) {
+            $curl_string = $curl_string . "driving-traffic/";
+        }//if shortest distance ignores traffic
         $curl_string = $curl_string . $waysFormatted .
             "?&access_token=" .
             $this->directions_key_api .
@@ -321,9 +321,9 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
     public function getMatrixDistance($providers, $sourceLat, $sourceLong)
     {
         try {
-
-            if (!$this->directions_key_api)
+            if (!$this->directions_key_api) {
                 return false;
+            }
 
             $destinations = $this->mountMatrixString($providers, $sourceLat, $sourceLong);
 
@@ -347,7 +347,7 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
 
             return $return;
         } catch (\Throwable $th) {
-            \Log::error($th->getMessage());
+            \Log::error($th->getMessage().$th->getTraceAsString());
             return array('success' => false);
         }
     }
@@ -366,7 +366,6 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
         ];
 
         try {
-
             $matrixString = "$sourceLong,$sourceLat;";
             $destIndex = '';
 
@@ -385,7 +384,7 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
 
             return $data;
         } catch (\Throwable $th) {
-            \Log::error($th->getMessage());
+            \Log::error($th->getMessage().$th->getTraceAsString());
             return $data;
         }
     }
@@ -402,7 +401,9 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
     public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
     {
         $formatedPoints = [];
-        foreach ($points as $point) $formatedPoints[] = explode(',', $point);
+        foreach ($points as $point) {
+            $formatedPoints[] = explode(',', $point);
+        }
         $encoded = FlexiblePolyline::encode($formatedPoints);
 
         $this->directions_key_api = "pk.eyJ1IjoiY29kaWZpY2FyIiwiYSI6ImNsMDg0ZDhlYTJvNjkzZHFobmV3bzVtYTEifQ.Kxyy1rsOZ815XXNebcUSrg";
@@ -414,6 +415,5 @@ class MapsDirectionsMapBoxLib implements IMapsDirections
 
         return false;
         return $url;
-
     }
 }

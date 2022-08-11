@@ -11,7 +11,6 @@ use Codificar\Geolocation\Helper;
  */
 class MapsDirectionsMapQuestLib implements IMapsDirections
 {
-
     /**
      * @var String $url_api URL to access API
      */
@@ -57,11 +56,10 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
         if (!$this->directions_key_api) {
             return array('success' => false);
         }
-        \Log::info("before quest: " . date("d/m/Y H:i:s"));
+
         $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api . "&from=" . $source_lat . "," . $source_long . "&to=" . $dest_lat . "," . $dest_long . "&unit=k&timeType=1&useTraffic=true";
         $php_obj = self::curlCall($curl_string);
         $response_obj = json_decode($php_obj);
-        \Log::info("after quest: " . date("d/m/Y H:i:s"));
 
         if (isset($response_obj->info->statuscode) && $response_obj->info->statuscode == 0) {
             $dist = convert_distance_format($this->settings_dist, $response_obj->route->distance * 1000);
@@ -245,7 +243,6 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
         if ($waysLen < 2) {
             return false;
         } else {
-
             $waysFormatted = '{"locations": [';
 
             foreach ($ways as $index => $way) {
@@ -261,7 +258,6 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
                     "timeType": 1' .
             $shortestDistance ? ',"routingMode":"shortest"' : ' '
                 . '}}';
-
         }
         $curl_string = $this->url_api . "/directions/v2/route?key=" . $this->directions_key_api;
 
@@ -348,8 +344,9 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
     public function getMatrixDistance($providers, $sourceLat, $sourceLong)
     {
         try {
-            if (!$this->directions_key_api)
+            if (!$this->directions_key_api) {
                 return false;
+            }
 
             $destinations = $this->mountMatrixString($providers, $sourceLat, $sourceLong);
             $curlString = $this->url_api . "/directions/v2/routematrix?key=" . $this->directions_key_api;
@@ -372,7 +369,7 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
 
             return $return;
         } catch (\Throwable $th) {
-            \Log::error($th->getMessage());
+            \Log::error($th->getMessage().$th->getTraceAsString());
             return array('success' => false);
         }
     }
@@ -408,7 +405,7 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
 
             return $data;
         } catch (\Throwable $th) {
-            \Log::error($th->getMessage());
+            \Log::error($th->getMessage().$th->getTraceAsString());
             return ["locations" => []];
         }
     }
@@ -430,7 +427,9 @@ class MapsDirectionsMapQuestLib implements IMapsDirections
             . "&locations=" . $points[0] . "|marker-start"
             . '||' . $points[count($points) - 1] . "|marker-end"
             . "&shape=";
-        foreach ($points as $point) $url .= $point . '|';
+        foreach ($points as $point) {
+            $url .= $point . '|';
+        }
 
         return $url;
     }

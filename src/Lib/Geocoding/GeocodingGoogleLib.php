@@ -15,7 +15,8 @@ class GeocodingGoogleLib extends AbstractGeocoding
     /**
      * Defined properties
      */
-    public function __construct($placesKey = null){
+    public function __construct($placesKey = null)
+    {
         parent::__construct($placesKey);
     }
 
@@ -41,13 +42,12 @@ class GeocodingGoogleLib extends AbstractGeocoding
             $php_obj = parent::curlCall($curl_string);
             $response_obj = json_decode($php_obj);
 
-            if (isset($response_obj->status) && $response_obj->status == "OK"){
+            if (isset($response_obj->status) && $response_obj->status == "OK") {
                 $latLng = $response_obj->results[0]->geometry->location;
                 $success = true;
-            }else {
+            } else {
                 $error = array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
                 \Log::info(__FUNCTION__ . ":: curl_string = " . print_r($curl_string, 1));
-
                 \Log::info(__FUNCTION__ . ":: response_obj = " . print_r($response_obj, 1));
             }
         }
@@ -56,5 +56,4 @@ class GeocodingGoogleLib extends AbstractGeocoding
 
         return count($error) ? array_merge($return, $error) : $return;
     }
-
 }

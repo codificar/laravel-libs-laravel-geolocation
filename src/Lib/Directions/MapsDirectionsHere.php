@@ -15,7 +15,6 @@ use GeometryLibrary\PolyUtil;
  */
 class MapsDirectionsHere implements IMapsDirections
 {
-
     /**
      * @var String $url_api URL to access Routes API
      */
@@ -284,10 +283,11 @@ class MapsDirectionsHere implements IMapsDirections
 
     private function convert_to_miliseconds_to_minutes($response_time)
     {
-        if (isset($response_time))
+        if (isset($response_time)) {
             $time_in_Minutes = ($response_time / 60000);
-        else
+        } else {
             $time_in_Minutes = 0;
+        }
 
         return $time_in_Minutes;
     }
@@ -326,7 +326,9 @@ class MapsDirectionsHere implements IMapsDirections
             "origin" => $origin,
             "destination" => $destination,
         );
-        if ($shortestDistance) $params["routingMode"] = "short";
+        if ($shortestDistance) {
+            $params["routingMode"] = "short";
+        }
 
         $curl_string = $this->url_api . "routes?" . http_build_query($params);
         $via ? $curl_string = $curl_string . $via : null;
@@ -348,7 +350,6 @@ class MapsDirectionsHere implements IMapsDirections
         $php_obj = self::curlCall($curl_string);
         $response_obj = json_decode($php_obj);
         if (isset($response_obj->routes[0])) {
-
             return self::formatDistanceTimeTextWithPoints($response_obj);
         } else {
             return false;
@@ -463,10 +464,9 @@ class MapsDirectionsHere implements IMapsDirections
 
             return $return;
         } catch (\Throwable $th) {
-            \Log::error($th->getMessage());
+            \Log::error($th->getMessage().$th->getTraceAsString());
             return array('success' => false);
         }
-
     }
 
     /**
@@ -515,10 +515,10 @@ class MapsDirectionsHere implements IMapsDirections
             . '&mlbl=0'// path color
             . '&r0=';
 
-        foreach ($points as $point) $url .= $point . ',';
+        foreach ($points as $point) {
+            $url .= $point . ',';
+        }
 
         return $url;
-
-
     }
 }

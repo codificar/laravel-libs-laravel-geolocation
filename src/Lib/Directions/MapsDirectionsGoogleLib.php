@@ -17,7 +17,6 @@ use phpDocumentor\Reflection\Types\Boolean;
  */
 class MapsDirectionsGoogleLib implements IMapsDirections
 {
-
     /**
      * @var String $url_api URL to access API
      */
@@ -31,7 +30,7 @@ class MapsDirectionsGoogleLib implements IMapsDirections
     /**
      * @const int DEFAULT_ZOOM zoom used in static maps lib
      */
-    const DEFAULT_ZOOM = 15;//city level
+    public const DEFAULT_ZOOM = 15;//city level
 
     /**
      * @var String $directions_key_api Key of API authentication
@@ -73,11 +72,10 @@ class MapsDirectionsGoogleLib implements IMapsDirections
         if (!$this->directions_key_api) {
             return array('success' => false);
         }
-        \Log::info("before google: " . date("d/m/Y H:i:s"));
+
         $curl_string = $this->url_api . "/directions/json?origin=" . $source_lat . "," . $source_long . "&destination=" . $dest_lat . "," . $dest_long . "&key=" . $this->directions_key_api . "";
         $php_obj = self::curlCall($curl_string);
         $response_obj = json_decode($php_obj);
-        \Log::info("after google: " . date("d/m/Y H:i:s"));
 
         if ($response_obj->status && $response_obj->status == 'OK') {
             $dist = convert_distance_format(0, $response_obj->routes[0]->legs[0]->distance->value);
@@ -259,10 +257,8 @@ class MapsDirectionsGoogleLib implements IMapsDirections
      */
     public function getPolylineAndEstimateWithWayPoints($wayPoints, $optimize = 0, $shortestDistance = null)
     {
-
         $waysFormatted = '';
         if (!$this->directions_key_api || (!is_string($wayPoints) || !is_array(json_decode($wayPoints, true)))) {
-            \Log::info("getPolylineAndEstimateWithWayPoints:false");
             return false;
         }
 
@@ -276,12 +272,13 @@ class MapsDirectionsGoogleLib implements IMapsDirections
 
         if ($waysLen > 2) {
             foreach ($ways as $index => $way) {
-                if ($index != 0 && $index < ($waysLen - 1))
+                if ($index != 0 && $index < ($waysLen - 1)) {
                     $waysFormatted .= !$waysFormatted ? ("&waypoints=" . $optimizeRoute . $way[0] . "," . $way[1]) : "|" . $way[0] . "," . $way[1];
+                }
             }
 
             $waysFormatted = rtrim($waysFormatted, "|");
-        } else if ($waysLen < 2) {
+        } elseif ($waysLen < 2) {
             return false;
         }
 
@@ -292,7 +289,9 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             "&destination="
             . urlencode($ways[$waysLen - 1][0] . "," . $ways[$waysLen - 1][1])
             . $waysFormatted;
-        if ($shortestDistance) $curl_string = $curl_string . '&alternatives=true';
+        if ($shortestDistance) {
+            $curl_string = $curl_string . '&alternatives=true';
+        }
 
         return self::polylineProcessWithPoints($curl_string);
     }
@@ -313,9 +312,9 @@ class MapsDirectionsGoogleLib implements IMapsDirections
 
             $shortestRoute = $response_obj['routes'][0];
             for ($i = 1; $i < sizeof($response_obj['routes']); $i++) {
-                if ($response_obj['routes'][$i]['legs'][0]['distance']['value'] < $shortestRoute['legs'][0]['distance']['value'])
+                if ($response_obj['routes'][$i]['legs'][0]['distance']['value'] < $shortestRoute['legs'][0]['distance']['value']) {
                     $shortestRoute = $response_obj['routes'][$i];
-
+                }
             }
 
 
@@ -365,7 +364,6 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             } else {
                 $array_resp['waypoint_order'] = [];
             }
-
         } else {
             return false;
         }
@@ -408,7 +406,7 @@ class MapsDirectionsGoogleLib implements IMapsDirections
 
             return $return;
         } catch (\Throwable $th) {
-            \Log::error($th->getMessage());
+            \Log::error($th->getMessage().$th->getTraceAsString());
             return array('success' => false);
         }
     }
@@ -452,19 +450,21 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             }
         }
 
-        if (array_key_exists('center', $params))
+        if (array_key_exists('center', $params)) {
             $url .= "&center=" . $params['center'];
+        }
 
-        if (array_key_exists('scale', $params))
+        if (array_key_exists('scale', $params)) {
             $url .= "&scale=" . $params['scale'];
+        }
 
-        if (array_key_exists('zoom', $params))
+        if (array_key_exists('zoom', $params)) {
             $url .= '&zoom=' . $params['zoom'];
-        else if (!array_key_exists('path', $params) && !array_key_exists('markers', $params))
-            $url .= '&zoom=' . self::DEFAULT_ZOOM;//zoom is required only if markers neither path is provided
+        } elseif (!array_key_exists('path', $params) && !array_key_exists('markers', $params)) {
+            $url .= '&zoom=' . self::DEFAULT_ZOOM;
+        }//zoom is required only if markers neither path is provided
 
         return $url;
-
     }
 
     /**
@@ -510,5 +510,4 @@ class MapsDirectionsGoogleLib implements IMapsDirections
             "markers" => $markers
         ]);
     }
-
 }
