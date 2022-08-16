@@ -96,10 +96,8 @@ export default {
       this.directionsDataModel.directions_redundancy_rule.value = value;
     },
     updateShortestDistance(checkedValue) {
-      console.log('updating shortest distance', checkedValue)
       const value = checkedValue.target.value;
       this.directionsDataModel.directions_shortest_distance.value = value;
-      console.log('updated shortest distance',   this.directionsDataModel.directions_shortest_distance.value)
     },
     updateEstimateRule(checkedValue) {
       const value = checkedValue.target.value;
@@ -316,7 +314,6 @@ export default {
     const optionsList = JSON.parse(this.enumData);
 
     this.directionsDataModel = JSON.parse(this.model);
-    console.log(this.directionsDataModel)
     this.directionsOptions = optionsList.directions_provider;
     //Set Selected Directions Provider
     const selectedDirectionProvider = this.directionsOptions.filter(
@@ -343,7 +340,6 @@ export default {
         objectData.value ==
         this.directionsDataModel.directions_provider_estimate.value
     );
-    console.log(selectedDirectionEstimateProvider)
     if (selectedDirectionEstimateProvider.length > 0) {
       this.selectDirectionEstimateService(selectedDirectionEstimateProvider[0]);
     }
@@ -517,6 +513,7 @@ export default {
         <div class="col-lg-12">
           <div
             class="form-check"
+            v-if="directionsDataModel.directions_shortest_distance"
           >
             <label class="form-check-label pl-0">
               <h3 style="color: #54667a">
