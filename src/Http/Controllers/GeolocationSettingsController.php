@@ -69,7 +69,7 @@ class GeolocationSettingsController extends Controller
 	{			
 		//Get Setting Category Data
 		$settingCategory = GeolocationSettings::getGeolocationCategory();
-			
+			dd($request->all());
 		$params = $request->all();
 		
 		foreach ($params as $key => $value) {

@@ -96,8 +96,10 @@ export default {
       this.directionsDataModel.directions_redundancy_rule.value = value;
     },
     updateShortestDistance(checkedValue) {
+      console.log('updating shortest distance', checkedValue)
       const value = checkedValue.target.value;
       this.directionsDataModel.directions_shortest_distance.value = value;
+      console.log('updated shortest distance',   this.directionsDataModel.directions_shortest_distance.value)
     },
     updateEstimateRule(checkedValue) {
       const value = checkedValue.target.value;
@@ -514,7 +516,6 @@ export default {
 
         <div class="col-lg-12">
           <div
-            v-if="directionsDataModel.directions_shortest_distance"
             class="form-check"
           >
             <label class="form-check-label pl-0">
