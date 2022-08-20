@@ -374,7 +374,7 @@ class DirectionsController extends Controller
             }
         } catch (\Exception $e) {
             \Log::error(__CLASS__ . "::" . __FUNCTION__ . $e);
-            \Log::info('Directions [Clicker: ' . $clicker::class  .' ] > getStaticMapByPath: ' . $e->getMessage());
+            \Log::info('Directions > getStaticMapByPath: ' . $e->getMessage());
             return false;
         }
 
