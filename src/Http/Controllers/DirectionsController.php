@@ -374,6 +374,7 @@ class DirectionsController extends Controller
             }
         } catch (\Exception $e) {
             \Log::error(__CLASS__ . "::" . __FUNCTION__ . $e);
+            \Log::info('Directions [Factory: ' . $factory  .' ] > getStaticMapByPath: ' . $e->getMessage());
             return false;
         }
 

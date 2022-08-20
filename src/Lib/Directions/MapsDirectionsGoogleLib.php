@@ -480,6 +480,13 @@ class MapsDirectionsGoogleLib implements IMapsDirections
     {
         $path = "color:0xff0000ff|weight:5";
 
+        
+        if(empty($points)) {
+            \Log::warning($points);
+            \Log::info('MapDirectionsGoogleLib > getStaticMapByPath: $points are empty.');
+           return null;
+        }
+
         foreach ($points as $point) {
             if(is_array($point) && 
                 array_key_exists('latitude', $point) && 
