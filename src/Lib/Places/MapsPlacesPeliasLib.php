@@ -180,7 +180,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $success    =   true;
             }
 
-            if(!count($processed) || !$processed)
+            if(!$processed || !count($processed))
             {
                 $success    =   false;
                 $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
@@ -249,7 +249,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $success    =   true;
             }
 
-            if(!count($processed) || !$processed)
+            if(!$processed || !count($processed) )
             {
                 $success    =   false;
                 $error      =   array("error_message" => trans('geolocationTrans::geolocation.no_data_found'));
@@ -324,6 +324,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
          */
         private function processGeocodeResponse($prediction)
         {
+            $processed  =  false;
             if(
                 isset($prediction->features) && 
                 count($prediction->features) > 0 && 
@@ -342,10 +343,6 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 $processed['latitude']      =   $prediction->features[0]->geometry->coordinates[1];
                 $processed['longitude']     =   $prediction->features[0]->geometry->coordinates[0];
                 $processed['address']       =   ($address ? $address : sprintf("%s %s %s", $street, $houseNumber, $postalCode));
-            }
-            else
-            {
-                $processed  =  false;
             }
 
             return $processed;
