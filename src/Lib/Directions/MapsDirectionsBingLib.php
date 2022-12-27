@@ -391,14 +391,18 @@ class MapsDirectionsBingLib implements IMapsDirections
 
         $wp ="";
         foreach ($points as $key => $point) {
-            $letter = chr($key+65);
-            if(is_string($point)) {
-                $cordinates = explode(",", $point);
-                $url .= $cordinates[0] . "," . $cordinates[1] . ';';
-                $wp .= "&wp.$key=" . $cordinates[0] . "," . $cordinates[1] . ";66;" . $letter;
-            } else if(isset($point['latitude']) && isset($point['longitude'])) {
-                $url .= $point['latitude'] . "," . $point['longitude'] . ';';
-                $wp .= "&wp.$key=" . $point['latitude'] . "," . $point['longitude'] . ";66;" . $letter;
+            $isFirst = $key == 0;
+            $isLast = count($points) == ($key+1);
+            if($isFirst || $isLast) {
+                $letter = chr($key+65);
+                if(is_string($point)) {
+                    $cordinates = explode(",", $point);
+                    $url .= $cordinates[0] . "," . $cordinates[1] . ';';
+                    $wp .= "&wp.$key=" . $cordinates[0] . "," . $cordinates[1] . ";" . $letter;
+                } else if(isset($point['latitude']) && isset($point['longitude'])) {
+                    $url .= $point['latitude'] . "," . $point['longitude'] . ';';
+                    $wp .= "&wp.$key=" . $point['latitude'] . "," . $point['longitude'] . ";" . $letter;
+                }
             }
         }
 
