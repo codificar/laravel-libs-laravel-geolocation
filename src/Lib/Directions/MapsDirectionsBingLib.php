@@ -380,20 +380,36 @@ class MapsDirectionsBingLib implements IMapsDirections
      * @param int $with map width size
      * @param int $height map height size
      *
-     * @return String    url
+     * @example URL https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/{lat},{lng};{lat},{lng};{lat},{lng};/14?key={key}&mapSize={width},{height}&pp={lat},{lng}&pp={lat},{lng}&pp={lat},{lng}
+     * 
+     * @return String url
      */
     public function getStaticMapByPath(array $points, int $width = 249, int $height = 246)
     {
-        $url = $this->url_api .
-            "/Imagery/Map/Streetside?key=" . $this->directions_key_api .
-            "&mapSize=" . $width . "," . $height .
-            "&dc=l,ff0000ff,5";
+        $url = $this->url_api . 
+            "/Imagery/Map/Road/";
 
-        foreach ($points as $point) {
-            $cordinates = explode(",", $point);
-            $url .= "," . $cordinates[0] . "_" . $cordinates[1];
+        $wpString ="";
+        foreach ($points as $key => $point) {
+            $isFirst = $key == 0;
+            $isLast = count($points) == ($key+1);
+            if($isFirst || $isLast) {
+                $wp = $isFirst ? 0 : 1;
+                if(is_string($point)) {
+                    $cordinates = explode(",", $point);
+                    $url .= $cordinates[0] . "," . $cordinates[1] . ';';
+                    $wpString .= "&wp.$wp=" . $cordinates[0] . "," . $cordinates[1];
+                } else if(isset($point['latitude']) && isset($point['longitude'])) {
+                    $url .= $point['latitude'] . "," . $point['longitude'] . ';';
+                    $wpString .= "&wp.$wp=" . $point['latitude'] . "," . $point['longitude'];
+                }
+            }
         }
 
-        return false;
+        $url .= "/14/Routes?key=" . $this->directions_key_api .
+        "&mapSize=$width,$height" .
+        $wpString;
+
+        return $url;
     }
 }
