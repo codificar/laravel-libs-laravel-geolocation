@@ -389,26 +389,26 @@ class MapsDirectionsBingLib implements IMapsDirections
         $url = $this->url_api . 
             "/Imagery/Map/Road/";
 
-        $wp ="";
+        $wpString ="";
         foreach ($points as $key => $point) {
             $isFirst = $key == 0;
             $isLast = count($points) == ($key+1);
             if($isFirst || $isLast) {
-                $letter = chr($key+65);
+                $wp = $isFirst ? 0 : 1;
                 if(is_string($point)) {
                     $cordinates = explode(",", $point);
                     $url .= $cordinates[0] . "," . $cordinates[1] . ';';
-                    $wp .= "&wp.$key=" . $cordinates[0] . "," . $cordinates[1] . ";" . $letter;
+                    $wpString .= "&wp.$wp=" . $cordinates[0] . "," . $cordinates[1];
                 } else if(isset($point['latitude']) && isset($point['longitude'])) {
                     $url .= $point['latitude'] . "," . $point['longitude'] . ';';
-                    $wp .= "&wp.$key=" . $point['latitude'] . "," . $point['longitude'] . ";" . $letter;
+                    $wpString .= "&wp.$wp=" . $point['latitude'] . "," . $point['longitude'];
                 }
             }
         }
 
         $url .= "/14/Routes?key=" . $this->directions_key_api .
         "&mapSize=$width,$height" .
-        $wp;
+        $wpString;
 
         return $url;
     }
