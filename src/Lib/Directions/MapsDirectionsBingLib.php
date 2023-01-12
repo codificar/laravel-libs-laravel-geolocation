@@ -390,6 +390,12 @@ class MapsDirectionsBingLib implements IMapsDirections
             "/Imagery/Map/Road/";
 
         $wpString ="";
+        // Caso venha somente um ponto, dplica o mesmo 
+        // ponto para não ocorrer erro ao gerar o mapa
+        if(count($points()) == 1) {
+            $points[1] = $points[0];
+        }
+
         foreach ($points as $key => $point) {
             $isFirst = $key == 0;
             $isLast = count($points) == ($key+1);
