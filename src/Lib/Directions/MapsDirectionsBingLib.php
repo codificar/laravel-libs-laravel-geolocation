@@ -392,7 +392,7 @@ class MapsDirectionsBingLib implements IMapsDirections
         $wpString ="";
         // Caso venha somente um ponto, dplica o mesmo 
         // ponto para não ocorrer erro ao gerar o mapa
-        if(count($points()) == 1) {
+        if(count($points) == 1) {
             $points[1] = $points[0];
         }
 
