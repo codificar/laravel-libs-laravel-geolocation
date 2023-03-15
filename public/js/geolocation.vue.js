@@ -2623,9 +2623,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       } //If directions is not google maps, so set optimize 0 (disable)
 
 
-      if (this.directionsProviderRule.value != "google_maps" && this.directionsDataModel.directions_google_optimize_route) {
+      /*if (this.directionsProviderRule.value != "google_maps" && this.directionsDataModel.directions_google_optimize_route) {
         this.directionsDataModel.directions_google_optimize_route.value = "0";
       }
+*/
 
       isValid = this.validateDirectionsEstimate();
       return isValid;

@@ -251,12 +251,13 @@ export default {
       }
 
       //If directions is not google maps, so set optimize 0 (disable)
-      if (
+      /*if (
         this.directionsProviderRule.value != "google_maps" &&
         this.directionsDataModel.directions_google_optimize_route
       ) {
         this.directionsDataModel.directions_google_optimize_route.value = "0";
       }
+*/
 
       isValid = this.validateDirectionsEstimate();
 
@@ -320,7 +321,7 @@ export default {
       (objectData) =>
         objectData.value == this.directionsDataModel.directions_provider.value
     );
-    if (selectedDirectionProvider.length > 0)
+    if (selectedDirectionProvider.length >= 0)
       this.selectDirectionService(selectedDirectionProvider[0]);
 
     //Set Selected Redundancy Place Provider
