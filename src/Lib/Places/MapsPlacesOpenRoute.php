@@ -205,13 +205,15 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
         private function processGeocodeResponse($prediction)
         {          
             if(
-                isset($prediction)
+                isset($prediction) 
+                && isset($prediction->properties) 
+                && isset($prediction->geometry)
             )
             {              
                 $processed['address']       =    $prediction->properties->label;
                 $processed['place_id']      =    null;
                 $processed['street_name']   =    $prediction->properties->name;
-                $processed['street_number'] =    $prediction->properties->housenumber;
+                $processed['street_number'] =    $prediction->properties->housenumber ?? null;
                 $processed['postal_code']   =    $prediction->properties->postalcode ?? null;
                 $processed['latitude']      =    $prediction->geometry->coordinates[1];
                 $processed['longitude']     =    $prediction->geometry->coordinates[0];

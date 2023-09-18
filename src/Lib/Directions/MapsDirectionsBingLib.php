@@ -272,37 +272,55 @@ class MapsDirectionsBingLib implements IMapsDirections
      */
     private static function polylineProcessWithPoints($curl_string)
     {
-        $php_obj = self::curlCall($curl_string);
-        $response_obj = json_decode($php_obj, true);
+        try {
+            $phpObj = self::curlCall($curl_string);
+            $responseObj = json_decode($phpObj, true);
 
-        $polyline = array('points' => array(0 => ['lat' => '', 'lng' => '']));
-        $position = 0;
+            $polyline = array('points' => array(0 => ['lat' => '', 'lng' => '']));
+            $position = 0;
 
-        if ($response_obj['statusCode'] && $response_obj['statusCode'] == 200) {
-            foreach ($response_obj['resourceSets'][0]['resources'][0]['routePath']['line']['coordinates'] as $index => $point) {
-                $polyline['points'][$index]['lat'] = $point[0];
-                $polyline['points'][$index]['lng'] = $point[1];
+            if ($responseObj['statusCode'] && $responseObj['statusCode'] == 200) {
+                $partialDistances = [];
+                $partialDurations = [];
+                $resourceSet = $responseObj['resourceSets'][0]['resources'][0] ?? null;
+
+                if(!$resourceSet) {
+                    throw new \Exception("Resource not found " . Json_encode($responseObj), 500);
+                }
+
+                $routeLegs = $resourceSet['routeLegs'];
+                $coordinates = $resourceSet['routePath']['line']['coordinates'];
+                $travelDistance = $resourceSet['travelDistance'];
+                $travelDurationTraffic = $resourceSet['travelDurationTraffic'];
+                $travelDuration = $resourceSet['travelDistance'];
+
+                foreach ($coordinates as $index => $point) {
+                    $polyline['points'][$index]['lat'] = $point[0];
+                    $polyline['points'][$index]['lng'] = $point[1];
+                }
+
+                foreach ($routeLegs as $index => $leg) {
+                    $partialDistances[$index] = number_format(($leg['travelDistance'] / 1000), 2);
+                    $partialDurations[$index] = number_format(($leg['travelDuration'] / 60), 2);
+                }
+
+                $polyline['distance_text'] = number_format($travelDistance, 1) . self::$unit_text;
+                $polyline['duration_text'] = self::formatTime($travelDurationTraffic);
+                $polyline['distance_value'] = $travelDuration;
+                $polyline['duration_value'] = convert_to_minutes($travelDurationTraffic);
+                $polyline['partial_distances'] = $partialDistances;
+                $polyline['partial_durations'] = $partialDurations;
+                $polyline['partial_durations'] = $partialDurations;
+            } else {
+                return false;
             }
 
-            $partialDistances = [];
-            $partialDurations = [];
-            foreach ($response_obj['resourceSets'][0]['resources'][0]['routeLegs'] as $index => $leg) {
-                $partialDistances[$index] = number_format(($leg['travelDistance'] / 1000), 2);
-                $partialDurations[$index] = number_format(($leg['travelDuration'] / 60), 2);
-            }
+            return $polyline;
 
-            $polyline['distance_text'] = number_format($response_obj['resourceSets'][0]['resources'][0]['travelDistance'], 1) . self::$unit_text;
-            $polyline['duration_text'] = self::formatTime($response_obj['resourceSets'][0]['resources'][0]['travelDurationTraffic']);
-            $polyline['distance_value'] = $response_obj['resourceSets'][0]['resources'][0]['travelDistance'];
-            $polyline['duration_value'] = convert_to_minutes($response_obj['resourceSets'][0]['resources'][0]['travelDurationTraffic']);
-            $polyline['partial_distances'] = $partialDistances;
-            $polyline['partial_durations'] = $partialDurations;
-            $polyline['partial_durations'] = $partialDurations;
-        } else {
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage() . $e->getTraceAsString());
             return false;
         }
-
-        return $polyline;
     }
 
     /**
