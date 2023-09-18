@@ -23,6 +23,11 @@ class GeolocationServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__.'/../public/js' => public_path('vendor/codificar/geolocation'),
         ], 'public_vuejs_libs');
+
+        // Publish the tests files 
+        $this->publishes([
+            __DIR__ . '/../tests/' => base_path('tests/Unit/libs/geolocation'),
+        ], 'publishes_tests');
     }
 
     public function register()
