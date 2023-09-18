@@ -11,7 +11,7 @@ return [
     "api_places_key"                => "Clave de autenticación",
     "api_places_id"                 => "ID de la aplicación",
 
-    "enable_red"                    => "¿Habilitar redundancia en la consulta?",
+    "enable_red"                    => "¿Desea habilitar redundancia en la consulta?",
     "yes"                           => "Sí",
     "no"                            => "No",    
   
@@ -28,36 +28,41 @@ return [
     "api_maps_provider"                    => "Proveedor de servicio",
     "api_maps_key"                    => "Clave de autenticación",
 
-    "unnamed_road"                    => "Calle sin nombre",   
+    "unnamed_road"                    => "Ruta sin nombre",   
     
     "invalid_url"                    => "Este campo debe ser una URL válida",    
-    "invalid_require"                    => "Rellene este campo",        
+    "invalid_require"                    => "Complete este campo",        
 
     "optimize_route"                => "¿Habilitar optimización de rutas?",
 
+    "matrix_distance"               => "¿Habilitar búsqueda a través de la API Matrix Distance?",
+    "matrix_distance_redundancy"    => "¿Habilitar búsqueda a través de la API Matrix Distance para redundancia?",
+    
     "no_data_found"         => "No hay datos disponibles para esta búsqueda",
     "no_lib_google"         => "La biblioteca no es de Google",
 
     "place_is_required"     => "El campo de lugar es obligatorio",
     "place_id_required"         => "El ID del lugar es obligatorio",
-    "token_required" => "Rellene el Token",
-    "token_invalid" => "Token no válido",
+    "token_required" => "Complete el Token",
+    "token_invalid" => "Token inválido",
     "token_string" => "El Token debe ser un texto",
-    "id_required" => "Rellene el ID",
+    "id_required" => "Complete el ID",
     "id_integer" => "El ID debe ser un número",
-    "address_required" => "Rellene la Dirección",
-    "address_string" => "La Dirección debe ser un texto",
+    "address_required" => "Complete la Dirección",
+    "address_string" => "La Dirección debe ser una cadena",
     'waypoints_required'        => 'Se requieren puntos de ruta',
     "latitude_and_longitude_equals_zero"=> "La latitud y la longitud son iguales a cero",
-    'incorrect_object_format'   => 'Formato de objeto incorrecto o incompleto',
+    'incorrect_object_format'   => 'Formato incorrecto o incompleto de los puntos de ruta',
 
     'minutes'        => "Minuto(s)",
     "km"=> "Kilómetro(s)",
     'mile'   => "Milla(s)",
 
-    "settings_title" => "Configuración",
+    "settings_title" => "Configuraciones",
 
-    "refresh_session_deflate" => "Actualizar el token de sesión al vaciar la búsqueda",
+    "refresh_session_deflate" => "¿Actualizar el token de sesión al vaciar la búsqueda?",
 
     "sessiontoken_work" => "¿Habilitar la funcionalidad de token de sesión?",
+
+    'shortest_distance' => "¿Optar siempre por la ruta más corta?",
 ];
