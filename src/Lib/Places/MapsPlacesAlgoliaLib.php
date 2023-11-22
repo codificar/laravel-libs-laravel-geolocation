@@ -409,6 +409,7 @@ use Codificar\Geolocation\Lib\Places\IMapsPlaces;
                 case 'es-mx':
                 case 'es-us':
                 case 'es-cl':
+                case 'es-py':
                     $this->lang = 'es';
                     $this->country  = 'es';
                     return true;
